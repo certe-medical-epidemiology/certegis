@@ -2,7 +2,9 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^\.github$
-^certetemplate\.Rproj$
+^certegis\.Rproj$
 ^_pkgdown\.yml$
 ^logo\.svg$
 ^\.DS_Store$
+^data-raw$
+^pkgdown$
