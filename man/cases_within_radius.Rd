@@ -2,91 +2,45 @@
 % Please edit documentation in R/cases_within_radius.R
 \name{cases_within_radius}
 \alias{cases_within_radius}
-\alias{cases_within_radius.default}
-\alias{cases_within_radius.sf}
-\alias{format.cases_within_radius}
-\alias{format2.cases_within_radius}
-\alias{rbind.cases_within_radius}
-\title{Aantal casussen binnen kilometerbereik bepalen}
+\title{Check Cases Within Radius}
 \usage{
-cases_within_radius(...)
-
-\method{cases_within_radius}{default}(
+cases_within_radius(
   data,
   radius_km = 10,
   minimal_cases = 10,
-  topic = NULL,
-  slack = TRUE
-)
-
-\method{cases_within_radius}{sf}(
-  data_sf,
-  radius_km = 10,
-  minimal_cases = 10,
-  column_zipcodes = "postcode",
   column_count = NULL,
-  info = TRUE
+  ...
 )
-
-\method{format}{cases_within_radius}(x, ...)
-
-\method{format2}{cases_within_radius}(x, ...)
-
-\method{rbind}{cases_within_radius}(x, ...)
 }
 \arguments{
-\item{data}{Een data set met postcodes, gefilterd op positieve gevallen. Deze dataset moet een kolom 'postcode' bevatten met PC4-waarden. Zie Examples.}
+\item{data}{data set containing a column 'postcode'}
 
-\item{radius_km}{Standaard is 10. De straal in kilometers waarbinnen het totaal \code{minimal_cases} voor moet komen, vanaf elke postcode. Dit is een thresholdparameter. Het kan voorkomen dat bijv. een postcode 10 km links van de postcode en een postcode 10 km rechts van postcode meegeteld worden. Dus de totale zoekdiameter rond elke postcode is 2x \code{radius_km}.}
+\item{radius_km}{radius in kilometres from each zip code. The search \verb{*diameter*} is twice this number (since zip codes e.g. to the west and to the east are searched).}
 
-\item{minimal_cases}{Standaard is 10. Het minimaal aantal casussen dat voor moet komen binnen het geografisch gebied. Dit is een thresholdparameter.}
+\item{minimal_cases}{minimum number of cases to search for}
 
-\item{topic}{Standaard is leeg. Onderwerp om in geformatteerde tekst op te nemen. Dit kan de naam van een virus, bacterie of aandoening zijn.}
+\item{column_count}{column name in \code{data} with the number of case counts}
 
-\item{slack}{Resultaat naar Slack versturen, kanaal #early-warning.}
-
-\item{data_sf}{Een sf-object met in ieder geval deze kolommen: de postcode (instellen met \code{column_zipcodes}) en het aantal casussen (instellen met \code{column_count}).}
-
-\item{column_zipcodes}{Standaard is \code{"postcode"}. De kolomnaam van de postcodes.}
-
-\item{column_count}{Standaard is eerste kolom die numeriek is en waarbij alle waarden binnen \link{0, 999} vallen.}
-
-\item{info}{Standaard is \code{TRUE}. Printen van geo-analyse en voortgang.}
-}
-\value{
-Een \code{list} met de postcodes als namen, waarbij elk element een \code{data.frame} bevat met postcodes, aantallen en afstand in kilometers wanneer er van die postcode minimaal \code{minimal_cases} gevonden zijn binnen een straal van \code{radius_km} kilometer. Als dit niet het geval is, bevat het element \code{NA}.
-
-\code{cases_within_radius()} retourneert onzichtbaar de output van \code{cases_within_radius.sf()}. Gebruik \code{format()} of \code{format2()} om een printbaar formaat te maken, dat verzonden kan worden per mail of Slack.
-
-Met \code{rbind()} worden alle 'positieve' postcodes samengevoegd tot 1 \code{data.frame}, dat een geldig sf-object is.
+\item{...}{ignored, allows for future extensions}
 }
 \description{
-Met deze functie kan bepaald worden of er binnen een geografisch bereik van een postcode een minimaal aantal casussen (van bijv. een virus, isolaat of aandoening) voorgekomen is.
+Based on the \link{postcodes4_afstanden} data set, this function determines the specified minimum number of cases within a certain radius.
 }
 \examples{
-\dontrun{
-noro <- certedb_getmmb(where = db$t.testcode == "PRNORO",
-                       zipcodes = TRUE)
+noro <- data.frame(postcode = c(9000:9100),
+                   n = floor(runif(101, 0, 3)))
+                   
+radial_check <- cases_within_radius(noro, radius_km = 10, minimal_cases = 10)
+radial_check
 
-# als je cases_within_radius() op 'normale' data gebruikt, worden de
-# postcodes van de dataset 'postcodes4' genomen, wordt de inputdata
-# gefilterd op positieven, zo nodig gegroepeerd op postcode en geteld,
-# en wordt dan cases_within_radius.sf() gedraaid.
-noro \%>\%
-   cases_within_radius(radius_km = 5,
-                       minimal_cases = 10,
-                       topic = "norovirus",
-                       slack = TRUE)
+if (require("certeplot2")) {
 
+  radial_check \%>\%
+    add_map() \%>\%
+    filter_geolocation(provincie == "Friesland") \%>\%
+    plot2(category = cases_within_range,
+          datalabels = FALSE,
+          colour_fill = "viridis")
 
-
-data.frame(ordernr = c("abc", "def"),
-           postcode = c(8900, 8901),
-           n = c(10, 20)) \%>\%
-  add_map("pc4") \%>\%
-  cases_within_radius(radius_km = 5, # <- dit is dus cases_within_radius.sf()
-                      minimal_cases = 10) \%>\%
-  format(topic = "SARS-CoV-2") \%>\%
-  teams("early-warning")
 }
 }

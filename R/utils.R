@@ -17,6 +17,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+#' @importFrom dplyr `%>%`
+dplyr::`%>%`
+
 check_is_installed <- function(pkgs) {
   to_install <- pkgs[which(!pkgs %in% rownames(utils::installed.packages()))]
   if (length(to_install) > 0) {
@@ -37,3 +40,31 @@ check_is_installed <- function(pkgs) {
     return(TRUE)
   }
 }
+
+globalVariables(c(".",
+                  "afstand",
+                  "afstand_km",
+                  "arrange_at",
+                  "bind_rows",
+                  "count",
+                  "gemeente",
+                  "ggdregio",
+                  "is_installed",
+                  "jeugdregio",
+                  "n",
+                  "nuts3",
+                  "percentage",
+                  "plaats",
+                  "postcode",
+                  "postcode.x",
+                  "postcode.y",
+                  "postcodes",
+                  "postcodes4",
+                  "postcodes4_afstanden",
+                  "provincie",
+                  "pull",
+                  "row_number",
+                  "select",
+                  "teams",
+                  "uitslag_int",
+                  "veiligheidsregio"))

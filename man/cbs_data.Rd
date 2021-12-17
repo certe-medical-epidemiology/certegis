@@ -3,55 +3,56 @@
 \docType{data}
 \name{cbs_data}
 \alias{cbs_data}
-\alias{gemeenten}
-\alias{ggdregios}
-\alias{jeugdregios}
-\alias{nuts3regios}
-\alias{postcodes4}
-\alias{provincies}
-\alias{veiligheidsregios}
+\alias{geo_postcodes4}
+\alias{geo_postcodes3}
+\alias{geo_postcodes2}
+\alias{geo_ggdregios}
+\alias{geo_nuts3}
+\alias{geo_gemeenten}
+\alias{geo_provincies}
 \title{Data Sets with Geometries of Dutch Provinces, Municipalities and Zipcodes}
 \format{
 A \code{sf}/\link{data.frame} with 3 variables:
 \itemize{
-\item \code{...}\cr column name of the identifier, which is the singular form of the name of the data set (i.e., \code{gemeenten$gemeente})
-\item \code{area_km2}\cr area in square kilometres
+\item \code{...}\cr column name of the identifier, which is the singular form of the name of the data set (i.e., \code{geo_gemeenten$gemeente})
+\item \code{inwoners}\cr number of inhabitants
+\item \code{oppervlakte_km2}\cr area in square kilometres
 \item \code{geometry}\cr the polygonal form of the area
 }
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 25 rows and 3 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 180 rows and 4 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 42 rows and 3 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 22 rows and 4 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 40 rows and 3 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 25 rows and 4 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 1060 rows and 3 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 40 rows and 4 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 12 rows and 3 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 352 rows and 4 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 25 rows and 3 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 12 rows and 4 columns.
 }
 \usage{
-gemeenten
+geo_postcodes4
 
-ggdregios
+geo_postcodes3
 
-jeugdregios
+geo_postcodes2
 
-nuts3regios
+geo_ggdregios
 
-postcodes4
+geo_nuts3
 
-provincies
+geo_gemeenten
 
-veiligheidsregios
+geo_provincies
 }
 \description{
 Data Sets with Geometries of Dutch Provinces, Municipalities and Zipcodes
 }
 \details{
-All data sets (maps) contain all of the Netherlands, except for \link{postcodes4} which only contains the northern Netherlands.
+All data sets (maps) contain all of the Netherlands, except for the \verb{geo_postcodes*} maps which only contains the Northern Netherlands.
 
-See \href{https://github.com/certe-medical-epidemiology/certedata/blob/main/data-raw/update_gis.R}{the repository file} to update these data sets.
+See \href{https://github.com/certe-medical-epidemiology/certegis/blob/main/data-raw/update_gis.R}{the repository file} to update these data sets.
 }
 \keyword{datasets}

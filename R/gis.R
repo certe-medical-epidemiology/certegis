@@ -19,32 +19,88 @@
 
 #' Geodata Functions
 #' 
+#' These are function to work with geographical data.
 #' @param data data to join left to the geodata
-#' @param maptype type of geometric data, must be one of: `r paste0("``\"", data(package = "certegis")$results[, "Item"], "\"``", collapse = ", ")`
+#' @param maptype type of geometric data, must be one of: `r paste0("``\"", gsub("geo_", "", included_datasets()), "\"``", collapse = ", ")`. For [add_map()], this is determined automatically if left blank.
+#' @param cut_northern_nl [logical] to keep only Northern Netherlands
 #' @rdname GIS
-#' @importFrom dplyr left_join
 #' @return An `sf` model. The column with geodata is always called `"geometry"`.
 #' @export
-add_map <- function(data, maptype = "postcodes4", by = NULL, cut_northern_nl = TRUE, ...) {
-  check_is_installed("sf")
-  data_ <- data
-  map_ <- getExportedValue(name = maptype, ns = asNamespace("certegis"))
-  if (isTRUE(cut_northern_nl)) {
-    map_ <- cut_northern_nl(map_)
+#' @examples 
+#' library(sf)
+#' 
+#' get_map() # defaults to the geo_postcodes4 data set
+get_map <- function(maptype = "postcodes4") {
+  
+  maptype <- gsub("pc", "postcodes", tolower(maptype[1L]))
+  if (maptype %unlike% "^geo_") {
+    maptype <- paste0("geo_", maptype)
   }
+  if (!maptype %in% included_datasets()) {
+    stop("invalid 'maptype', invalid types are ", paste0("'", gsub("geo_", "", included_datasets()), "'", collapse = ", "))
+  }
+  getExportedValue(name = maptype, ns = asNamespace("certegis"))
+}
+
+#' @rdname GIS
+#' @param data data set to join left to the geodata
+#' @param by column to join by
+#' @importFrom dplyr left_join group_by summarise across everything
+#' @export
+#' @examples 
+#' data.frame(postcode = 7702, number_of_cases = 3) %>% 
+#'   add_map()
+add_map <- function(data, maptype = NULL, by = NULL, cut_northern_nl = TRUE) {
+  check_is_installed("sf")
+  
+  if (is.null(maptype)) {
+    # determine automatically
+    common_cols <- intersect(colnames(data), gsub("[ns]$", "", gsub("^geo_", "", included_datasets())))
+    if (length(common_cols) == 0) {
+      # try zip codes
+      if ("postcode" %in% colnames(data)) {
+        maptype <- paste0("postcodes", max(nchar(data$postcode)))
+      } else {
+        stop("No common column found to join.")
+      }
+    } else {
+      maptype <- included_datasets()[included_datasets() %like% common_cols][1]
+    }
+  }
+  
+  geo_data <- get_map(maptype = maptype)
+  if (isTRUE(cut_northern_nl) && maptype %unlike% "postcodes") {
+    geo_data <- cut_northern_nl(geo_data)
+  }
+
   if (is.null(by)) {
     # search for the 'by'
-    by <- colnames(data_)[colnames(data_) %in% colnames(map_)][1]
-    if (is.na(by)) {
+    by <- intersect(colnames(data), colnames(geo_data))
+    if (length(by) == 0) {
       stop("No common column found to join.")
     } else {
       message("Joining, by ", by)
     }
   }
-  map_[, by] <- as.character(map_[, by, drop = TRUE])
-  data_[, by] <- as.character(data_[, by, drop = TRUE])
-  joined <- suppressMessages(left_join(map_, data_, by = by))
-  sf::st_as_sf(joined)
+  
+  if (length(data[, by, drop = TRUE]) > length(unique(data[, by, drop = TRUE]))) {
+    warning("Column '", by, "'in `data` should have unique values for `add_map()`, summarising all numeric columns of `data`", call. = FALSE)
+    data <- data %>% 
+      group_by(across(by)) %>% 
+      summarise(across(everything(),
+                       function(x) {
+                         if (is.numeric(x)) {
+                           sum(x, na.rm = TRUE)
+                         } else {
+                           x[1]
+                         }
+                       }))
+  }
+  
+  geo_data[, by] <- as.character(geo_data[, by, drop = TRUE])
+  data[, by] <- as.character(data[, by, drop = TRUE])
+  sf::st_as_sf(as.data.frame(suppressMessages(left_join(geo_data, data, by = by)),
+                             stringsAsFactors = FALSE))
 }
 
 #' @rdname GIS
@@ -59,6 +115,8 @@ is.sf <- function(sf_data) {
 #' @importFrom dplyr `%>%` mutate filter 
 #' @details [cut_northern_nl()] cuts any geometry on the northern three provinces of the Netherlands.
 #' @export
+#' @examples 
+#' geo_provincies %>% cut_northern_nl()
 cut_northern_nl <- function(sf_data) {
   check_is_installed("sf")
   
@@ -114,6 +172,9 @@ cut_northern_nl <- function(sf_data) {
 #' @param xmin,xmax,ymin,ymax coordination filters for `sf_data`
 #' @details [filter_sf()] filters an sf object on coordinates, and is internally used by [cut_northern_nl()].
 #' @export
+#' @examples 
+#' # filter on a latitude of 52.5 degrees and higher
+#' geo_provincies %>% filter_sf(ymin = 52.5)
 filter_sf <- function(sf_data, xmin = NULL, xmax = NULL, ymin = NULL, ymax = NULL) {
   check_is_installed("sf")
   
@@ -129,19 +190,22 @@ filter_sf <- function(sf_data, xmin = NULL, xmax = NULL, ymin = NULL, ymax = NUL
 }
 
 #' @rdname GIS
+#' @param ... filters to set
+#' @param col_zipcode column with zip codes
 #' @importFrom dplyr `%>%` mutate filter 
 #' @export
 #' @examples 
 #' if (require("certeplot2")) {
 #' 
-#'   postcodes4 %>% 
+#'   geo_postcodes4 %>% 
 #'     filter_geolocation(gemeente == "Tytsjerksteradiel") %>% 
-#'     plot2()
+#'     plot2(category = inwoners,
+#'           datalabels = postcode)
 #' 
 #' }
 filter_geolocation <- function(sf_data, ..., col_zipcode = NULL) {
   if (is.null(col_zipcode)) {
-    col_zipcode <- rev(sort(colnames(sf_data)[which(colnames(sf_data) %in% c("postcode", paste0("pc", 2:6)))]))[1]
+    col_zipcode <- rev(sort(colnames(sf_data)[which(colnames(sf_data) %in% c("postcode", paste0("pc", 2:4)))]))[1]
     if (is.na(col_zipcode)) {
       stop("set column for zipcodes with 'col_zipcode'")
     }
@@ -164,6 +228,9 @@ filter_geolocation <- function(sf_data, ..., col_zipcode = NULL) {
 #' @param sf_data a data set of class 'sf'
 #' @details [latitude()] and [longitude()] return these specific geographic properties of `sf_data`.
 #' @export
+#' @examples 
+#' latitude(geo_provincies)
+#' longitude(geo_provincies)
 latitude <- function(sf_data) {
   check_is_installed("sf")
   

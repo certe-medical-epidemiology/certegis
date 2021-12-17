@@ -17,6 +17,14 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+CBS_VERSION <- c(postcodes = "2020",
+                 gebiedsindelingen = "2021 v1")
+
+included_datasets <- function() {
+  DATASETS <- utils::data(package = "certegis")$results[, "Item", drop = TRUE]
+  DATASETS[DATASETS %like% "^geo"]
+}
+
 #' Data Set with Dutch Zipcodes, Cities, Municipalities and Province
 #' @format A [data.frame] with `r format(nrow(postcodes), big.mark = ",")` observations and `r ncol(postcodes)` variables:
 #' - `postcode`\cr zipcode, contains PC2, PC3 and PC4
@@ -47,32 +55,34 @@
 
 #' Data Sets with Geometries of Dutch Provinces, Municipalities and Zipcodes
 #' @format A `sf`/[data.frame] with 3 variables:
-#' - `...`\cr column name of the identifier, which is the singular form of the name of the data set (i.e., `gemeenten$gemeente`)
-#' - `area_km2`\cr area in square kilometres
+#' - `...`\cr column name of the identifier, which is the singular form of the name of the data set (i.e., `geo_gemeenten$gemeente`)
+#' - `inwoners`\cr number of inhabitants
+#' - `oppervlakte_km2`\cr area in square kilometres
 #' - `geometry`\cr the polygonal form of the area
-#' @details All data sets (maps) contain all of the Netherlands, except for [postcodes4] which only contains the northern Netherlands.
+#' @details All data sets (maps) contain all of the Netherlands, except for the `geo_postcodes*` maps which only contains the Northern Netherlands.
 #' @name cbs_data
 #' @rdname cbs_data
-#' @details See [the repository file](https://github.com/certe-medical-epidemiology/certedata/blob/main/data-raw/update_gis.R) to update these data sets.
-"gemeenten"
+#' @details See [the repository file](https://github.com/certe-medical-epidemiology/certegis/blob/main/data-raw/update_gis.R) to update these data sets.
+"geo_postcodes4"
 
 #' @rdname cbs_data
-"ggdregios"
+"geo_postcodes3"
 
 #' @rdname cbs_data
-"jeugdregios"
+"geo_postcodes2"
 
 #' @rdname cbs_data
-"nuts3regios"
+"geo_ggdregios"
 
 #' @rdname cbs_data
-"postcodes4"
+"geo_nuts3"
 
 #' @rdname cbs_data
-"provincies"
+"geo_gemeenten"
 
 #' @rdname cbs_data
-"veiligheidsregios"
+"geo_provincies"
+
 
 #' Distance from Zipcode to Zipcode
 #' 
