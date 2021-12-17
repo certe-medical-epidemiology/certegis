@@ -36,6 +36,14 @@ jobs:
       CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
     steps:
       - uses: actions/checkout@v2
+      
+      - name: Install gdal on macOS
+        if: runner.os == 'macOS'
+        run: |
+          brew install proj
+          brew install gdal
+          brew link --overwrite gcc
+        shell: bash
 
       - uses: r-lib/actions/setup-r@v1
         with:

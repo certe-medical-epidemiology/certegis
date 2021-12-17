@@ -63,6 +63,7 @@ jobs:
       - name: Install gdal on macOS
         if: runner.os == 'macOS'
         run: |
+          brew install proj
           brew install gdal
           brew link --overwrite gcc
         shell: bash
