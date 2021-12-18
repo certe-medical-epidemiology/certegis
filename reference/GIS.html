@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">certegis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.3</span>
       </span>
     </div>
 
@@ -78,11 +78,11 @@
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">get_map</span><span class="op">(</span>maptype <span class="op">=</span> <span class="st">"postcodes4"</span><span class="op">)</span>
 
-<span class="fu">add_map</span><span class="op">(</span><span class="va">data</span>, maptype <span class="op">=</span> <span class="cn">NULL</span>, by <span class="op">=</span> <span class="cn">NULL</span>, cut_northern_nl <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu">add_map</span><span class="op">(</span><span class="va">data</span>, maptype <span class="op">=</span> <span class="cn">NULL</span>, by <span class="op">=</span> <span class="cn">NULL</span>, crop_certe <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
 <span class="fu">is.sf</span><span class="op">(</span><span class="va">sf_data</span><span class="op">)</span>
 
-<span class="fu">cut_northern_nl</span><span class="op">(</span><span class="va">sf_data</span><span class="op">)</span>
+<span class="fu">crop_certe</span><span class="op">(</span><span class="va">sf_data</span><span class="op">)</span>
 
 <span class="fu">filter_sf</span><span class="op">(</span><span class="va">sf_data</span>, xmin <span class="op">=</span> <span class="cn">NULL</span>, xmax <span class="op">=</span> <span class="cn">NULL</span>, ymin <span class="op">=</span> <span class="cn">NULL</span>, ymax <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
 
@@ -101,8 +101,8 @@
 <dd><p>data set to join left to the geodata</p></dd>
 <dt>by</dt>
 <dd><p>column to join by</p></dd>
-<dt>cut_northern_nl</dt>
-<dd><p><a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to keep only Northern Netherlands</p></dd>
+<dt>crop_certe</dt>
+<dd><p><a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to keep only the Certe region</p></dd>
 <dt>sf_data</dt>
 <dd><p>a data set of class 'sf'</p></dd>
 <dt>xmin, xmax, ymin, ymax</dt>
@@ -118,14 +118,17 @@
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p><code>cut_northern_nl()</code> cuts any geometry on the northern three provinces of the Netherlands.</p>
-<p><code>filter_sf()</code> filters an sf object on coordinates, and is internally used by <code>cut_northern_nl()</code>.</p>
+    <p><code>crop_certe()</code> cuts any geometry on the Certe region (more or less the Northern three provinces of the Netherlands).</p>
+<p><code>filter_sf()</code> filters an sf object on coordinates, and is internally used by <code>crop_certe()</code>.</p>
 <p><code>latitude()</code> and <code>longitude()</code> return these specific geographic properties of <code>sf_data</code>.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Registered S3 method overwritten by 'sf':</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   method   from    </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   print.sf certegis</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1; sf_use_s2() is TRUE</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu">get_map</span><span class="op">(</span><span class="op">)</span> <span class="co"># defaults to the geo_postcodes4 data set</span></span>
@@ -146,6 +149,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8      7754      370      10.3784451 MULTIPOLYGON (((6.778744 52...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9      7755      370       9.0296660 MULTIPOLYGON (((6.811244 52...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10     7756      250       8.8123596 MULTIPOLYGON (((6.845373 52...</span>
+<span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>postcode <span class="op">=</span> <span class="fl">7702</span>, number_of_cases <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span class="r-in">  <span class="fu">add_map</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Joining, by postcode</span>
@@ -177,7 +181,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8  MULTIPOLYGON (((6.778744 52...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9  MULTIPOLYGON (((6.811244 52...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10 MULTIPOLYGON (((6.845373 52...</span>
-<span class="r-in"><span class="va">geo_provincies</span> <span class="op">%&gt;%</span> <span class="fu">cut_northern_nl</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="va">geo_provincies</span> <span class="op">%&gt;%</span> <span class="fu">crop_certe</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 3 features and 3 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: MULTIPOLYGON</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
@@ -187,6 +192,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   Drenthe   493590        2680.343 MULTIPOLYGON (((6.493505 53...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 Friesland   649965        3531.061 MULTIPOLYGON (((6.176871 53...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3 Groningen   585840        2393.481 MULTIPOLYGON (((6.778757 53...</span>
+<span class="r-in"></span>
 <span class="r-in"><span class="co"># filter on a latitude of 52.5 degrees and higher</span></span>
 <span class="r-in"><span class="va">geo_provincies</span> <span class="op">%&gt;%</span> <span class="fu">filter_sf</span><span class="op">(</span>ymin <span class="op">=</span> <span class="fl">52.5</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 2 features and 3 fields</span>
@@ -197,6 +203,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   provincie inwoners oppervlakte_km2                       geometry</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   Drenthe   493590        2680.343 MULTIPOLYGON (((6.493505 53...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 Friesland   649965        3531.061 MULTIPOLYGON (((6.176871 53...</span>
+<span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://certe-medical-epidemiology.github.io/certeplot2" class="external-link">"certeplot2"</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"></span>
 <span class="r-in">  <span class="va">geo_postcodes4</span> <span class="op">%&gt;%</span> </span>
@@ -207,6 +214,7 @@
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: certeplot2</span>
 <span class="r-plt img"><img src="GIS-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"></span>
 <span class="r-in"><span class="fu">latitude</span><span class="op">(</span><span class="va">geo_provincies</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 52.86228 52.52686 53.10846 52.06070 53.21675 51.20786 51.56101 52.58149</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] 52.44379 52.08348 51.45178 51.94913</span>
