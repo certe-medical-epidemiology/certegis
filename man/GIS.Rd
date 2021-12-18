@@ -4,7 +4,7 @@
 \alias{get_map}
 \alias{add_map}
 \alias{is.sf}
-\alias{cut_northern_nl}
+\alias{crop_certe}
 \alias{filter_sf}
 \alias{filter_geolocation}
 \alias{latitude}
@@ -13,11 +13,11 @@
 \usage{
 get_map(maptype = "postcodes4")
 
-add_map(data, maptype = NULL, by = NULL, cut_northern_nl = TRUE)
+add_map(data, maptype = NULL, by = NULL, crop_certe = TRUE)
 
 is.sf(sf_data)
 
-cut_northern_nl(sf_data)
+crop_certe(sf_data)
 
 filter_sf(sf_data, xmin = NULL, xmax = NULL, ymin = NULL, ymax = NULL)
 
@@ -34,7 +34,7 @@ longitude(sf_data)
 
 \item{by}{column to join by}
 
-\item{cut_northern_nl}{\link{logical} to keep only Northern Netherlands}
+\item{crop_certe}{\link{logical} to keep only the Certe region}
 
 \item{sf_data}{a data set of class 'sf'}
 
@@ -51,9 +51,9 @@ An \code{sf} model. The column with geodata is always called \code{"geometry"}.
 These are function to work with geographical data.
 }
 \details{
-\code{\link[=cut_northern_nl]{cut_northern_nl()}} cuts any geometry on the northern three provinces of the Netherlands.
+\code{\link[=crop_certe]{crop_certe()}} cuts any geometry on the Certe region (more or less the Northern three provinces of the Netherlands).
 
-\code{\link[=filter_sf]{filter_sf()}} filters an sf object on coordinates, and is internally used by \code{\link[=cut_northern_nl]{cut_northern_nl()}}.
+\code{\link[=filter_sf]{filter_sf()}} filters an sf object on coordinates, and is internally used by \code{\link[=crop_certe]{crop_certe()}}.
 
 \code{\link[=latitude]{latitude()}} and \code{\link[=longitude]{longitude()}} return these specific geographic properties of \code{sf_data}.
 }
@@ -61,11 +61,15 @@ These are function to work with geographical data.
 library(sf)
 
 get_map() # defaults to the geo_postcodes4 data set
+
 data.frame(postcode = 7702, number_of_cases = 3) \%>\% 
   add_map()
-geo_provincies \%>\% cut_northern_nl()
+
+geo_provincies \%>\% crop_certe()
+
 # filter on a latitude of 52.5 degrees and higher
 geo_provincies \%>\% filter_sf(ymin = 52.5)
+
 if (require("certeplot2")) {
 
   geo_postcodes4 \%>\% 
@@ -74,6 +78,7 @@ if (require("certeplot2")) {
           datalabels = postcode)
 
 }
+
 latitude(geo_provincies)
 longitude(geo_provincies)
 }

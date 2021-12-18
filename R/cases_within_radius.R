@@ -22,16 +22,24 @@
 #' Based on the [postcodes4_afstanden] data set, this function determines the specified minimum number of cases within a certain radius.
 #' @param data data set containing a column 'postcode'
 #' @param radius_km radius in kilometres from each zip code. The search `*diameter*` is twice this number (since zip codes e.g. to the west and to the east are searched).
-#' @param minimal_cases minimum number of cases to search for
+#' @param minimum_cases minimum number of cases to search for
 #' @param column_count column name in `data` with the number of case counts
 #' @param ... ignored, allows for future extensions
 #' @importFrom dplyr `%>%` filter select pull bind_rows
 #' @export
 #' @examples
-#' noro <- data.frame(postcode = c(9000:9100),
-#'                    n = floor(runif(101, 0, 3)))
-#'                    
-#' radial_check <- cases_within_radius(noro, radius_km = 10, minimal_cases = 10)
+#' library(dplyr)
+#' postcodes_friesland <- postcodes %>% 
+#'   filter(postcode > 999, provincie == "Friesland") %>% 
+#'   pull(postcode)
+#' fivenum(postcodes_friesland)
+#' 
+#' noro <- data.frame(postcode = postcodes_friesland,
+#'                    n = floor(runif(length(postcodes_friesland),
+#'                                    min = 0, max = 3)))
+#' head(noro)
+#' 
+#' radial_check <- cases_within_radius(noro, radius_km = 10, minimum_cases = 10)
 #' radial_check
 #' 
 #' if (require("certeplot2")) {
@@ -40,11 +48,12 @@
 #'     add_map() %>%
 #'     filter_geolocation(provincie == "Friesland") %>%
 #'     plot2(category = cases_within_range,
+#'           legend.title = "Cases",
 #'           datalabels = FALSE,
 #'           colour_fill = "viridis")
 #' 
 #' }
-cases_within_radius <- function(data, radius_km = 10, minimal_cases = 10, column_count = NULL, ...) {
+cases_within_radius <- function(data, radius_km = 10, minimum_cases = 10, column_count = NULL, ...) {
   if (!"postcode" %in% colnames(data)) {
     stop("`data` must contain a column 'postcode'")
   }
@@ -58,8 +67,9 @@ cases_within_radius <- function(data, radius_km = 10, minimal_cases = 10, column
     }
   }
   unique_pc <- unique(data$postcode)
-  warns <- data.frame(postcode = character(0),
-                      cases_within_range = integer(0))
+  warns <- data.frame(postcode = as.character(unique_pc),
+                      cases_within_range = NA_integer_,
+                      minimum_met = FALSE)
   for (i in seq_len(length(unique_pc))) {
     pcs_within_radius <- certegis::postcodes4_afstanden %>% 
       filter((postcode.x == as.character(unique_pc[i]) & postcode.y %in% as.character(data$postcode)) |
@@ -72,12 +82,11 @@ cases_within_radius <- function(data, radius_km = 10, minimal_cases = 10, column
       filter(postcode %in% pcs_within_radius) %>% 
       pull(column_count) %>% 
       sum()
-    if (n_sum >= minimal_cases) {
+    if (n_sum >= minimum_cases) {
       message("Found ", n_sum, " cases within ", radius_km, " km of ", unique_pc[i])
-      warns <- warns %>% 
-        bind_rows(data.frame(postcode = as.character(unique_pc[i]),
-                             cases_within_range = as.integer(n_sum)))
+      warns$minimum_met[i] <- TRUE
     }
+    warns$cases_within_range[i] <- as.integer(n_sum)
   }
   warns
 }

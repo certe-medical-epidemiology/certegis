@@ -7,7 +7,7 @@
 cases_within_radius(
   data,
   radius_km = 10,
-  minimal_cases = 10,
+  minimum_cases = 10,
   column_count = NULL,
   ...
 )
@@ -17,7 +17,7 @@ cases_within_radius(
 
 \item{radius_km}{radius in kilometres from each zip code. The search \verb{*diameter*} is twice this number (since zip codes e.g. to the west and to the east are searched).}
 
-\item{minimal_cases}{minimum number of cases to search for}
+\item{minimum_cases}{minimum number of cases to search for}
 
 \item{column_count}{column name in \code{data} with the number of case counts}
 
@@ -27,10 +27,17 @@ cases_within_radius(
 Based on the \link{postcodes4_afstanden} data set, this function determines the specified minimum number of cases within a certain radius.
 }
 \examples{
-noro <- data.frame(postcode = c(9000:9100),
-                   n = floor(runif(101, 0, 3)))
-                   
-radial_check <- cases_within_radius(noro, radius_km = 10, minimal_cases = 10)
+library(dplyr)
+postcodes_friesland <- postcodes \%>\% 
+  filter(postcode > 999, provincie == "Friesland") \%>\% 
+  pull(postcode)
+  
+noro <- data.frame(postcode = postcodes_friesland,
+                   n = floor(runif(length(postcodes_friesland),
+                                   min = 0, max = 3)))
+head(noro)
+
+radial_check <- cases_within_radius(noro, radius_km = 10, minimum_cases = 10)
 radial_check
 
 if (require("certeplot2")) {

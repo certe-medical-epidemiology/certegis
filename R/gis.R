@@ -22,7 +22,7 @@
 #' These are function to work with geographical data.
 #' @param data data to join left to the geodata
 #' @param maptype type of geometric data, must be one of: `r paste0("``\"", gsub("geo_", "", included_datasets()), "\"``", collapse = ", ")`. For [add_map()], this is determined automatically if left blank.
-#' @param cut_northern_nl [logical] to keep only Northern Netherlands
+#' @param crop_certe [logical] to keep only the Certe region
 #' @rdname GIS
 #' @return An `sf` model. The column with geodata is always called `"geometry"`.
 #' @export
@@ -48,9 +48,10 @@ get_map <- function(maptype = "postcodes4") {
 #' @importFrom dplyr left_join group_by summarise across everything
 #' @export
 #' @examples 
+#' 
 #' data.frame(postcode = 7702, number_of_cases = 3) %>% 
 #'   add_map()
-add_map <- function(data, maptype = NULL, by = NULL, cut_northern_nl = TRUE) {
+add_map <- function(data, maptype = NULL, by = NULL, crop_certe = TRUE) {
   check_is_installed("sf")
   
   if (is.null(maptype)) {
@@ -69,8 +70,8 @@ add_map <- function(data, maptype = NULL, by = NULL, cut_northern_nl = TRUE) {
   }
   
   geo_data <- get_map(maptype = maptype)
-  if (isTRUE(cut_northern_nl) && maptype %unlike% "postcodes") {
-    geo_data <- cut_northern_nl(geo_data)
+  if (isTRUE(crop_certe) && maptype %unlike% "postcodes") {
+    geo_data <- crop_certe(geo_data)
   }
 
   if (is.null(by)) {
@@ -113,11 +114,12 @@ is.sf <- function(sf_data) {
 
 #' @rdname GIS
 #' @importFrom dplyr `%>%` mutate filter 
-#' @details [cut_northern_nl()] cuts any geometry on the northern three provinces of the Netherlands.
+#' @details [crop_certe()] cuts any geometry on the Certe region (more or less the Northern three provinces of the Netherlands).
 #' @export
 #' @examples 
-#' geo_provincies %>% cut_northern_nl()
-cut_northern_nl <- function(sf_data) {
+#' 
+#' geo_provincies %>% crop_certe()
+crop_certe <- function(sf_data) {
   check_is_installed("sf")
   
   postcode_filter <- certegis::postcodes %>%
@@ -170,9 +172,10 @@ cut_northern_nl <- function(sf_data) {
 #' @rdname GIS
 #' @param sf_data a data set of class 'sf'
 #' @param xmin,xmax,ymin,ymax coordination filters for `sf_data`
-#' @details [filter_sf()] filters an sf object on coordinates, and is internally used by [cut_northern_nl()].
+#' @details [filter_sf()] filters an sf object on coordinates, and is internally used by [crop_certe()].
 #' @export
 #' @examples 
+#' 
 #' # filter on a latitude of 52.5 degrees and higher
 #' geo_provincies %>% filter_sf(ymin = 52.5)
 filter_sf <- function(sf_data, xmin = NULL, xmax = NULL, ymin = NULL, ymax = NULL) {
@@ -195,6 +198,7 @@ filter_sf <- function(sf_data, xmin = NULL, xmax = NULL, ymin = NULL, ymax = NUL
 #' @importFrom dplyr `%>%` mutate filter 
 #' @export
 #' @examples 
+#' 
 #' if (require("certeplot2")) {
 #' 
 #'   geo_postcodes4 %>% 
@@ -229,6 +233,7 @@ filter_geolocation <- function(sf_data, ..., col_zipcode = NULL) {
 #' @details [latitude()] and [longitude()] return these specific geographic properties of `sf_data`.
 #' @export
 #' @examples 
+#' 
 #' latitude(geo_provincies)
 #' longitude(geo_provincies)
 latitude <- function(sf_data) {
@@ -258,4 +263,15 @@ longitude <- function(sf_data) {
       suppressWarnings(sf::st_centroid(sf_data))
     )
   )$X
+}
+
+#' @noRd
+#' @method print sf
+#' @export
+print.sf <- function(x, n = 10, ...) {
+  if ("sf" %in% rownames(utils::installed.packages())) {
+    sf:::print.sf(x = x, n = n, ...)
+  } else {
+    print.data.frame(x)
+  }
 }
