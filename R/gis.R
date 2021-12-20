@@ -264,14 +264,3 @@ longitude <- function(sf_data) {
     )
   )$X
 }
-
-#' @noRd
-#' @method print sf
-#' @export
-print.sf <- function(x, n = 10, ...) {
-  if ("sf" %in% rownames(utils::installed.packages())) {
-    sf:::print.sf(x = x, n = n, ...)
-  } else {
-    print.data.frame(x)
-  }
-}

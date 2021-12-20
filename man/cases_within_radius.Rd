@@ -31,14 +31,15 @@ library(dplyr)
 postcodes_friesland <- postcodes \%>\% 
   filter(postcode > 999, provincie == "Friesland") \%>\% 
   pull(postcode)
-  
+fivenum(postcodes_friesland)
+
 noro <- data.frame(postcode = postcodes_friesland,
                    n = floor(runif(length(postcodes_friesland),
                                    min = 0, max = 3)))
 head(noro)
 
 radial_check <- cases_within_radius(noro, radius_km = 10, minimum_cases = 10)
-radial_check
+head(radial_check)
 
 if (require("certeplot2")) {
 
@@ -46,6 +47,7 @@ if (require("certeplot2")) {
     add_map() \%>\%
     filter_geolocation(provincie == "Friesland") \%>\%
     plot2(category = cases_within_range,
+          legend.title = "Cases",
           datalabels = FALSE,
           colour_fill = "viridis")
 

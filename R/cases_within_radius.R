@@ -40,7 +40,7 @@
 #' head(noro)
 #' 
 #' radial_check <- cases_within_radius(noro, radius_km = 10, minimum_cases = 10)
-#' radial_check
+#' head(radial_check)
 #' 
 #' if (require("certeplot2")) {
 #' 
@@ -81,9 +81,8 @@ cases_within_radius <- function(data, radius_km = 10, minimum_cases = 10, column
     n_sum <- data %>% 
       filter(postcode %in% pcs_within_radius) %>% 
       pull(column_count) %>% 
-      sum()
+      sum(na.rm = TRUE)
     if (n_sum >= minimum_cases) {
-      message("Found ", n_sum, " cases within ", radius_km, " km of ", unique_pc[i])
       warns$minimum_met[i] <- TRUE
     }
     warns$cases_within_range[i] <- as.integer(n_sum)
