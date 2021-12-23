@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">certegis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.10</span>
       </span>
     </div>
 
@@ -113,8 +113,6 @@
 <span class="r-in"><span class="va">postcodes_friesland</span> <span class="op">&lt;-</span> <span class="va">postcodes</span> <span class="op">%&gt;%</span> </span>
 <span class="r-in">  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">postcode</span> <span class="op">&gt;</span> <span class="fl">999</span>, <span class="va">provincie</span> <span class="op">==</span> <span class="st">"Friesland"</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span class="r-in">  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">postcode</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/fivenum.html" class="external-link">fivenum</a></span><span class="op">(</span><span class="va">postcodes_friesland</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 8388.0 8551.5 8833.0 9090.0 9873.0</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">noro</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>postcode <span class="op">=</span> <span class="va">postcodes_friesland</span>,</span>
 <span class="r-in">                   n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">postcodes_friesland</span><span class="op">)</span>,</span>
@@ -122,22 +120,22 @@
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">noro</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   postcode n</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     8388 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     8389 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     8391 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     8389 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     8391 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4     8392 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     8393 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     8394 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     8393 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     8394 0</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">radial_check</span> <span class="op">&lt;-</span> <span class="fu">cases_within_radius</span><span class="op">(</span><span class="va">noro</span>, radius_km <span class="op">=</span> <span class="fl">10</span>, minimum_cases <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using column 'n' for cases_within_radius()</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">radial_check</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   postcode cases_within_range minimum_met</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     8388                 33        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     8389                 40        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     8391                 41        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     8392                 29        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     8388                 30        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     8389                 39        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     8391                 40        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     8392                 32        TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5     8393                 33        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     8394                 41        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     8394                 37        TRUE</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://certe-medical-epidemiology.github.io/certeplot2" class="external-link">"certeplot2"</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"></span>
@@ -145,7 +143,7 @@
 <span class="r-in">    <span class="fu"><a href="GIS.html">add_map</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span class="r-in">    <span class="fu"><a href="GIS.html">filter_geolocation</a></span><span class="op">(</span><span class="va">provincie</span> <span class="op">==</span> <span class="st">"Friesland"</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span class="r-in">    <span class="fu"><a href="https://certe-medical-epidemiology.github.io/certeplot2/reference/plot2.html" class="external-link">plot2</a></span><span class="op">(</span>category <span class="op">=</span> <span class="va">cases_within_range</span>,</span>
-<span class="r-in">          legend.title <span class="op">=</span> <span class="st">"Cases"</span>,</span>
+<span class="r-in">          category.title <span class="op">=</span> <span class="st">"Cases"</span>,</span>
 <span class="r-in">          datalabels <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span class="r-in">          colour_fill <span class="op">=</span> <span class="st">"viridis"</span><span class="op">)</span></span>
 <span class="r-in"></span>
