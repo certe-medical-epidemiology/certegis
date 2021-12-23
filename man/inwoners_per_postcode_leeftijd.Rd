@@ -3,7 +3,7 @@
 \docType{data}
 \name{inwoners_per_postcode_leeftijd}
 \alias{inwoners_per_postcode_leeftijd}
-\title{"Number of Inhabitants per Zipcode and Age"}
+\title{Number of Inhabitants per Zipcode and Age}
 \format{
 A \link{data.frame} with 99,220 observations and 5 variables:
 \itemize{
@@ -18,7 +18,7 @@ A \link{data.frame} with 99,220 observations and 5 variables:
 inwoners_per_postcode_leeftijd
 }
 \description{
-"Number of Inhabitants per Zipcode and Age"
+Number of Inhabitants per Zipcode and Age
 }
 \details{
 See \href{https://github.com/certe-medical-epidemiology/certedata/blob/main/data-raw/update_gis.R}{the repository file} to update this data set.

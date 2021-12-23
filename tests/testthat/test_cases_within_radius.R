@@ -17,7 +17,8 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-test_that("function_name works", {
-  expect_true(1 + 1 == 2)
-  expect_identical(1, 2 - 1)
+test_that("cases_within_radius works", {
+  df <- data.frame(postcode = c(9001:9010),
+                   n = floor(runif(10, min = 0, max = 30)))
+  expect_s3_class(cases_within_radius(df), "data.frame")
 })

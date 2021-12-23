@@ -138,12 +138,6 @@ crop_certe <- function(sf_data) {
   } else if ("ggdregio" %in% colnames(sf_data)) {
     sf_data <- sf_data %>%
       filter(ggdregio %in% postcode_filter$ggdregio)
-  } else if ("jeugdregio" %in% colnames(sf_data)) {
-    sf_data <- sf_data %>%
-      filter(jeugdregio %in% postcode_filter$jeugdregio)
-  } else if ("veiligheidsregio" %in% colnames(sf_data)) {
-    sf_data <- sf_data %>%
-      filter(veiligheidsregio %in% postcode_filter$veiligheidsregio)
   } else if ("postcode" %in% colnames(sf_data)) {
     sf_data <- sf_data %>%
       filter(!as.integer(gsub("[^0-9]|", "", postcode)) %in% c(0:7000, 8255, 8263))

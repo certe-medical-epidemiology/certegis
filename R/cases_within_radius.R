@@ -32,7 +32,6 @@
 #' postcodes_friesland <- postcodes %>% 
 #'   filter(postcode > 999, provincie == "Friesland") %>% 
 #'   pull(postcode)
-#' fivenum(postcodes_friesland)
 #' 
 #' noro <- data.frame(postcode = postcodes_friesland,
 #'                    n = floor(runif(length(postcodes_friesland),
@@ -48,7 +47,7 @@
 #'     add_map() %>%
 #'     filter_geolocation(provincie == "Friesland") %>%
 #'     plot2(category = cases_within_range,
-#'           legend.title = "Cases",
+#'           category.title = "Cases",
 #'           datalabels = FALSE,
 #'           colour_fill = "viridis")
 #' 

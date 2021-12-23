@@ -43,7 +43,7 @@ included_datasets <- function() {
 #' @details See [the repository file](https://github.com/certe-medical-epidemiology/certedata/blob/main/data-raw/update_gis.R) to update this data set.
 "postcodes"
 
-#' "Number of Inhabitants per Zipcode and Age"
+#' Number of Inhabitants per Zipcode and Age
 #' @format A [data.frame] with `r format(nrow(inwoners_per_postcode_leeftijd), big.mark = ",")` observations and `r ncol(inwoners_per_postcode_leeftijd)` variables:
 #' - `postcode`\cr zipcode, contains PC2, PC3 and PC4
 #' - `leeftijd`\cr age group per 5 years: 0-4, 5-9, ..., 90-94, 95+
