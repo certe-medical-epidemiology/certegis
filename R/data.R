@@ -17,8 +17,8 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-CBS_VERSION <- c(postcodes = "2020",
-                 gebiedsindelingen = "2021 v1")
+CBS_VERSION <- c(postcodes = "2021",
+                 gebiedsindelingen = "2022 v1")
 
 included_datasets <- function() {
   DATASETS <- utils::data(package = "certegis")$results[, "Item", drop = TRUE]
@@ -38,8 +38,8 @@ included_datasets <- function() {
 #' - `ggdregio`\cr name of the regional GGD service (public healthcare service)
 #' - `jeugdregio`\cr name of the regional youth service
 #' - `veiligheidsregio`\cr name of the regional safety service (public healthcare service)
-#' - `huishoudens`\cr number of households in the zipcode area
-#' - `huishouden_grootte`\cr mean size of the household sizes in the zipcode area
+# - `huishoudens`\cr number of households in the zipcode area
+# - `huishouden_grootte`\cr mean size of the household sizes in the zipcode area
 #' @details See [the repository file](https://github.com/certe-medical-epidemiology/certedata/blob/main/data-raw/update_gis.R) to update this data set.
 "postcodes"
 

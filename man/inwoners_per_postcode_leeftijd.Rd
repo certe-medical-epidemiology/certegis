@@ -5,7 +5,7 @@
 \alias{inwoners_per_postcode_leeftijd}
 \title{Number of Inhabitants per Zipcode and Age}
 \format{
-A \link{data.frame} with 99,220 observations and 5 variables:
+A \link{data.frame} with 99,260 observations and 5 variables:
 \itemize{
 \item \code{postcode}\cr zipcode, contains PC2, PC3 and PC4
 \item \code{leeftijd}\cr age group per 5 years: 0-4, 5-9, ..., 90-94, 95+

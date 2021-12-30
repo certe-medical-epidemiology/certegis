@@ -20,15 +20,15 @@ A \code{sf}/\link{data.frame} with 3 variables:
 \item \code{geometry}\cr the polygonal form of the area
 }
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 180 rows and 4 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 798 rows and 4 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 22 rows and 4 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 90 rows and 4 columns.
 
 An object of class \code{sf} (inherits from \code{data.frame}) with 25 rows and 4 columns.
 
 An object of class \code{sf} (inherits from \code{data.frame}) with 40 rows and 4 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 352 rows and 4 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 345 rows and 4 columns.
 
 An object of class \code{sf} (inherits from \code{data.frame}) with 12 rows and 4 columns.
 }

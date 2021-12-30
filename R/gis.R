@@ -123,7 +123,7 @@ crop_certe <- function(sf_data) {
   check_is_installed("sf")
   
   postcode_filter <- certegis::postcodes %>%
-    filter(provincie %in% c("Friesland", "Groningen", "Drenthe"))
+    filter(provincie %in% c("Friesland", "Fryslân", "Groningen", "Drenthe"))
   
   if ("provincie" %in% colnames(sf_data)) {
     sf_data <- sf_data %>%

@@ -5,7 +5,7 @@
 \alias{postcodes}
 \title{Data Set with Dutch Zipcodes, Cities, Municipalities and Province}
 \format{
-A \link{data.frame} with 4,961 observations and 13 variables:
+A \link{data.frame} with 4,963 observations and 9 variables:
 \itemize{
 \item \code{postcode}\cr zipcode, contains PC2, PC3 and PC4
 \item \code{inwoners}\cr total number of inhabitants
@@ -18,8 +18,6 @@ A \link{data.frame} with 4,961 observations and 13 variables:
 \item \code{ggdregio}\cr name of the regional GGD service (public healthcare service)
 \item \code{jeugdregio}\cr name of the regional youth service
 \item \code{veiligheidsregio}\cr name of the regional safety service (public healthcare service)
-\item \code{huishoudens}\cr number of households in the zipcode area
-\item \code{huishouden_grootte}\cr mean size of the household sizes in the zipcode area
 }
 }
 \usage{
