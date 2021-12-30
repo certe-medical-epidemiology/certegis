@@ -29,12 +29,12 @@
 #' @export
 #' @examples
 #' library(dplyr)
-#' postcodes_friesland <- postcodes %>% 
-#'   filter(postcode > 999, provincie == "Friesland") %>% 
+#' postcodes_drenthe <- postcodes %>% 
+#'   filter(postcode > 999, provincie == "Drenthe") %>% 
 #'   pull(postcode)
 #' 
-#' noro <- data.frame(postcode = postcodes_friesland,
-#'                    n = floor(runif(length(postcodes_friesland),
+#' noro <- data.frame(postcode = postcodes_drenthe,
+#'                    n = floor(runif(length(postcodes_drenthe),
 #'                                    min = 0, max = 3)))
 #' head(noro)
 #' 
@@ -45,7 +45,7 @@
 #' 
 #'   radial_check %>%
 #'     add_map() %>%
-#'     filter_geolocation(provincie == "Friesland") %>%
+#'     filter_geolocation(provincie == "Drenthe") %>%
 #'     plot2(category = cases_within_range,
 #'           category.title = "Cases",
 #'           datalabels = FALSE,
