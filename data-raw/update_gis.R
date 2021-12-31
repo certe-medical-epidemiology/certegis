@@ -270,6 +270,10 @@ geo_provincies <- inwoners_toevoegen(geo_provincies)
 geo_postcodes4 <- st_simplify(geo_postcodes4, dTolerance = 0.0001)
 geo_postcodes4$geometry <- st_cast(geo_postcodes4$geometry, , "MULTIPOLYGON")
 
+# "Fryslân" vervangen door "Friesland"
+geo_provincies$provincie <- gsub("Fryslân", "Friesland", geo_provincies$provincie, fixed = TRUE)
+postcodes$provincie <- gsub("Fryslân", "Friesland", postcodes$provincie, fixed = TRUE)
+
 # nu kan alles opgeslagen worden in het certegis pakket:
 usethis::use_data(postcodes, overwrite = TRUE, internal = FALSE, compress = "xz", version = 2)
 usethis::use_data(inwoners_per_postcode_leeftijd, overwrite = TRUE, internal = FALSE, compress = "xz", version = 2)

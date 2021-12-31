@@ -70,7 +70,7 @@ add_map <- function(data, maptype = NULL, by = NULL, crop_certe = TRUE) {
   }
   
   geo_data <- get_map(maptype = maptype)
-  if (isTRUE(crop_certe) && maptype %unlike% "postcodes") {
+  if (isTRUE(crop_certe)) {
     geo_data <- crop_certe(geo_data)
   }
 
@@ -123,7 +123,7 @@ crop_certe <- function(sf_data) {
   check_is_installed("sf")
   
   postcode_filter <- certegis::postcodes %>%
-    filter(provincie %in% c("Friesland", "Fryslân", "Groningen", "Drenthe"))
+    filter(provincie %in% c("Friesland", "Groningen", "Drenthe"))
   
   if ("provincie" %in% colnames(sf_data)) {
     sf_data <- sf_data %>%
@@ -139,27 +139,19 @@ crop_certe <- function(sf_data) {
     sf_data <- sf_data %>%
       filter(ggdregio %in% postcode_filter$ggdregio)
   } else if ("postcode" %in% colnames(sf_data)) {
-    sf_data <- sf_data %>%
-      filter(!as.integer(gsub("[^0-9]|", "", postcode)) %in% c(0:7000, 8255, 8263))
+    max_nchar <- max(nchar(sf_data$postcode), na.rm = TRUE)
+    # PC4
+    if (max_nchar == 4) {
+      sf_data <- sf_data %>%
+        filter(!as.integer(gsub("[^0-9]|", "", postcode)) %in% c(0:7000, 8255, 8263))  
+    } else if (max_nchar == 3) { 
+      sf_data <- sf_data %>%
+        filter(!as.integer(gsub("[^0-9]|", "", postcode)) %in% c(0:700, 825, 826))
+    } else {
+      sf_data <- sf_data %>%
+        filter(!as.integer(gsub("[^0-9]|", "", postcode)) %in% c(0:70, 82))
+    }
   }
-  
-  crs <- sf::st_crs(sf_data)
-  crs_changed <- FALSE
-  
-  if (sf::st_crs(sf_data)$input %unlike% "4326") {
-    sf_data <- sf::st_transform(sf_data, 4326)
-    crs_changed <- TRUE
-  }
-  sf_data <- sf_data %>%
-    filter_sf(xmin = 4.75,
-              xmax = 7.25,
-              ymin = ifelse("postcode" %in% colnames(sf_data), 52.58, 52.40),
-              ymax = 53.60)
-  
-  if (isTRUE(crs_changed)) {
-    sf_data <- sf::st_transform(sf_data, crs)
-  }
-  
   sf_data
 }
 

@@ -17,6 +17,8 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+library(sf)
+
 test_that("cases_within_radius works", {
   df <- data.frame(postcode = c(9001:9010),
                    n = floor(runif(10, min = 0, max = 30)))

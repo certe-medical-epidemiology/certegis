@@ -36,8 +36,8 @@ included_datasets <- function() {
 #' - `provincie`\cr formal Dutch province name
 #' - `nuts3`\cr Nomenclature of Territorial Units for Statistics, level 3 (in Dutch: COROP region, *Coordinatie Commissie Regionaal OnderzoeksProgramma*)
 #' - `ggdregio`\cr name of the regional GGD service (public healthcare service)
-#' - `jeugdregio`\cr name of the regional youth service
-#' - `veiligheidsregio`\cr name of the regional safety service (public healthcare service)
+# - `jeugdregio`\cr name of the regional youth service
+# - `veiligheidsregio`\cr name of the regional safety service (public healthcare service)
 # - `huishoudens`\cr number of households in the zipcode area
 # - `huishouden_grootte`\cr mean size of the household sizes in the zipcode area
 #' @details See [the repository file](https://github.com/certe-medical-epidemiology/certedata/blob/main/data-raw/update_gis.R) to update this data set.
@@ -58,8 +58,7 @@ included_datasets <- function() {
 #' - `...`\cr column name of the identifier, which is the singular form of the name of the data set (i.e., `geo_gemeenten$gemeente`)
 #' - `inwoners`\cr number of inhabitants
 #' - `oppervlakte_km2`\cr area in square kilometres
-#' - `geometry`\cr the polygonal form of the area
-#' @details All data sets (maps) contain all of the Netherlands, except for the `geo_postcodes*` maps which only contains the Northern Netherlands.
+#' - `geometry`\cr the multipolygonal form of the area
 #' @name cbs_data
 #' @rdname cbs_data
 #' @details See [the repository file](https://github.com/certe-medical-epidemiology/certegis/blob/main/data-raw/update_gis.R) to update these data sets.

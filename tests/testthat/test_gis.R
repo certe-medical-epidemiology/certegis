@@ -17,17 +17,21 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+library(sf)
+
 test_that("gis works", {
   mp <- get_map()
   expect_true(is.sf(mp))
   
   expect_error(get_map(maptype = "fake"))
   expect_error(add_map(data.frame(pc = c(9001:9010))))
-  expect_s3_class(add_map(data.frame(postcode = c(9001:9010))), "data.frame")
-  expect_s3_class(add_map(data.frame(gemeente = "Groningen")), "data.frame")
-  expect_s3_class(add_map(data.frame(provincie = "Groningen")), "data.frame")
-  expect_s3_class(add_map(data.frame(ggdregio = "Groningen")), "data.frame")
-  expect_s3_class(add_map(data.frame(nuts3 = "Overig Groningen")), "data.frame")
+  expect_s3_class(add_map(data.frame(postcode = c(9001:9010))), "sf") # PC4
+  expect_s3_class(add_map(data.frame(postcode = c(900:910))), "sf")   # PC3
+  expect_s3_class(add_map(data.frame(postcode = c(90:91))), "sf")     # PC2
+  expect_s3_class(add_map(data.frame(gemeente = "Groningen")), "sf")
+  expect_s3_class(add_map(data.frame(provincie = "Groningen")), "sf")
+  expect_s3_class(add_map(data.frame(ggdregio = "Groningen")), "sf")
+  expect_s3_class(add_map(data.frame(nuts3 = "Overig Groningen")), "sf")
   expect_warning(add_map(data.frame(postcode = c(9001, 9001), n = c(1, 2))))
   
   expect_lt(nrow(crop_certe(geo_provincies)), nrow(geo_provincies))
@@ -37,6 +41,8 @@ test_that("gis works", {
   expect_lt(nrow(crop_certe(geo_postcodes2)), nrow(geo_postcodes2))
   expect_lt(nrow(crop_certe(geo_postcodes3)), nrow(geo_postcodes3))
   expect_lt(nrow(crop_certe(geo_postcodes4)), nrow(geo_postcodes4))
+  
+  expect_lt(nrow(filter_sf(geo_provincies, ymin = 52.5)), nrow(geo_provincies))
   
   expect_true(is.numeric(latitude(geo_provincies)))
   expect_true(is.numeric(longitude(geo_provincies)))

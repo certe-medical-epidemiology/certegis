@@ -17,7 +17,7 @@ A \code{sf}/\link{data.frame} with 3 variables:
 \item \code{...}\cr column name of the identifier, which is the singular form of the name of the data set (i.e., \code{geo_gemeenten$gemeente})
 \item \code{inwoners}\cr number of inhabitants
 \item \code{oppervlakte_km2}\cr area in square kilometres
-\item \code{geometry}\cr the polygonal form of the area
+\item \code{geometry}\cr the multipolygonal form of the area
 }
 
 An object of class \code{sf} (inherits from \code{data.frame}) with 798 rows and 4 columns.
@@ -51,8 +51,6 @@ geo_provincies
 Data Sets with Geometries of Dutch Provinces, Municipalities and Zipcodes
 }
 \details{
-All data sets (maps) contain all of the Netherlands, except for the \verb{geo_postcodes*} maps which only contains the Northern Netherlands.
-
 See \href{https://github.com/certe-medical-epidemiology/certegis/blob/main/data-raw/update_gis.R}{the repository file} to update these data sets.
 }
 \keyword{datasets}

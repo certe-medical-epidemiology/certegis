@@ -16,8 +16,6 @@ A \link{data.frame} with 4,963 observations and 9 variables:
 \item \code{provincie}\cr formal Dutch province name
 \item \code{nuts3}\cr Nomenclature of Territorial Units for Statistics, level 3 (in Dutch: COROP region, \emph{Coordinatie Commissie Regionaal OnderzoeksProgramma})
 \item \code{ggdregio}\cr name of the regional GGD service (public healthcare service)
-\item \code{jeugdregio}\cr name of the regional youth service
-\item \code{veiligheidsregio}\cr name of the regional safety service (public healthcare service)
 }
 }
 \usage{
