@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">certegis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
       </span>
     </div>
 
@@ -119,23 +119,23 @@
 <span class="r-in">                                   min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">noro</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   postcode n</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     8388 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     8389 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     8391 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     8388 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     8389 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     8391 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4     8392 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5     8393 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     8394 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     8394 1</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">radial_check</span> <span class="op">&lt;-</span> <span class="fu">cases_within_radius</span><span class="op">(</span><span class="va">noro</span>, radius_km <span class="op">=</span> <span class="fl">10</span>, minimum_cases <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using column 'n' for cases_within_radius()</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">radial_check</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   postcode cases_within_range minimum_met</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     8388                 25        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     8389                 30        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     8391                 31        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     8392                 21        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     8393                 32        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     8394                 39        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     8388                 36        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     8389                 46        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     8391                 45        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     8392                 35        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     8393                 40        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     8394                 48        TRUE</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://certe-medical-epidemiology.github.io/certeplot2" class="external-link">"certeplot2"</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"></span>
