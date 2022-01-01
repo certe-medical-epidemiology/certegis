@@ -36,11 +36,9 @@ included_datasets <- function() {
 #' - `provincie`\cr formal Dutch province name
 #' - `nuts3`\cr Nomenclature of Territorial Units for Statistics, level 3 (in Dutch: COROP region, *Coordinatie Commissie Regionaal OnderzoeksProgramma*)
 #' - `ggdregio`\cr name of the regional GGD service (public healthcare service)
-# - `jeugdregio`\cr name of the regional youth service
-# - `veiligheidsregio`\cr name of the regional safety service (public healthcare service)
 # - `huishoudens`\cr number of households in the zipcode area
 # - `huishouden_grootte`\cr mean size of the household sizes in the zipcode area
-#' @details See [the repository file](https://github.com/certe-medical-epidemiology/certedata/blob/main/data-raw/update_gis.R) to update this data set.
+#' @details See [the repository file](https://github.com/certe-medical-epidemiology/certegis/blob/main/data-raw/update_gis.R) to update this data set.
 "postcodes"
 
 #' Number of Inhabitants per Zipcode and Age
@@ -50,7 +48,7 @@ included_datasets <- function() {
 #' - `inwoners`\cr total number of inhabitants
 #' - `inwoners_man`\cr total number of male inhabitants
 #' - `inwoners_vrouw`\cr total number of female inhabitants
-#' @details See [the repository file](https://github.com/certe-medical-epidemiology/certedata/blob/main/data-raw/update_gis.R) to update this data set.
+#' @details See [the repository file](https://github.com/certe-medical-epidemiology/certegis/blob/main/data-raw/update_gis.R) to update this data set.
 "inwoners_per_postcode_leeftijd"
 
 #' Data Sets with Geometries of Dutch Provinces, Municipalities and Zipcodes
@@ -81,7 +79,6 @@ included_datasets <- function() {
 
 #' @rdname cbs_data
 "geo_provincies"
-
 
 #' Distance from Zipcode to Zipcode
 #' 

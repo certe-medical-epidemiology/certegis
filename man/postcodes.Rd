@@ -25,6 +25,6 @@ postcodes
 Data Set with Dutch Zipcodes, Cities, Municipalities and Province
 }
 \details{
-See \href{https://github.com/certe-medical-epidemiology/certedata/blob/main/data-raw/update_gis.R}{the repository file} to update this data set.
+See \href{https://github.com/certe-medical-epidemiology/certegis/blob/main/data-raw/update_gis.R}{the repository file} to update this data set.
 }
 \keyword{datasets}
