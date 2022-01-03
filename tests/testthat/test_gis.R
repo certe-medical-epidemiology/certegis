@@ -22,6 +22,11 @@ library(sf)
 test_that("gis works", {
   mp <- get_map()
   expect_true(is.sf(mp))
+  expect_true(is.sf(as.sf(mp)))
+  expect_true(is.sf(as.sf(as.data.frame(mp))))
+  
+  expect_error(latitude(as.data.frame(mp)))
+  expect_error(longitude(as.data.frame(mp)))
   
   expect_error(get_map(maptype = "fake"))
   expect_error(add_map(data.frame(pc = c(9001:9010))))
@@ -43,6 +48,7 @@ test_that("gis works", {
   expect_lt(nrow(crop_certe(geo_postcodes4)), nrow(geo_postcodes4))
   
   expect_lt(nrow(filter_sf(geo_provincies, ymin = 52.5)), nrow(geo_provincies))
+  expect_lt(nrow(filter_sf(geo_provincies, ymin = 52.5, ymax = 60, xmin = 4, xmax = 8)), nrow(geo_provincies))
   
   expect_true(is.numeric(latitude(geo_provincies)))
   expect_true(is.numeric(longitude(geo_provincies)))

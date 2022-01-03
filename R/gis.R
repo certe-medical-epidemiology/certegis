@@ -20,7 +20,7 @@
 #' Geodata Functions
 #' 
 #' These are function to work with geographical data.
-#' @param data data to join left to the geodata
+#' @param data [data.frame]
 #' @param maptype type of geometric data, must be one of: `r paste0("``\"", gsub("geo_", "", included_datasets()), "\"``", collapse = ", ")`. For [add_map()], this is determined automatically if left blank.
 #' @param crop_certe [logical] to keep only the Certe region
 #' @rdname GIS
@@ -107,9 +107,17 @@ add_map <- function(data, maptype = NULL, by = NULL, crop_certe = TRUE) {
 #' @rdname GIS
 #' @export
 is.sf <- function(sf_data) {
-  is.data.frame(sf_data) &&
-    (inherits(sf_data, "sf") |
-       (any(unlist(lapply(sf_data, class)) == "sfc") & "geometry" %in% colnames(sf_data)))
+  inherits(sf_data, "sf")
+}
+
+#' @rdname GIS
+#' @export
+as.sf <- function(data) {
+  if (is.sf(data)) {
+    data
+  } else {
+    sf::st_as_sf(data)
+  }
 }
 
 #' @rdname GIS
@@ -225,8 +233,8 @@ filter_geolocation <- function(sf_data, ..., col_zipcode = NULL) {
 latitude <- function(sf_data) {
   check_is_installed("sf")
   
-  if (!sf::st_is_longlat(sf_data)) {
-    stop("sf_data does not contain geographic coordinates")
+  if (!isTRUE(sf::st_is_longlat(sf_data))) {
+    stop("`sf_data` does not contain geographic coordinates", call. = FALSE)
   }
   as.data.frame(
     sf::st_coordinates(
@@ -241,8 +249,8 @@ latitude <- function(sf_data) {
 longitude <- function(sf_data) {
   check_is_installed("sf")
   
-  if (!sf::st_is_longlat(sf_data)) {
-    stop("sf_data does not contain geographic coordinates")
+  if (!isTRUE(sf::st_is_longlat(sf_data))) {
+    stop("`sf_data` does not contain geographic coordinates", call. = FALSE)
   }
   as.data.frame(
     sf::st_coordinates(

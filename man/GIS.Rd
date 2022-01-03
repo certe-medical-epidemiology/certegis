@@ -4,6 +4,7 @@
 \alias{get_map}
 \alias{add_map}
 \alias{is.sf}
+\alias{as.sf}
 \alias{crop_certe}
 \alias{filter_sf}
 \alias{filter_geolocation}
@@ -16,6 +17,8 @@ get_map(maptype = "postcodes4")
 add_map(data, maptype = NULL, by = NULL, crop_certe = TRUE)
 
 is.sf(sf_data)
+
+as.sf(data)
 
 crop_certe(sf_data)
 
