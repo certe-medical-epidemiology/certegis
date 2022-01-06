@@ -21,4 +21,7 @@
   # find in R/data.R
   packageStartupMessage(paste("Linking to CBS data -",
                               paste0("'", names(CBS_VERSION), "' ", CBS_VERSION, collapse = ", ")))
+  if ("sf" %in% rownames(utils::installed.packages)) {
+    attach("sf")
+  }
 }
