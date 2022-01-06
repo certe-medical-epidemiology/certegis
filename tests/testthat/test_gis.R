@@ -18,6 +18,7 @@
 # ===================================================================== #
 
 library(sf)
+test_that("gis functions work", {
 
   mp <- get_map()
   expect_true(is.sf(mp))
