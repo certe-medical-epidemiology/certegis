@@ -47,7 +47,7 @@ get_addresses(sfc)
 # or use search parameters:
 get_addresses(c("Certe NL", "IKEA Groningen"))
 
-coord <- get_coordinates(c("Van Swietenlaan 2, Groningen"),
+coord <- get_coordinates(c("Van Swietenlaan 2, Groningen",
                            "Jelsumerstraat 6, Leeuwarden",
                            "Medisch Centrum Leeuwarden"))
 coord
