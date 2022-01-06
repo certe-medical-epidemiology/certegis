@@ -17,15 +17,54 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-#' Geocoding to Translate Address to Coordinates
+#' Geocoding to Translate Address <-> Coordinates
 #'
 #' @param search a search string, such as an address. Preference is given to places in the Northern Netherlands using [[crop_certe()].
 #' @param api URL of the application programming interface, defaults to OpenStreetMap
+#' @details
+#' [get_coordinates()] returns a [list] with the latitude and longitude. These can be retrieved with that names (e.g. `output$latitude`) or with the [latitude()]/[longitude()] functions.
 #' @name geocoding
 #' @rdname geocoding
 #' @export
-get_coordinates <- function(search, api = "") {
-  
+#' @examples
+#' get_coordinates("Van Swietenlaan 2, Groningen")
+#' coord <- get_coordinates(c("Van Swietenlaan 2, Groningen"),
+#'                            "Jelsumerstraat 6, Leeuwarden"))
+#' coord
+#' 
+#' if (require("certeplot2")) {
+#'   geo_gemeenten %>%
+#'     crop_certe() %>%
+#'     plot2() +
+#'     geom_sf(aes(x = coord$longitude,
+#'                 y = coord$latitude))
+#'
+#'   geo_gemeenten %>%
+#'     crop_certe() %>%
+#'     plot2() %>%
+#'     add_coordinates(coord, colour = "certeroze")
+#' }
+get_coordinates <- function(search, api = "https://nominatim.openstreetmap.org/search?q={search}&format=json") {
+  check_is_installed("jsonlite")
+
+  out <- list(latitude = numeric(length(search)),
+              longitude = numeric(length(search)))
+  for (i in seq_len(length(search))) {
+    url <- gsub("{search}", search[i], api, fixed = TRUE)
+    osm <- jsonlite::fromJSON(url)
+    osm <- tryCatch(osm[1, c("lat", "lon", "display_name"), drop = FALSE],
+                    error = function(e) NULL)
+    if (is.null(osm)) {
+      message("No coordinates found for '", search[i], "'")
+      out$latitude[i] <- NA_real_
+      out$longitude[i] <- NA_real_
+    } else {
+      message("Found address: ", osm$display_name)
+      out$latitude[i] <- as.double(osm$lat)
+      out$longitude[i] <- as.double(osm$lon)
+    }
+  }
+  return(out)
 }
 
 #' @rdname geocoding
@@ -34,5 +73,6 @@ get_coordinates <- function(search, api = "") {
 #' @param longitude longitude of a GPS location
 #' @export
 get_address <- function(st_point, latitude, longitud, api = "https://nominatim.openstreetmap.org/reverse?lat={latitude}&lon={longitude}") {
+  check_is_installed("jsonlite")
   
 }
