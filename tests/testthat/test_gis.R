@@ -18,8 +18,8 @@
 # ===================================================================== #
 
 library(sf)
+test_that("gis functions work", {
 
-test_that("gis works", {
   mp <- get_map()
   expect_true(is.sf(mp))
   expect_true(is.sf(as.sf(mp)))
@@ -56,4 +56,9 @@ test_that("gis works", {
   expect_lt(nrow(geo_postcodes4 %>% filter_geolocation(gemeente == "Tytsjerksteradiel")),
             nrow(geo_postcodes4))
   expect_warning(geo_postcodes3 %>% filter_geolocation(gemeente == "Tytsjerksteradiel"))
+})
+
+test_that("geocoding works", {
+  expect_s3_class(get_coordinates("Van Swietenlaan 2, Groningen"), "sfc")
+  expect_equal(nrow(get_addresses(c("Certe NL", "Certe NL", "IKEA Groningen"))), 3)
 })
