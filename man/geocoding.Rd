@@ -2,60 +2,60 @@
 % Please edit documentation in R/geocoding.R
 \name{geocoding}
 \alias{geocoding}
-\alias{get_coordinates}
-\alias{get_addresses}
-\title{Geocoding to Translate Addresses <-> Coordinates}
+\alias{geocode}
+\alias{reverse_geocode}
+\title{Geocoding to Find Coordinates and Addresses}
+\source{
+Data © OpenStreetMap contributors, ODbL 1.0. \url{https://osm.org/copyright}
+}
 \usage{
-get_coordinates(
-  search,
-  api = "https://nominatim.openstreetmap.org/search?q={search}&format=json"
-)
+geocode(place, as_coordinates = FALSE, only_netherlands = TRUE)
 
-get_addresses(
-  sf_data,
- 
-    api = "https://nominatim.openstreetmap.org/reverse?lat={latitude}&lon={longitude}&format=json"
-)
+reverse_geocode(sf_data)
 }
 \arguments{
-\item{search}{a (vector of) search string(s), such as an address or name}
+\item{place}{a (vector of) names or addresses of places}
 
-\item{api}{URL of the application programming interface, defaults to OpenStreetMap}
+\item{as_coordinates}{a \link{logical} to indicate whether the result should be returned as coordinates (i.e., class \code{sfc_POINT})}
+
+\item{only_netherlands}{a \link{logical} to indicate whether only Dutch places should be searched}
 
 \item{sf_data}{an 'sf' object or an 'sfc' object (i.e., a vector with geometric \code{sfc_POINT}s). Can also be a character vector, in which case \code{\link[=get_coordinates]{get_coordinates()}} will be called first.}
 }
 \description{
-Geocoding to Translate Addresses <-> Coordinates
+\strong{Geocoding} is the process of retrieving geographic coordinates based on text, such as an address or the name of a place (\href{https://en.wikipedia.org/wiki/Address_geocoding}{Wikipedia page}). On the other hand, \strong{reverse geocoding} is the process of retrieving the name and address from geographic coordinates (\href{https://en.wikipedia.org/wiki/Reverse_geocoding}{Wikipedia page}).
 }
 \details{
 These functions use \href{https://openstreetmap.org}{OpenStreetMap (OSM)}.
 
-\code{\link[=get_coordinates]{get_coordinates()}} provides geocoding (looking up the coordinates of a place) and returns an 'sfc' geometry object. For the results, preference is given to places in the Northern Netherlands using [\code{\link[=crop_certe]{crop_certe()}}.
+\code{\link[=geocode]{geocode()}} provides geocoding and returns an 'sf' \link{data.frame} at default. In case of multiple results, the distance from the main Certe building in Groningen is leading.
 
-\code{\link[=get_addresses]{get_addresses()}} provides reversed-geocoding (looking up the place of coordinates) and returns a \link{data.frame} with the columns "address", "zipcode" and "city".
+\code{\link[=reverse_geocode]{reverse_geocode()}} provides reversed geocoding and returns a \link{data.frame} with the columns "name", "address", "zipcode" and "city".
 
 For both functions, the OSM API will only be called on unique input values, to increase speed.
 }
 \examples{
-# geocoding: retrieve sfc points of addresses
-sfc <- get_coordinates("Van Swietenlaan 2, Groningen")
-sfc
-
-# reversed-geocoding: get the addresses
-get_addresses(sfc)
-
-# or use search parameters:
-get_addresses(c("Certe NL", "IKEA Groningen"))
-
-coord <- get_coordinates(c("Van Swietenlaan 2, Groningen",
-                           "Jelsumerstraat 6, Leeuwarden",
-                           "Medisch Centrum Leeuwarden"))
+# geocoding: retrieve 'sf' data.frame based on place names
+coord <- geocode("Van Swietenlaan 2, Groningen")
 coord
+
+# reverse geocoding: get the name and address
+reverse_geocode(coord)
+
+# places can be any text, and the results are prioritised based on
+# the distance from the main Certe building, so:
+reverse_geocode(c("Certe", "IKEA"))
+
+hospitals <- geocode(c("Martini ziekenhuis",
+                       "Medisch Centrum Leeuwarden",
+                       "Tjongerschans Heerenveen",
+                       "Scheper Emmen"))
+hospitals
 
 if (require("certeplot2")) {
   geo_gemeenten \%>\%
     crop_certe() \%>\%
-    plot2() # \%>\%
-    # add_coordinates(coord, colour = "certeroze")
+    plot2(datalabels = FALSE) \%>\%
+    add_sf(hospitals, colour = "certeroze", datalabels = place)
 }
 }

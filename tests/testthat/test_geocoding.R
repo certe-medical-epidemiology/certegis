@@ -17,8 +17,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-.onLoad <- function(...) {
-  # find in R/data.R
-  packageStartupMessage(paste("Linking to CBS data -",
-                              paste0("'", names(CBS_VERSION), "' ", CBS_VERSION, collapse = ", ")))
-}
+library(sf)
+
+test_that("geocoding works", {
+  expect_s3_class(geocode("Van Swietenlaan 2, Groningen"), "sf")
+  expect_equal(nrow(reverse_geocode(c("Certe", "Certe", "IKEA Groningen"))), 3)
+})

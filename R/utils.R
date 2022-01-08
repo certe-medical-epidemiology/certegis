@@ -41,6 +41,17 @@ check_is_installed <- function(pkgs) {
   }
 }
 
+get_bbox <- function(lst, crs) {
+  lapply(lst, function(bb) {
+    bb <- as.double(bb)
+    sf::st_bbox(c(ymin = bb[1],
+                  ymax = bb[2],
+                  xmin = bb[3],
+                  xmax = bb[4]),
+                crs = crs)
+  })
+}
+
 globalVariables(c(".",
                   "afstand",
                   "afstand_km",
@@ -49,9 +60,7 @@ globalVariables(c(".",
                   "count",
                   "gemeente",
                   "ggdregio",
-                  "house_number",
                   "is_installed",
-                  "jeugdregio",
                   "n",
                   "nuts3",
                   "percentage",
@@ -64,9 +73,7 @@ globalVariables(c(".",
                   "postcodes4_afstanden",
                   "provincie",
                   "pull",
-                  "road",
                   "row_number",
                   "select",
                   "teams",
-                  "uitslag_int",
-                  "veiligheidsregio"))
+                  "uitslag_int"))

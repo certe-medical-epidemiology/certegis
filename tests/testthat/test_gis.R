@@ -57,8 +57,3 @@ test_that("gis functions work", {
             nrow(geo_postcodes4))
   expect_warning(geo_postcodes3 %>% filter_geolocation(gemeente == "Tytsjerksteradiel"))
 })
-
-test_that("geocoding works", {
-  expect_s3_class(get_coordinates("Van Swietenlaan 2, Groningen"), "sfc")
-  expect_equal(nrow(get_addresses(c("Certe NL", "Certe NL", "IKEA Groningen"))), 3)
-})

@@ -17,71 +17,109 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-#' Geocoding to Translate Addresses <-> Coordinates
+#' Geocoding to Find Coordinates and Addresses
 #'
-#' @param search a (vector of) search string(s), such as an address or name
+#' **Geocoding** is the process of retrieving geographic coordinates based on text, such as an address or the name of a place ([Wikipedia page](https://en.wikipedia.org/wiki/Address_geocoding)). On the other hand, **reverse geocoding** is the process of retrieving the name and address from geographic coordinates ([Wikipedia page](https://en.wikipedia.org/wiki/Reverse_geocoding)).
+#' @param place a (vector of) names or addresses of places
 #' @param sf_data an 'sf' object or an 'sfc' object (i.e., a vector with geometric `sfc_POINT`s). Can also be a character vector, in which case [get_coordinates()] will be called first.
-#' @param api URL of the application programming interface, defaults to OpenStreetMap
+#' @param as_coordinates a [logical] to indicate whether the result should be returned as coordinates (i.e., class `sfc_POINT`)
+#' @param only_netherlands a [logical] to indicate whether only Dutch places should be searched
 #' @details
 #' These functions use [OpenStreetMap (OSM)](https://openstreetmap.org).
 #'
-#' [get_coordinates()] provides geocoding (looking up the coordinates of a place) and returns an 'sfc' geometry object. For the results, preference is given to places in the Northern Netherlands using [[crop_certe()].
+#' [geocode()] provides geocoding and returns an 'sf' [data.frame] at default. In case of multiple results, the distance from the main Certe building in Groningen is leading.
 #'
-#' [get_addresses()] provides reversed-geocoding (looking up the place of coordinates) and returns a [data.frame] with the columns "address", "zipcode" and "city".
+#' [reverse_geocode()] provides reversed geocoding and returns a [data.frame] with the columns "name", "address", "zipcode" and "city".
 #'
 #' For both functions, the OSM API will only be called on unique input values, to increase speed. 
+#' @source Data © OpenStreetMap contributors, ODbL 1.0. <https://osm.org/copyright>
 #' @name geocoding
 #' @rdname geocoding
 #' @export
 #' @examples
-#' # geocoding: retrieve sfc points of addresses
-#' sfc <- get_coordinates("Van Swietenlaan 2, Groningen")
-#' sfc
-#' 
-#' # reversed-geocoding: get the addresses
-#' get_addresses(sfc)
-#' 
-#' # or use search parameters:
-#' get_addresses(c("Certe NL", "IKEA Groningen"))
-#' 
-#' coord <- get_coordinates(c("Van Swietenlaan 2, Groningen",
-#'                            "Jelsumerstraat 6, Leeuwarden",
-#'                            "Medisch Centrum Leeuwarden"))
+#' # geocoding: retrieve 'sf' data.frame based on place names
+#' coord <- geocode("Van Swietenlaan 2, Groningen")
 #' coord
+#' 
+#' # reverse geocoding: get the name and address
+#' reverse_geocode(coord)
+#' 
+#' # places can be any text, and the results are prioritised based on
+#' # the distance from the main Certe building, so:
+#' reverse_geocode(c("Certe", "IKEA"))
+#' 
+#' hospitals <- geocode(c("Martini ziekenhuis",
+#'                        "Medisch Centrum Leeuwarden",
+#'                        "Tjongerschans Heerenveen",
+#'                        "Scheper Emmen"))
+#' hospitals
 #' 
 #' if (require("certeplot2")) {
 #'   geo_gemeenten %>%
 #'     crop_certe() %>%
-#'     plot2() # %>%
-#'     # add_coordinates(coord, colour = "certeroze")
+#'     plot2(datalabels = FALSE) %>%
+#'     add_sf(hospitals, colour = "certeroze", datalabels = place)
 #' }
-get_coordinates <- function(search, api = "https://nominatim.openstreetmap.org/search?q={search}&format=json") {
+geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
   check_is_installed("jsonlite")
   check_is_installed("sf")
-
-  search_long <- search
-  search <- unique(search)
-
-  out <- list(search = search,
-              latitude = numeric(length(search)),
-              longitude = numeric(length(search)))
   
-  for (i in seq_len(length(search))) {
-    url <- gsub("{search}", search[i], api, fixed = TRUE)
+  api <- paste("https://nominatim.openstreetmap.org/search?format=json",
+               "q={place}",
+               ifelse(isTRUE(only_netherlands), "countrycodes=nl", ""),
+               "limit=50",
+               "namedetails=1",
+               sep = "&")
+  
+  place_long <- place
+  place <- unique(place)
+  
+  out <- list(place = place,
+              name = character(length(place)),
+              latitude = numeric(length(place)),
+              longitude = numeric(length(place)))
+  
+  # sort on distance from the HQ of Certe
+  van_swietenlaan_2 <- sf::st_sfc(sf::st_point(c(6.5504128, 53.1931877)),
+                                  # take the CRS from included datasets
+                                  crs = sf::st_crs(certegis::geo_postcodes4))
+  
+  for (i in seq_len(length(place))) {
+    url <- gsub("{place}", place[i], api, fixed = TRUE)
     osm <- tryCatch({
       result <- jsonlite::fromJSON(url)
       # fair use is 1 per second
       Sys.sleep(0.25)
-      # later: prefer Certe region instead of just first row
-      result[1, c("lat", "lon", "display_name"), drop = FALSE]
+      if (NROW(result) > 1) {
+        # keep track of how the OSM algorithm sorted:
+        result$osm_sorting <- seq_len(nrow(result))
+        # multiple results, sort on distance from Certe region:
+        result$metres_from_certe <- round(
+          vapply(FUN.VALUE = double(1),
+                 X = get_bbox(result$boundingbox,
+                              # take the CRS from included datasets
+                              crs = sf::st_crs(certegis::geo_postcodes4)),
+                 FUN = function(x)
+                   as.double(sf::st_distance(sf::st_as_sfc(x),
+                                             van_swietenlaan_2))),
+          # round on 100 metres:
+          -2)
+        # return first hit based on distance from Certe and OSM sorting
+        result[order(result$metres_from_certe, result$osm_sorting)[1], , drop = FALSE]
+      } else {
+        result[1, , drop = FALSE]
+      }
     }, error = function(e) {
       return(NULL)
     })
-    if (is.null(osm) || length(osm) == 0 || is.na(osm)) {
-      message("No coordinates found for '", search[i], "'")
-      out$latitude[i] <- 0 # NA_real_
-      out$longitude[i] <- 0 # NA_real_
+    if (is.null(osm) || length(osm) == 0 || is.na(osm[[1]])) {
+      message("No coordinates found for '", place[i], "'")
+      out$latitude[i] <- 0
+      out$longitude[i] <- 0
     } else {
+      out$name[i] <- ifelse("short_name" %in% colnames(osm$namedetails),
+                            osm$namedetails$short_name,
+                            osm$namedetails$name)
       out$latitude[i] <- as.double(osm$lat)
       out$longitude[i] <- as.double(osm$lon)
     }
@@ -89,28 +127,39 @@ get_coordinates <- function(search, api = "https://nominatim.openstreetmap.org/s
   
   out <- as.data.frame(out)
   # 'de-uniquify' the data set
-  out <- out[match(search_long, search), , drop = FALSE]
+  out <- out[match(place_long, place), , drop = FALSE]
   rownames(out) <- NULL
-
+  
   # as sf with geometry column and same CRS as included data sets
   out <- sf::st_as_sf(out,
                       coords = c("longitude", "latitude"),
-                      crs = "EPSG:4326")$geometry
+                      # take the CRS from included datasets
+                      crs = sf::st_crs(certegis::geo_postcodes4))
   # replace lat=0,lon=0 coordinates with valid empty ones
-  out[which(vapply(FUN.VALUE = logical(1), out, function(sfc) identical(unclass(sfc), c(0, 0))))] <- sf::st_point()
-  out
+  out$geometry[which(vapply(FUN.VALUE = logical(1),
+                            out$geometry,
+                            function(sfc) identical(unclass(sfc), c(0, 0))))] <- sf::st_point()
+  if (isTRUE(as_coordinates)) {
+    out$geometry
+  } else {
+    out
+  }
 }
 
 #' @rdname geocoding
-#' @importFrom dplyr `%>%` mutate select
 #' @export
-get_addresses <- function(sf_data, api = "https://nominatim.openstreetmap.org/reverse?lat={latitude}&lon={longitude}&format=json") {
+reverse_geocode <- function(sf_data) {
   check_is_installed("jsonlite")
   check_is_installed("sf")
   
+  api <- paste("https://nominatim.openstreetmap.org/reverse?format=json",
+               "lat={latitude}",
+               "lon={longitude}",
+               sep = "&")
+  
   if (NCOL(sf_data) == 1 && is.character(sf_data)) {
     # no coordinates but text instead, do regular geocoding first
-    sf_data <- get_coordinates(sf_data)
+    sf_data <- geocode(sf_data)
   }
   
   # get the lat/lon
@@ -126,6 +175,7 @@ get_addresses <- function(sf_data, api = "https://nominatim.openstreetmap.org/re
   lon <- lon[match(coord, coord_long)]
   urls <- rep(api, length(coord))
   out <- data.frame(coord = coord,
+                    name = rep(NA_character_, length(coord)),
                     address = rep(NA_character_, length(coord)),
                     zipcode = rep(NA_character_, length(coord)),
                     city = rep(NA_character_, length(coord)))
@@ -138,18 +188,27 @@ get_addresses <- function(sf_data, api = "https://nominatim.openstreetmap.org/re
     url <- gsub("{latitude}", lat[i], url, fixed = TRUE)
     url <- gsub("{longitude}", lon[i], url, fixed = TRUE)
     osm <- tryCatch({
-      result <- jsonlite::fromJSON(url)$address %>%
-        as.data.frame(stringsAsFactors = FALSE) %>%
-        mutate(address = trimws(paste(road, house_number)))
+      result <- as.data.frame(jsonlite::fromJSON(url)$address, stringsAsFactors = FALSE)
+      if (all(c("road", "house_number") %in% colnames(result))) {
+        result$address <- trimws(paste(result$road, result$house_number))
+      } else {
+        result$address <- trimws(result$road)
+      }
+      if ("amenity" %in% colnames(result) && !"place" %in% colnames(result)) {
+        result$place <- result$amenity
+      }
       # fair use is 1 per second
       Sys.sleep(0.25)
       result$zipcode <- result$postcode
-      result[, colnames(result)[which(colnames(result) %in% c("address", "zipcode", "city", "town"))], drop = FALSE]
+      result[, colnames(result)[which(colnames(result) %in% c("place", "address", "zipcode", "city", "town"))], drop = FALSE]
     }, error = function(e) {
       message("unable to retrieve address: ", e$message)
       return(NULL)
     })
     if (!is.null(osm)) {
+      if ("place" %in% colnames(osm)) {
+        out$name[i] <- osm$place
+      }
       out$address[i] <- osm$address
       out$zipcode[i] <- osm$zipcode
       if ("city" %in% colnames(osm)) {
@@ -159,7 +218,7 @@ get_addresses <- function(sf_data, api = "https://nominatim.openstreetmap.org/re
       }
     }
   }
-  out <- out[match(coord_long, coord), c("address", "zipcode", "city"), drop = FALSE]
+  out <- out[match(coord_long, coord), c("name", "address", "zipcode", "city"), drop = FALSE]
   rownames(out) <- NULL
   out
 }
