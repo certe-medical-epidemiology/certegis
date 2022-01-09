@@ -21,7 +21,7 @@
 #'
 #' **Geocoding** is the process of retrieving geographic coordinates based on text, such as an address or the name of a place ([Wikipedia page](https://en.wikipedia.org/wiki/Address_geocoding)). On the other hand, **reverse geocoding** is the process of retrieving the name and address from geographic coordinates ([Wikipedia page](https://en.wikipedia.org/wiki/Reverse_geocoding)).
 #' @param place a (vector of) names or addresses of places
-#' @param sf_data an 'sf' object or an 'sfc' object (i.e., a vector with geometric `sfc_POINT`s). Can also be a character vector, in which case [get_coordinates()] will be called first.
+#' @param sf_data an 'sf' object or an 'sfc' object (i.e., a vector with geometric `sfc_POINT`s). Can also be a character vector, in which case [geocode()] will be called first.
 #' @param as_coordinates a [logical] to indicate whether the result should be returned as coordinates (i.e., class `sfc_POINT`)
 #' @param only_netherlands a [logical] to indicate whether only Dutch places should be searched
 #' @details
@@ -74,12 +74,13 @@ geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
   place_long <- place
   place <- unique(place)
   
-  out <- list(place = place,
-              name = character(length(place)),
-              latitude = numeric(length(place)),
-              longitude = numeric(length(place)))
+  out <- data.frame(place = place,
+                    name = character(length(place)),
+                    latitude = numeric(length(place)),
+                    longitude = numeric(length(place)),
+                    stringsAsFactors = FALSE)
   
-  # sort on distance from the HQ of Certe
+  # HQ of Certe
   van_swietenlaan_2 <- sf::st_sfc(sf::st_point(c(6.5504128, 53.1931877)),
                                   # take the CRS from included datasets
                                   crs = sf::st_crs(certegis::geo_postcodes4))
@@ -91,9 +92,9 @@ geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
       # fair use is 1 per second
       Sys.sleep(0.25)
       if (NROW(result) > 1) {
-        # keep track of how the OSM algorithm sorted:
+        # keep track of how the OSM algorithm sorts:
         result$osm_sorting <- seq_len(nrow(result))
-        # multiple results, sort on distance from Certe region:
+        # multiple results, determine distance from the HQ of Certe
         result$metres_from_certe <- round(
           vapply(FUN.VALUE = double(1),
                  X = get_bbox(result$boundingbox,
@@ -102,9 +103,9 @@ geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
                  FUN = function(x)
                    as.double(sf::st_distance(sf::st_as_sfc(x),
                                              van_swietenlaan_2))),
-          # round on 100 metres:
-          -2)
-        # return first hit based on distance from Certe and OSM sorting
+          # round on 1000 metres:
+          digits = -3)
+        # return first hit based on distance from Certe HQ and OSM sorting
         result[order(result$metres_from_certe, result$osm_sorting)[1], , drop = FALSE]
       } else {
         result[1, , drop = FALSE]
@@ -119,13 +120,14 @@ geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
     } else {
       out$name[i] <- ifelse("short_name" %in% colnames(osm$namedetails),
                             osm$namedetails$short_name,
-                            osm$namedetails$name)
+                            ifelse("name" %in% colnames(osm$namedetails),
+                                   osm$namedetails$name,
+                                   NA_character_))
       out$latitude[i] <- as.double(osm$lat)
       out$longitude[i] <- as.double(osm$lon)
     }
   }
   
-  out <- as.data.frame(out)
   # 'de-uniquify' the data set
   out <- out[match(place_long, place), , drop = FALSE]
   rownames(out) <- NULL
@@ -155,6 +157,8 @@ reverse_geocode <- function(sf_data) {
   api <- paste("https://nominatim.openstreetmap.org/reverse?format=json",
                "lat={latitude}",
                "lon={longitude}",
+               "limit=50",
+               "namedetails=1",
                sep = "&")
   
   if (NCOL(sf_data) == 1 && is.character(sf_data)) {
@@ -194,8 +198,8 @@ reverse_geocode <- function(sf_data) {
       } else {
         result$address <- trimws(result$road)
       }
-      if ("amenity" %in% colnames(result) && !"place" %in% colnames(result)) {
-        result$place <- result$amenity
+      if (any(c("amenity", "shop", "building") %in% colnames(result)) && !"place" %in% colnames(result)) {
+        result$place <- c(result$amenity, result$shop, result$building)[1]
       }
       # fair use is 1 per second
       Sys.sleep(0.25)

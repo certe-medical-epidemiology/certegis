@@ -20,7 +20,7 @@ reverse_geocode(sf_data)
 
 \item{only_netherlands}{a \link{logical} to indicate whether only Dutch places should be searched}
 
-\item{sf_data}{an 'sf' object or an 'sfc' object (i.e., a vector with geometric \code{sfc_POINT}s). Can also be a character vector, in which case \code{\link[=get_coordinates]{get_coordinates()}} will be called first.}
+\item{sf_data}{an 'sf' object or an 'sfc' object (i.e., a vector with geometric \code{sfc_POINT}s). Can also be a character vector, in which case \code{\link[=geocode]{geocode()}} will be called first.}
 }
 \description{
 \strong{Geocoding} is the process of retrieving geographic coordinates based on text, such as an address or the name of a place (\href{https://en.wikipedia.org/wiki/Address_geocoding}{Wikipedia page}). On the other hand, \strong{reverse geocoding} is the process of retrieving the name and address from geographic coordinates (\href{https://en.wikipedia.org/wiki/Reverse_geocoding}{Wikipedia page}).

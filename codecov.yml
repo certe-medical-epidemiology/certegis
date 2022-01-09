@@ -17,6 +17,11 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+coverage:
+  range:
+  - 0.0
+  - 90.0
+
 ignore:
   - "R/universal.R"
   - "R/utils.R"

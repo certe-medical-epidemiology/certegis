@@ -160,14 +160,14 @@ crop_certe <- function(sf_data) {
         filter(!as.integer(gsub("[^0-9]|", "", postcode)) %in% c(0:70, 82))
     }
   } else {
-    # try a bounding box bassed on PC4 level
+    # try a bounding box based on PC4 level
     bbox <- sf::st_bbox(crop_certe(certegis::geo_postcodes4))
     # special case for SFC points
     if (inherits(sf_data, c("sfg", "XY", "sfc", "sfc_POINT"))) {
       if (inherits(sf_data, c("sfg", "XY"))) {
-        sf_data <- st_sfc(sf_data)
+        sf_data <- sf::st_sfc(sf_data)
       }
-      sf_data <- st_as_sf(sf_data, crs = "EPSG:4326")
+      sf_data <- sf::st_as_sf(sf_data, crs = "EPSG:4326")
       sf_data <- suppressMessages(sf::st_filter(sf_data, sf::st_as_sfc(bbox), .predicate = sf::st_within))
       return(sf_data[, 1, drop = TRUE])
     }

@@ -21,5 +21,8 @@ library(sf)
 
 test_that("geocoding works", {
   expect_s3_class(geocode("Van Swietenlaan 2, Groningen"), "sf")
+  expect_s3_class(geocode("Van Swietenlaan 2, Groningen", as_coordinates = TRUE), "sfc_POINT")
   expect_equal(nrow(reverse_geocode(c("Certe", "Certe", "IKEA Groningen"))), 3)
+  # places should be found nearest to the Certe main building
+  expect_equal(reverse_geocode("IKEA")$city, "Groningen")
 })

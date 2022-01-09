@@ -17,7 +17,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-.onLoad <- function(...) {
+.onAttach <- function(...) {
   # find in R/data.R
   packageStartupMessage(paste("Linking to CBS data -",
                               paste0("'", names(CBS_VERSION), "' ", CBS_VERSION, collapse = ", ")))
