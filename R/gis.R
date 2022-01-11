@@ -151,13 +151,13 @@ crop_certe <- function(sf_data) {
     # PC4
     if (max_nchar == 4) {
       sf_data <- sf_data %>%
-        filter(!as.integer(gsub("[^0-9]|", "", postcode)) %in% c(0:7000, 8255, 8263))  
+        filter(!as.integer(gsub("[^0-9]|", "", postcode)) %in% c(0:7749, 7770:7799, 8000:8299))
     } else if (max_nchar == 3) { 
       sf_data <- sf_data %>%
-        filter(!as.integer(gsub("[^0-9]|", "", postcode)) %in% c(0:700, 825, 826))
+        filter(!as.integer(gsub("[^0-9]|", "", postcode)) %in% c(0:774, 777:779, 800:829))
     } else {
       sf_data <- sf_data %>%
-        filter(!as.integer(gsub("[^0-9]|", "", postcode)) %in% c(0:70, 82))
+        filter(!as.integer(gsub("[^0-9]|", "", postcode)) %in% c(0:77, 80:82))
     }
   } else {
     # try a bounding box based on PC4 level

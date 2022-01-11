@@ -20,9 +20,9 @@ A \code{sf}/\link{data.frame} with 3 variables:
 \item \code{geometry}\cr the multipolygonal form of the area
 }
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 798 rows and 4 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 799 rows and 4 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 90 rows and 4 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 97 rows and 4 columns.
 
 An object of class \code{sf} (inherits from \code{data.frame}) with 25 rows and 4 columns.
 

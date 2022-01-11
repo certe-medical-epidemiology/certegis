@@ -285,20 +285,24 @@ usethis::use_data(geo_provincies, overwrite = TRUE, internal = FALSE, compress =
 
 # vanuit geo_postcodes4 ook geo_postcodes2 en geo_postcodes3 maken
 geo_postcodes2 <- geo_postcodes4 %>%
-  group_by(postcode = clean_numeric(substr(postcode, 1, 2))) %>%
+  as.data.frame() %>%
+  mutate(postcode = as.double(substr(postcode, 1, 2))) %>%
+  group_by(postcode) %>%
   summarise(inwoners = sum(inwoners, na.rm = TRUE),
             oppervlakte_km2 = sum(oppervlakte_km2, na.rm = TRUE),
-            geometry = suppressMessages(st_cast(st_union(geometry), "MULTIPOLYGON")),
-            .groups = "drop")
-class(geo_postcodes2) <- c("sf", "data.frame")
+            geometry = st_union(geometry)) %>% 
+  as.data.frame() %>%
+  st_as_sf()
 
 geo_postcodes3 <- geo_postcodes4 %>%
-  group_by(postcode = clean_numeric(substr(postcode, 1, 3))) %>%
+  as.data.frame() %>%
+  mutate(postcode = as.double(substr(postcode, 1, 3))) %>%
+  group_by(postcode) %>%
   summarise(inwoners = sum(inwoners, na.rm = TRUE),
             oppervlakte_km2 = sum(oppervlakte_km2, na.rm = TRUE),
-            geometry = suppressMessages(st_cast(st_union(geometry), "MULTIPOLYGON")),
-            .groups = "drop")
-class(geo_postcodes3) <- c("sf", "data.frame")
+            geometry = st_union(geometry)) %>% 
+  as.data.frame() %>%
+  st_as_sf()
 
 # instelling terugzetten
 sf_use_s2(sf_use_s2.old)
