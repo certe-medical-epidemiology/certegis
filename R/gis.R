@@ -60,7 +60,7 @@ add_map <- function(data, maptype = NULL, by = NULL, crop_certe = TRUE) {
     if (length(common_cols) == 0) {
       # try zip codes
       if ("postcode" %in% colnames(data)) {
-        maptype <- paste0("postcodes", max(nchar(data$postcode)))
+        maptype <- paste0("postcodes", max(nchar(as.character(data$postcode))))
       } else {
         stop("No common column found to join.")
       }
@@ -147,7 +147,7 @@ crop_certe <- function(sf_data) {
     sf_data <- sf_data %>%
       filter(ggdregio %in% postcode_filter$ggdregio)
   } else if ("postcode" %in% colnames(sf_data)) {
-    max_nchar <- max(nchar(sf_data$postcode), na.rm = TRUE)
+    max_nchar <- max(nchar(as.character(sf_data$postcode)), na.rm = TRUE)
     # PC4
     if (max_nchar == 4) {
       sf_data <- sf_data %>%
@@ -224,7 +224,7 @@ filter_geolocation <- function(sf_data, ..., col_zipcode = NULL) {
   if (!col_zipcode %in% colnames(sf_data)) {
     stop("'sf_data' must contain the column '", col_zipcode, "'")
   }
-  min_char <- min(nchar(as.integer(gsub("[^0-9]|", "", sf_data[, col_zipcode, drop = TRUE]))))
+  min_char <- min(nchar(as.character(gsub("[^0-9]|", "", sf_data[, col_zipcode, drop = TRUE]))))
   if (min_char < 4) {
     warning("filter may not be accurate since (some) zip codes only contain ", min_char, " numbers", call. = FALSE)
   }
