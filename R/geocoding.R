@@ -63,6 +63,7 @@
 geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
   check_is_installed("jsonlite")
   check_is_installed("sf")
+  loadNamespace("sf") # for use in other packages, otherwise the `vctrs` pkg will complain
   
   api <- paste("https://nominatim.openstreetmap.org/search?format=json",
                "q={place}",
@@ -153,6 +154,7 @@ geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
 reverse_geocode <- function(sf_data) {
   check_is_installed("jsonlite")
   check_is_installed("sf")
+  loadNamespace("sf") # for use in other packages, otherwise the `vctrs` pkg will complain
   
   api <- paste("https://nominatim.openstreetmap.org/reverse?format=json",
                "lat={latitude}",

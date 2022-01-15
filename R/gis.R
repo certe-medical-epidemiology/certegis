@@ -53,6 +53,7 @@ get_map <- function(maptype = "postcodes4") {
 #'   add_map()
 add_map <- function(data, maptype = NULL, by = NULL, crop_certe = TRUE) {
   check_is_installed("sf")
+  loadNamespace("sf") # for use in other packages, otherwise the `vctrs` pkg will complain
   
   if (is.null(maptype)) {
     # determine automatically
@@ -129,6 +130,7 @@ as.sf <- function(data) {
 #' geo_provincies %>% crop_certe()
 crop_certe <- function(sf_data) {
   check_is_installed("sf")
+  loadNamespace("sf") # for use in other packages, otherwise the `vctrs` pkg will complain
 
   postcode_filter <- certegis::postcodes %>%
     filter(provincie %in% c("Friesland", "Groningen", "Drenthe"))
@@ -151,13 +153,13 @@ crop_certe <- function(sf_data) {
     # PC4
     if (max_nchar == 4) {
       sf_data <- sf_data %>%
-        filter(!as.integer(gsub("[^0-9]|", "", postcode)) %in% c(0:7749, 7770:7799, 8000:8299))
+        filter(!as.integer(gsub("[^0-9]|", "", as.character(postcode))) %in% c(0:7749, 7770:7799, 8000:8299))
     } else if (max_nchar == 3) { 
       sf_data <- sf_data %>%
-        filter(!as.integer(gsub("[^0-9]|", "", postcode)) %in% c(0:774, 777:779, 800:829))
+        filter(!as.integer(gsub("[^0-9]|", "", as.character(postcode))) %in% c(0:774, 777:779, 800:829))
     } else {
       sf_data <- sf_data %>%
-        filter(!as.integer(gsub("[^0-9]|", "", postcode)) %in% c(0:77, 80:82))
+        filter(!as.integer(gsub("[^0-9]|", "", as.character(postcode))) %in% c(0:77, 80:82))
     }
   } else {
     # try a bounding box based on PC4 level
@@ -187,6 +189,7 @@ crop_certe <- function(sf_data) {
 #' geo_provincies %>% filter_sf(ymin = 52.5)
 filter_sf <- function(sf_data, xmin = NULL, xmax = NULL, ymin = NULL, ymax = NULL) {
   check_is_installed("sf")
+  loadNamespace("sf") # for use in other packages, otherwise the `vctrs` pkg will complain
   
   if(!is.sf(sf_data)) {
     sf_data <- sf::st_as_sf(sf_data)
@@ -245,6 +248,7 @@ filter_geolocation <- function(sf_data, ..., col_zipcode = NULL) {
 #' longitude(geo_provincies)
 latitude <- function(sf_data) {
   check_is_installed("sf")
+  loadNamespace("sf") # for use in other packages, otherwise the `vctrs` pkg will complain
   
   if (!isTRUE(sf::st_is_longlat(sf_data))) {
     stop("`sf_data` does not contain geographic coordinates", call. = FALSE)
@@ -261,6 +265,7 @@ latitude <- function(sf_data) {
 #' @export
 longitude <- function(sf_data) {
   check_is_installed("sf")
+  loadNamespace("sf") # for use in other packages, otherwise the `vctrs` pkg will complain
   
   if (!isTRUE(sf::st_is_longlat(sf_data))) {
     stop("`sf_data` does not contain geographic coordinates", call. = FALSE)

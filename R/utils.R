@@ -18,6 +18,7 @@
 # ===================================================================== #
 
 #' @importFrom dplyr `%>%`
+#' @export
 dplyr::`%>%`
 
 check_is_installed <- function(pkgs) {
