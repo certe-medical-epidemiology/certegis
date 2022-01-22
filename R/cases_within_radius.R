@@ -29,10 +29,11 @@
 #' @export
 #' @examples
 #' library(dplyr)
-#' postcodes_friesland <- postcodes %>% 
-#'   filter(postcode > 999, provincie == "Friesland") %>% 
+#' postcodes_friesland <- geo_postcodes4 %>% 
+#'   filter_geolocation(provincie == "Friesland") %>% 
 #'   pull(postcode)
 #' 
+#' # example with Norovirus cases
 #' noro <- data.frame(postcode = postcodes_friesland,
 #'                    n = floor(runif(length(postcodes_friesland),
 #'                                    min = 0, max = 3)))

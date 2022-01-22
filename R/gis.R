@@ -19,18 +19,20 @@
 
 #' Geodata Functions
 #' 
-#' These are function to work with geographical data.
+#' These are functions to work with geographical data. To determine coordinates based on a location (or vice versa), use [geocode()] / [reverse_geocode()].
 #' @param data [data.frame]
 #' @param maptype type of geometric data, must be one of: `r paste0("``\"", gsub("geo_", "", included_datasets()), "\"``", collapse = ", ")`. For [add_map()], this is determined automatically if left blank.
 #' @param crop_certe [logical] to keep only the Certe region
+#' @details All of these functions will check if the `sf` package is installed, and will load its namespace (but not attach the package).
 #' @rdname GIS
+#' @name GIS
 #' @return An `sf` model. The column with geodata is always called `"geometry"`.
 #' @export
 #' @examples 
-#' library(sf)
-#' 
 #' get_map() # defaults to the geo_postcodes4 data set
 get_map <- function(maptype = "postcodes4") {
+  check_is_installed("sf")
+  loadNamespace("sf") # for use in other packages, otherwise the `vctrs` pkg will complain
   
   maptype <- gsub("pc", "postcodes", tolower(maptype[1L]))
   if (maptype %unlike% "^geo_") {
@@ -49,7 +51,7 @@ get_map <- function(maptype = "postcodes4") {
 #' @export
 #' @examples 
 #' 
-#' data.frame(postcode = 7702, number_of_cases = 3) %>% 
+#' data.frame(postcode = 7753, number_of_cases = 3) %>% 
 #'   add_map()
 add_map <- function(data, maptype = NULL, by = NULL, crop_certe = TRUE) {
   check_is_installed("sf")
@@ -114,6 +116,9 @@ is.sf <- function(sf_data) {
 #' @rdname GIS
 #' @export
 as.sf <- function(data) {
+  check_is_installed("sf")
+  loadNamespace("sf") # for use in other packages, otherwise the `vctrs` pkg will complain
+  
   if (is.sf(data)) {
     data
   } else {
@@ -218,6 +223,9 @@ filter_sf <- function(sf_data, xmin = NULL, xmax = NULL, ymin = NULL, ymax = NUL
 #' 
 #' }
 filter_geolocation <- function(sf_data, ..., col_zipcode = NULL) {
+  check_is_installed("sf")
+  loadNamespace("sf") # for use in other packages, otherwise the `vctrs` pkg will complain
+  
   if (is.null(col_zipcode)) {
     col_zipcode <- rev(sort(colnames(sf_data)[which(colnames(sf_data) %in% c("postcode", paste0("pc", 2:4)))]))[1]
     if (is.na(col_zipcode)) {
@@ -240,7 +248,7 @@ filter_geolocation <- function(sf_data, ..., col_zipcode = NULL) {
 
 #' @rdname GIS
 #' @param sf_data a data set of class 'sf'
-#' @details [latitude()] and [longitude()] return these specific geographic properties of `sf_data`.
+#' @details [latitude()] specifies the north-south position ('y axis') and [longitude()] specifies the east-west position ('x axis'). They return the numeric coordinate of the centre of a simple feature.
 #' @export
 #' @examples 
 #' 
