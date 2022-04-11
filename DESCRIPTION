@@ -1,6 +1,6 @@
 Package: certegis
 Title: A Certe R Package for Geographic Information Science
-Version: 1.2.5
+Version: 1.2.6
 Authors@R: c(
   person(given = c("Matthijs", "S."), 
          family = "Berends",
@@ -17,7 +17,7 @@ Description: A Certe R package for geographic information science (GIS),
   This package is part of the 'certedata' universe.
 URL: https://certe-medical-epidemiology.github.io/certegis, https://github.com/certe-medical-epidemiology/certegis
 Depends: 
-  R (>= 3.6.0)
+  R (>= 4.1.0)
 Imports: 
   dplyr (>= 1.0.5),
   yaml (>= 2.2.0)
