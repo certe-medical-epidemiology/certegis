@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">certegis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.6</span>
       </span>
     </div>
 
@@ -115,18 +115,18 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 6.550413 ymin: 53.19319 xmax: 6.550413 ymax: 53.19319</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geodetic CRS:  WGS 84</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                          place  name                  geometry</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Van Swietenlaan 2, Groningen CERTE POINT (6.550413 53.19319)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Van Swietenlaan 2, Groningen Certe POINT (6.550413 53.19319)</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># reverse geocoding: get the name and address</span></span>
 <span class="r-in"><span class="fu">reverse_geocode</span><span class="op">(</span><span class="va">coord</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    name           address zipcode      city</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 CERTE Van Swietenlaan 2  9728NZ Groningen</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Certe Van Swietenlaan 2  9728NZ Groningen</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># places can be any text, and the results are prioritised based on</span></span>
 <span class="r-in"><span class="co"># the distance from the main Certe building, so:</span></span>
 <span class="r-in"><span class="fu">reverse_geocode</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Certe"</span>, <span class="st">"IKEA"</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    name           address zipcode      city</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 CERTE Van Swietenlaan 2  9728NZ Groningen</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Certe Van Swietenlaan 2  9728NZ Groningen</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  IKEA         Sontweg 9  9723AT Groningen</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">hospitals</span> <span class="op">&lt;-</span> <span class="fu">geocode</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Martini ziekenhuis"</span>,</span>
