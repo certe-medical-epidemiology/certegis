@@ -78,27 +78,30 @@ included_datasets <- function() {
 #' @name cbs_geodata
 #' @rdname cbs_geodata
 #' @examples 
-#' if (requireNamespace("sf")) {
+#' if (require("certeplot2")) {
 #' 
-#' head(geo_gemeenten)
-#' head(geo_ggdregios)
-#' head(geo_nuts3)
-#' head(geo_postcodes2)
-#' head(geo_postcodes3)
-#' head(geo_postcodes4)
-#' head(geo_postcodes6)
-#' head(geo_provincies)
-#' 
+#'   geo_postcodes6 |>
+#'     filter_geolocation(plaats == "Groningen") |>
+#'     plot2(category = inwoners / oppervlakte_km2,
+#'           datalabels = FALSE,
+#'           title = "City of Groningen")
+#'   
 #' }
 #' 
-#' if (requireNamespace("certeplot2")) {
+#' if (require("certeplot2")) {
 #' 
-#' geo_postcodes6 |>
-#'   filter_geolocation(plaats == "Groningen") |>
-#'   plot2(category = inwoners / oppervlakte_km2,
-#'         datalabels = FALSE,
-#'         title = "City of Groningen")
+#'   geo_postcodes4 |>
+#'     filter_geolocation(plaats == "Groningen") |>
+#'     plot2(category = inwoners / oppervlakte_km2,
+#'           datalabels = FALSE,
+#'           title = "City of Groningen")
 #'   
+#' }
+#' 
+#' if (require("sf")) {
+#' 
+#'   head(geo_gemeenten)
+#' 
 #' }
 "geo_gemeenten"
 
