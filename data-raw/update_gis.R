@@ -284,9 +284,9 @@ geo_postcodes4 <- st_simplify(geo_postcodes4, dTolerance = 0.0001)
 geo_postcodes4$geometry <- st_cast(geo_postcodes4$geometry, , "MULTIPOLYGON")
 
 # geo_postcodes6 is ook veel te groot en bevat veel te veel detail
+geo_postcodes6 <- crop_certe(geo_postcodes6)
 geo_postcodes6 <- st_simplify(geo_postcodes6, dTolerance = 5)
 geo_postcodes6$geometry <- st_cast(geo_postcodes6$geometry, , "MULTIPOLYGON")
-geo_postcodes6 <- crop_certe(geo_postcodes6)
 
 # "Fryslân" vervangen door "Friesland"
 geo_provincies$provincie <- gsub("Fryslân", "Friesland", geo_provincies$provincie, fixed = TRUE)
