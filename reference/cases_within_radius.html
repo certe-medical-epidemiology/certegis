@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">certegis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.0</span>
       </span>
     </div>
 
@@ -110,8 +110,8 @@
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:base’:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     intersect, setdiff, setequal, union</span>
-<span class="r-in"><span class="va">postcodes_friesland</span> <span class="op">&lt;-</span> <span class="va">geo_postcodes4</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span class="r-in">  <span class="fu"><a href="GIS.html">filter_geolocation</a></span><span class="op">(</span><span class="va">provincie</span> <span class="op">==</span> <span class="st">"Friesland"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span class="r-in"><span class="va">postcodes_friesland</span> <span class="op">&lt;-</span> <span class="va">geo_postcodes4</span> |&gt; </span>
+<span class="r-in">  <span class="fu"><a href="GIS.html">filter_geolocation</a></span><span class="op">(</span><span class="va">provincie</span> <span class="op">==</span> <span class="st">"Friesland"</span><span class="op">)</span> |&gt; </span>
 <span class="r-in">  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">postcode</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># example with Norovirus cases</span></span>
@@ -121,28 +121,28 @@
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">noro</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   postcode n</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     8388 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     8389 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     8391 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     8389 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     8391 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4     8392 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     8393 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     8394 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     8393 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     8394 2</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">radial_check</span> <span class="op">&lt;-</span> <span class="fu">cases_within_radius</span><span class="op">(</span><span class="va">noro</span>, radius_km <span class="op">=</span> <span class="fl">10</span>, minimum_cases <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using column 'n' for cases_within_radius()</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">radial_check</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   postcode cases_within_range minimum_met</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     8388                 32        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     8389                 43        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     8391                 41        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     8392                 34        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     8393                 35        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     8394                 42        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     8388                 31        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     8389                 42        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     8391                 45        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     8392                 33        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     8393                 36        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     8394                 49        TRUE</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://certe-medical-epidemiology.github.io/certeplot2" class="external-link">"certeplot2"</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"></span>
-<span class="r-in">  <span class="va">radial_check</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">    <span class="fu"><a href="GIS.html">add_map</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">    <span class="fu"><a href="GIS.html">filter_geolocation</a></span><span class="op">(</span><span class="va">provincie</span> <span class="op">==</span> <span class="st">"Friesland"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">  <span class="va">radial_check</span> |&gt;</span>
+<span class="r-in">    <span class="fu"><a href="GIS.html">add_map</a></span><span class="op">(</span><span class="op">)</span> |&gt;</span>
+<span class="r-in">    <span class="fu"><a href="GIS.html">filter_geolocation</a></span><span class="op">(</span><span class="va">provincie</span> <span class="op">==</span> <span class="st">"Friesland"</span><span class="op">)</span> |&gt;</span>
 <span class="r-in">    <span class="fu"><a href="https://certe-medical-epidemiology.github.io/certeplot2/reference/plot2.html" class="external-link">plot2</a></span><span class="op">(</span>category <span class="op">=</span> <span class="va">cases_within_range</span>,</span>
 <span class="r-in">          category.title <span class="op">=</span> <span class="st">"Cases"</span>,</span>
 <span class="r-in">          datalabels <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -166,7 +166,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>

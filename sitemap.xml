@@ -19,7 +19,7 @@
     <loc>https://certe-medical-epidemiology.github.io/certegis/reference/cases_within_radius.html</loc>
   </url>
   <url>
-    <loc>https://certe-medical-epidemiology.github.io/certegis/reference/cbs_data.html</loc>
+    <loc>https://certe-medical-epidemiology.github.io/certegis/reference/cbs_geodata.html</loc>
   </url>
   <url>
     <loc>https://certe-medical-epidemiology.github.io/certegis/reference/certegis-package.html</loc>
@@ -38,8 +38,5 @@
   </url>
   <url>
     <loc>https://certe-medical-epidemiology.github.io/certegis/reference/postcodes4_afstanden.html</loc>
-  </url>
-  <url>
-    <loc>https://certe-medical-epidemiology.github.io/certegis/reference/reexports.html</loc>
   </url>
 </urlset>
