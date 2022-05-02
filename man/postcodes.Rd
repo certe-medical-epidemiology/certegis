@@ -3,11 +3,11 @@
 \docType{data}
 \name{postcodes}
 \alias{postcodes}
-\title{Data Set with Dutch Zipcodes, Cities, Municipalities and Province}
+\title{Data Set with Dutch Zip Codes, Cities, Municipalities and Province}
 \format{
 A \link{data.frame} with 4,963 observations and 9 variables:
 \itemize{
-\item \code{postcode}\cr zipcode, contains PC2, PC3 and PC4
+\item \code{postcode}\cr zip code, contains PC2, PC3 and PC4
 \item \code{inwoners}\cr total number of inhabitants
 \item \code{inwoners_man}\cr total number of male inhabitants
 \item \code{inwoners_vrouw}\cr total number of female inhabitants
@@ -18,13 +18,20 @@ A \link{data.frame} with 4,963 observations and 9 variables:
 \item \code{ggdregio}\cr name of the regional GGD service (public healthcare service)
 }
 }
+\source{
+The data in this \link{data.frame} are retrieved from, and publicly available at, Statistics Netherlands: \emph{StatLine}, Centraal Bureau voor de Statistiek, 'Bevolking per geslacht per postcode (data set 83503NED)', 1 januari 2021, \url{https://opendata.cbs.nl}.
+}
 \usage{
 postcodes
 }
 \description{
-Data Set with Dutch Zipcodes, Cities, Municipalities and Province
+Data Set with Dutch Zip Codes, Cities, Municipalities and Province
 }
 \details{
 See \href{https://github.com/certe-medical-epidemiology/certegis/blob/main/data-raw/update_gis.R}{the repository file} to update this data set.
+}
+\examples{
+head(postcodes)
+str(postcodes)
 }
 \keyword{datasets}

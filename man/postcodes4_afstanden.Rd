@@ -3,19 +3,28 @@
 \docType{data}
 \name{postcodes4_afstanden}
 \alias{postcodes4_afstanden}
-\title{Distance from Zipcode to Zipcode}
+\title{Distance from Zip Code to Zip Code}
 \format{
 A \link{data.frame} with 562,330 observations and 3 variables:
 \itemize{
-\item \code{postcode.x}\cr zipcode (PC4)
-\item \code{postcode.y}\cr zipcode (PC4)
+\item \code{postcode.x}\cr zip code (PC4)
+\item \code{postcode.y}\cr zip code (PC4)
 \item \code{afstand_km}\cr distance in kilometres
+}
+}
+\source{
+The data in this \link{data.frame} are retrieved from, and publicly available at, Statistics Netherlands:
+\itemize{
+\item Centraal Bureau voor de Statistiek, 'Gebiedsindelingen', GPKG 2022 v1, \url{https://www.cbs.nl}
 }
 }
 \usage{
 postcodes4_afstanden
 }
 \description{
-This data set was obtained by calculating the difference from the middle point of a zipcode geometry to another zipcode geometry (using the \link{postcodes} data set and the \code{sf} package).
+This data set was obtained by calculating the difference from the middle point of a zip code geometry to another zip code geometry (using the \link{geo_postcodes4} data set and the \code{sf} package).
+}
+\examples{
+head(postcodes4_afstanden)
 }
 \keyword{datasets}

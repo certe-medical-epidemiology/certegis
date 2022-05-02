@@ -32,7 +32,7 @@ latitude(sf_data)
 longitude(sf_data)
 }
 \arguments{
-\item{maptype}{type of geometric data, must be one of: \code{"gemeenten"}, \code{"ggdregios"}, \code{"nuts3"}, \code{"postcodes2"}, \code{"postcodes3"}, \code{"postcodes4"}, \code{"provincies"}. For \code{\link[=add_map]{add_map()}}, this is determined automatically if left blank.}
+\item{maptype}{type of geometric data, must be one of: \code{"gemeenten"}, \code{"ggdregios"}, \code{"nuts3"}, \code{"postcodes2"}, \code{"postcodes3"}, \code{"postcodes4"}, \code{"postcodes6"}, \code{"provincies"}. For \code{\link[=add_map]{add_map()}}, this is determined automatically if left blank.}
 
 \item{data}{data set to join left to the geodata}
 

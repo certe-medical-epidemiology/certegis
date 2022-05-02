@@ -17,17 +17,19 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-CBS_VERSION <- c(postcodes = "2021",
-                 gebiedsindelingen = "2022 v1")
+CBS_VERSION <- c("Kerncijfers per postcode" = "ZIP 2020 v1",
+                 "Gebiedsindelingen" = "GPKG 2022 v1",
+                 "Bevolking per geslacht per postcode (data set 83503NED)" = "1 januari 2021",
+                 "Bevolking en leeftijd per postcode (data set 83502NED)" = "1 januari 2021")
 
 included_datasets <- function() {
   DATASETS <- utils::data(package = "certegis")$results[, "Item", drop = TRUE]
   DATASETS[DATASETS %like% "^geo"]
 }
 
-#' Data Set with Dutch Zipcodes, Cities, Municipalities and Province
+#' Data Set with Dutch Zip Codes, Cities, Municipalities and Province
 #' @format A [data.frame] with `r format(nrow(postcodes), big.mark = ",")` observations and `r ncol(postcodes)` variables:
-#' - `postcode`\cr zipcode, contains PC2, PC3 and PC4
+#' - `postcode`\cr zip code, contains PC2, PC3 and PC4
 #' - `inwoners`\cr total number of inhabitants
 #' - `inwoners_man`\cr total number of male inhabitants
 #' - `inwoners_vrouw`\cr total number of female inhabitants
@@ -36,55 +38,91 @@ included_datasets <- function() {
 #' - `provincie`\cr formal Dutch province name
 #' - `nuts3`\cr Nomenclature of Territorial Units for Statistics, level 3 (in Dutch: COROP region, *Coordinatie Commissie Regionaal OnderzoeksProgramma*)
 #' - `ggdregio`\cr name of the regional GGD service (public healthcare service)
-# - `huishoudens`\cr number of households in the zipcode area
-# - `huishouden_grootte`\cr mean size of the household sizes in the zipcode area
+# - `huishoudens`\cr number of households in the zip code area
+# - `huishouden_grootte`\cr mean size of the household sizes in the zip code area
 #' @details See [the repository file](https://github.com/certe-medical-epidemiology/certegis/blob/main/data-raw/update_gis.R) to update this data set.
+#' @source The data in this [data.frame] are retrieved from, and publicly available at, Statistics Netherlands: *StatLine*, Centraal Bureau voor de Statistiek, '`r names(CBS_VERSION[names(CBS_VERSION) %like% "83503NED"])`', `r CBS_VERSION[names(CBS_VERSION) %like% "83503NED"]`, <https://opendata.cbs.nl>.
+#' @examples 
+#' head(postcodes)
+#' str(postcodes)
 "postcodes"
 
-#' Number of Inhabitants per Zipcode and Age
+#' Number of Inhabitants per Zip Code and Age
 #' @format A [data.frame] with `r format(nrow(inwoners_per_postcode_leeftijd), big.mark = ",")` observations and `r ncol(inwoners_per_postcode_leeftijd)` variables:
-#' - `postcode`\cr zipcode, contains PC2, PC3 and PC4
+#' - `postcode`\cr zip code, contains PC2, PC3 and PC4
 #' - `leeftijd`\cr age group per 5 years: 0-4, 5-9, ..., 90-94, 95+
 #' - `inwoners`\cr total number of inhabitants
 #' - `inwoners_man`\cr total number of male inhabitants
 #' - `inwoners_vrouw`\cr total number of female inhabitants
 #' @details See [the repository file](https://github.com/certe-medical-epidemiology/certegis/blob/main/data-raw/update_gis.R) to update this data set.
+#' @source The data in this [data.frame] are retrieved from, and publicly available at, Statistics Netherlands: *StatLine*, Centraal Bureau voor de Statistiek, '`r names(CBS_VERSION[names(CBS_VERSION) %like% "83502NED"])`', `r CBS_VERSION[names(CBS_VERSION) %like% "83502NED"]`, <https://opendata.cbs.nl>.
+#' @examples 
+#' head(inwoners_per_postcode_leeftijd)
+#' str(inwoners_per_postcode_leeftijd)
 "inwoners_per_postcode_leeftijd"
 
-#' Data Sets with Geometries of Dutch Provinces, Municipalities and Zipcodes
-#' @format A `sf`/[data.frame] with 3 variables:
-#' - `...`\cr column name of the identifier, which is the singular form of the name of the data set (i.e., `geo_gemeenten$gemeente`)
-#' - `inwoners`\cr number of inhabitants
+#' Data Sets with Geometries of Dutch Provinces, Municipalities and Zip Codes
+#' @details These [data.frame]s are of additional class `sf` and contain 3 variables:
+#' - `...`\cr name of the area, see *Examples*
+#' - `inwoners`\cr number of inhabitants in the area
 #' - `oppervlakte_km2`\cr area in square kilometres
-#' - `geometry`\cr the multipolygonal form of the area
-#' @name cbs_data
-#' @rdname cbs_data
-#' @details See [the repository file](https://github.com/certe-medical-epidemiology/certegis/blob/main/data-raw/update_gis.R) to update these data sets.
-"geo_postcodes4"
-
-#' @rdname cbs_data
-"geo_postcodes3"
-
-#' @rdname cbs_data
-"geo_postcodes2"
-
-#' @rdname cbs_data
-"geo_ggdregios"
-
-#' @rdname cbs_data
-"geo_nuts3"
-
-#' @rdname cbs_data
+#' - `geometry`\cr the multipolygonal object of the area
+#' 
+#' See [the repository file](https://github.com/certe-medical-epidemiology/certegis/blob/main/data-raw/update_gis.R) to update these data sets.
+#' 
+#' **NOTE**: all data sets contains all areas of the whole country of the Netherlands, except for `geo_postcodes6` which was cropped to only cover the Certe region (using [crop_certe()]).
+#' @source The data in these [data.frame]s are retrieved from, and publicly available at, Statistics Netherlands: 
+#' 
+#' * Centraal Bureau voor de Statistiek, '`r names(CBS_VERSION[names(CBS_VERSION) %like% "gebiedsindeling"])`', `r CBS_VERSION[names(CBS_VERSION) %like% "gebiedsindeling"]`, <https://www.cbs.nl>
+#' * Centraal Bureau voor de Statistiek, '`r names(CBS_VERSION[names(CBS_VERSION) %like% "kerncijfers"])`', `r CBS_VERSION[names(CBS_VERSION) %like% "kerncijfers"]`, <https://www.cbs.nl>
+#' @name cbs_geodata
+#' @rdname cbs_geodata
+#' @examples 
+#' if (requireNamespace("sf")) {
+#' 
+#' head(geo_gemeenten)
+#' head(geo_ggdregios)
+#' head(geo_nuts3)
+#' head(geo_postcodes2)
+#' head(geo_postcodes3)
+#' head(geo_postcodes4)
+#' head(geo_postcodes6)
+#' head(geo_provincies)
+#' 
+#' }
 "geo_gemeenten"
 
-#' @rdname cbs_data
+#' @rdname cbs_geodata
+"geo_ggdregios"
+
+#' @rdname cbs_geodata
+"geo_nuts3"
+
+#' @rdname cbs_geodata
+"geo_postcodes2"
+
+#' @rdname cbs_geodata
+"geo_postcodes3"
+
+#' @rdname cbs_geodata
+"geo_postcodes4"
+
+#' @rdname cbs_geodata
+"geo_postcodes6"
+
+#' @rdname cbs_geodata
 "geo_provincies"
 
-#' Distance from Zipcode to Zipcode
+#' Distance from Zip Code to Zip Code
 #' 
-#' This data set was obtained by calculating the difference from the middle point of a zipcode geometry to another zipcode geometry (using the [postcodes] data set and the `sf` package).
+#' This data set was obtained by calculating the difference from the middle point of a zip code geometry to another zip code geometry (using the [geo_postcodes4] data set and the `sf` package).
 #' @format A [data.frame] with `r format(nrow(postcodes4_afstanden), big.mark = ",")` observations and `r ncol(postcodes4_afstanden)` variables:
-#' - `postcode.x`\cr zipcode (PC4)
-#' - `postcode.y`\cr zipcode (PC4)
+#' - `postcode.x`\cr zip code (PC4)
+#' - `postcode.y`\cr zip code (PC4)
 #' - `afstand_km`\cr distance in kilometres
+#' @source The data in this [data.frame] are retrieved from, and publicly available at, Statistics Netherlands: 
+#' 
+#' * Centraal Bureau voor de Statistiek, '`r names(CBS_VERSION[names(CBS_VERSION) %like% "gebiedsindeling"])`', `r CBS_VERSION[names(CBS_VERSION) %like% "gebiedsindeling"]`, <https://www.cbs.nl>
+#' @examples 
+#' head(postcodes4_afstanden)
 "postcodes4_afstanden"

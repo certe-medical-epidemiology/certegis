@@ -155,16 +155,18 @@ crop_certe <- function(sf_data) {
       filter(ggdregio %in% postcode_filter$ggdregio)
   } else if ("postcode" %in% colnames(sf_data)) {
     max_nchar <- max(nchar(as.character(sf_data$postcode)), na.rm = TRUE)
-    # PC4
-    if (max_nchar == 4) {
+    if (max_nchar == 2) {
+      # PC2
       sf_data <- sf_data %>%
-        filter(!as.integer(gsub("[^0-9]|", "", as.character(postcode))) %in% c(0:7749, 7770:7799, 8000:8299))
+        filter(!as.integer(gsub("[^0-9]|", "", as.character(postcode))) %in% c(0:77, 80:82))
     } else if (max_nchar == 3) { 
+      # PC3
       sf_data <- sf_data %>%
         filter(!as.integer(gsub("[^0-9]|", "", as.character(postcode))) %in% c(0:774, 777:779, 800:829))
     } else {
+      # PC4 and PC6
       sf_data <- sf_data %>%
-        filter(!as.integer(gsub("[^0-9]|", "", as.character(postcode))) %in% c(0:77, 80:82))
+        filter(!as.integer(gsub("[^0-9]|", "", as.character(postcode))) %in% c(0:7749, 7770:7799, 8000:8299))
     }
   } else {
     # try a bounding box based on PC4 level
