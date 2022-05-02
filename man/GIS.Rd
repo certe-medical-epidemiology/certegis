@@ -66,18 +66,18 @@ All of these functions will check if the \code{sf} package is installed, and wil
 \examples{
 get_map() # defaults to the geo_postcodes4 data set
 
-data.frame(postcode = 7753, number_of_cases = 3) \%>\% 
+data.frame(postcode = 7753, number_of_cases = 3) |> 
   add_map()
 
-geo_provincies \%>\% crop_certe()
+geo_provincies |> crop_certe()
 
 # filter on a latitude of 52.5 degrees and higher
-geo_provincies \%>\% filter_sf(ymin = 52.5)
+geo_provincies |> filter_sf(ymin = 52.5)
 
 if (require("certeplot2")) {
 
-  geo_postcodes4 \%>\% 
-    filter_geolocation(gemeente == "Tytsjerksteradiel") \%>\% 
+  geo_postcodes4 |> 
+    filter_geolocation(gemeente == "Tytsjerksteradiel") |> 
     plot2(category = inwoners,
           datalabels = postcode)
 

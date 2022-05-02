@@ -17,10 +17,6 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-#' @importFrom dplyr `%>%`
-#' @export
-dplyr::`%>%`
-
 check_is_installed <- function(pkgs) {
   to_install <- pkgs[which(!pkgs %in% rownames(utils::installed.packages()))]
   if (length(to_install) > 0) {

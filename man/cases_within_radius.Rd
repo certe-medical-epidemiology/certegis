@@ -28,8 +28,8 @@ Based on the \link{postcodes4_afstanden} data set, this function determines the 
 }
 \examples{
 library(dplyr)
-postcodes_friesland <- geo_postcodes4 \%>\% 
-  filter_geolocation(provincie == "Friesland") \%>\% 
+postcodes_friesland <- geo_postcodes4 |> 
+  filter_geolocation(provincie == "Friesland") |> 
   pull(postcode)
 
 # example with Norovirus cases
@@ -43,9 +43,9 @@ head(radial_check)
 
 if (require("certeplot2")) {
 
-  radial_check \%>\%
-    add_map() \%>\%
-    filter_geolocation(provincie == "Friesland") \%>\%
+  radial_check |>
+    add_map() |>
+    filter_geolocation(provincie == "Friesland") |>
     plot2(category = cases_within_range,
           category.title = "Cases",
           datalabels = FALSE,

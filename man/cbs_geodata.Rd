@@ -82,5 +82,15 @@ head(geo_postcodes6)
 head(geo_provincies)
 
 }
+
+if (requireNamespace("certeplot2")) {
+
+geo_postcodes6 |>
+  filter_geolocation(plaats == "Groningen") |>
+  plot2(category = inwoners / oppervlakte_km2,
+        datalabels = FALSE,
+        title = "City of Groningen")
+  
+}
 }
 \keyword{datasets}

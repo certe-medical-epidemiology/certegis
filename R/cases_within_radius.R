@@ -25,12 +25,12 @@
 #' @param minimum_cases minimum number of cases to search for
 #' @param column_count column name in `data` with the number of case counts
 #' @param ... ignored, allows for future extensions
-#' @importFrom dplyr `%>%` filter select pull bind_rows
+#' @importFrom dplyr filter select pull bind_rows
 #' @export
 #' @examples
 #' library(dplyr)
-#' postcodes_friesland <- geo_postcodes4 %>% 
-#'   filter_geolocation(provincie == "Friesland") %>% 
+#' postcodes_friesland <- geo_postcodes4 |> 
+#'   filter_geolocation(provincie == "Friesland") |> 
 #'   pull(postcode)
 #' 
 #' # example with Norovirus cases
@@ -44,9 +44,9 @@
 #' 
 #' if (require("certeplot2")) {
 #' 
-#'   radial_check %>%
-#'     add_map() %>%
-#'     filter_geolocation(provincie == "Friesland") %>%
+#'   radial_check |>
+#'     add_map() |>
+#'     filter_geolocation(provincie == "Friesland") |>
 #'     plot2(category = cases_within_range,
 #'           category.title = "Cases",
 #'           datalabels = FALSE,
@@ -71,16 +71,16 @@ cases_within_radius <- function(data, radius_km = 10, minimum_cases = 10, column
                       cases_within_range = NA_integer_,
                       minimum_met = FALSE)
   for (i in seq_len(length(unique_pc))) {
-    pcs_within_radius <- certegis::postcodes4_afstanden %>% 
+    pcs_within_radius <- certegis::postcodes4_afstanden |> 
       filter((postcode.x == as.character(unique_pc[i]) & postcode.y %in% as.character(data$postcode)) |
-               (postcode.y == as.character(unique_pc[i]) & postcode.x %in% as.character(data$postcode))) %>% 
-      filter(afstand_km <= radius_km) %>% 
-      select(postcode.x, postcode.y) %>% 
-      unlist() %>% 
+               (postcode.y == as.character(unique_pc[i]) & postcode.x %in% as.character(data$postcode))) |> 
+      filter(afstand_km <= radius_km) |> 
+      select(postcode.x, postcode.y) |> 
+      unlist() |> 
       unique()
-    n_sum <- data %>% 
-      filter(postcode %in% pcs_within_radius) %>% 
-      pull(column_count) %>% 
+    n_sum <- data |> 
+      filter(postcode %in% pcs_within_radius) |> 
+      pull(column_count) |> 
       sum(na.rm = TRUE)
     if (n_sum >= minimum_cases) {
       warns$minimum_met[i] <- TRUE

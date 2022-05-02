@@ -51,7 +51,7 @@ get_map <- function(maptype = "postcodes4") {
 #' @export
 #' @examples 
 #' 
-#' data.frame(postcode = 7753, number_of_cases = 3) %>% 
+#' data.frame(postcode = 7753, number_of_cases = 3) |> 
 #'   add_map()
 add_map <- function(data, maptype = NULL, by = NULL, crop_certe = TRUE) {
   check_is_installed("sf")
@@ -89,8 +89,8 @@ add_map <- function(data, maptype = NULL, by = NULL, crop_certe = TRUE) {
   
   if (length(data[, by, drop = TRUE]) > length(unique(data[, by, drop = TRUE]))) {
     warning("Column '", by, "'in `data` should have unique values for `add_map()`, summarising all numeric columns of `data`", call. = FALSE)
-    data <- data %>% 
-      group_by(across(by)) %>% 
+    data <- data |> 
+      group_by(across(by)) |> 
       summarise(across(everything(),
                        function(x) {
                          if (is.numeric(x)) {
@@ -127,45 +127,45 @@ as.sf <- function(data) {
 }
 
 #' @rdname GIS
-#' @importFrom dplyr `%>%` mutate filter 
+#' @importFrom dplyr mutate filter 
 #' @details [crop_certe()] cuts any geometry on the Certe region (more or less the Northern three provinces of the Netherlands).
 #' @export
 #' @examples 
 #' 
-#' geo_provincies %>% crop_certe()
+#' geo_provincies |> crop_certe()
 crop_certe <- function(sf_data) {
   check_is_installed("sf")
   loadNamespace("sf") # for use in other packages, otherwise the `vctrs` pkg will complain
 
-  postcode_filter <- certegis::postcodes %>%
+  postcode_filter <- certegis::postcodes |>
     filter(provincie %in% c("Friesland", "Groningen", "Drenthe"))
   
   if ("provincie" %in% colnames(sf_data)) {
-    sf_data <- sf_data %>%
+    sf_data <- sf_data |>
       filter(provincie %in% postcode_filter$provincie)
     return(sf_data)
   } else if ("gemeente" %in% colnames(sf_data)) {
-    sf_data <- sf_data %>%
+    sf_data <- sf_data |>
       filter(gemeente %in% postcode_filter$gemeente)
   } else if ("nuts3" %in% colnames(sf_data)) {
-    sf_data <- sf_data %>%
+    sf_data <- sf_data |>
       filter(nuts3 %in% postcode_filter$nuts3)
   } else if ("ggdregio" %in% colnames(sf_data)) {
-    sf_data <- sf_data %>%
+    sf_data <- sf_data |>
       filter(ggdregio %in% postcode_filter$ggdregio)
   } else if ("postcode" %in% colnames(sf_data)) {
     max_nchar <- max(nchar(as.character(sf_data$postcode)), na.rm = TRUE)
     if (max_nchar == 2) {
       # PC2
-      sf_data <- sf_data %>%
+      sf_data <- sf_data |>
         filter(!as.integer(gsub("[^0-9]|", "", as.character(postcode))) %in% c(0:77, 80:82))
     } else if (max_nchar == 3) { 
       # PC3
-      sf_data <- sf_data %>%
+      sf_data <- sf_data |>
         filter(!as.integer(gsub("[^0-9]|", "", as.character(postcode))) %in% c(0:774, 777:779, 800:829))
     } else {
       # PC4 and PC6
-      sf_data <- sf_data %>%
+      sf_data <- sf_data |>
         filter(!as.integer(gsub("[^0-9]|", "", as.character(postcode))) %in% c(0:7749, 7770:7799, 8000:8299))
     }
   } else {
@@ -193,7 +193,7 @@ crop_certe <- function(sf_data) {
 #' @examples 
 #' 
 #' # filter on a latitude of 52.5 degrees and higher
-#' geo_provincies %>% filter_sf(ymin = 52.5)
+#' geo_provincies |> filter_sf(ymin = 52.5)
 filter_sf <- function(sf_data, xmin = NULL, xmax = NULL, ymin = NULL, ymax = NULL) {
   check_is_installed("sf")
   loadNamespace("sf") # for use in other packages, otherwise the `vctrs` pkg will complain
@@ -212,14 +212,14 @@ filter_sf <- function(sf_data, xmin = NULL, xmax = NULL, ymin = NULL, ymax = NUL
 #' @rdname GIS
 #' @param ... filters to set
 #' @param col_zipcode column with zip codes
-#' @importFrom dplyr `%>%` mutate filter 
+#' @importFrom dplyr mutate filter 
 #' @export
 #' @examples 
 #' 
 #' if (require("certeplot2")) {
 #' 
-#'   geo_postcodes4 %>% 
-#'     filter_geolocation(gemeente == "Tytsjerksteradiel") %>% 
+#'   geo_postcodes4 |> 
+#'     filter_geolocation(gemeente == "Tytsjerksteradiel") |> 
 #'     plot2(category = inwoners,
 #'           datalabels = postcode)
 #' 
@@ -241,9 +241,9 @@ filter_geolocation <- function(sf_data, ..., col_zipcode = NULL) {
   if (min_char < 4) {
     warning("filter may not be accurate since (some) zip codes only contain ", min_char, " numbers", call. = FALSE)
   }
-  filtered <- certegis::postcodes %>% filter(...)
-  filtered_sf <- sf_data %>%
-    mutate(postcode = as.double(gsub("[^0-9]", "", sf_data[, col_zipcode, drop = TRUE]))) %>%
+  filtered <- certegis::postcodes |> filter(...)
+  filtered_sf <- sf_data |>
+    mutate(postcode = as.double(gsub("[^0-9]", "", sf_data[, col_zipcode, drop = TRUE]))) |>
     filter(postcode %in% filtered$postcode)
   filtered_sf[, colnames(sf_data), drop = FALSE]
 }
