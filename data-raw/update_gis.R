@@ -283,8 +283,8 @@ geo_provincies <- inwoners_toevoegen(geo_provincies)
 geo_postcodes4 <- st_simplify(geo_postcodes4, dTolerance = 0.0001)
 geo_postcodes4$geometry <- st_cast(geo_postcodes4$geometry, , "MULTIPOLYGON")
 
-# geo_postcodes6 is veel te groot, we maken hem simpeler
-geo_postcodes6 <- st_simplify(geo_postcodes6, dTolerance = 0.0001)
+# geo_postcodes6 is ook veel te groot en bevat veel te veel detail
+geo_postcodes6 <- st_simplify(geo_postcodes6, dTolerance = 5)
 geo_postcodes6$geometry <- st_cast(geo_postcodes6$geometry, , "MULTIPOLYGON")
 geo_postcodes6 <- crop_certe(geo_postcodes6)
 
