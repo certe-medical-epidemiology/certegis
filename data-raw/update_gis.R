@@ -5,10 +5,10 @@ library(AMR) # voor age_groups()
 library(sf) # let op: minimaal v1.0!
 library(cleaner)
 
-## HIER NA R/data.R UPDATEN MET VERSIENUMMER
+## HIERNA R/data.R UPDATEN MET VERSIENUMMER
 
 # MB/ 2021-12-31 ik kon vandaag dit hele script doorlopen zonder fouten.
-
+# MB/ 2022-05-02 PC6 toegevoegd
 
 # Bronnen -----------------------------------------------------------------
 
@@ -34,6 +34,8 @@ gebiedsindelingen_bestand <- paste0(downloadmap, "cbsgebiedsindelingen_2022_v1.g
 # daarvan gemaakt:
 # https://download.cbs.nl/postcode/CBS-PC4-2020-v1.zip (en die bestond gewoon)
 postcodes4_bestand <- paste0(downloadmap, "CBS-PC4-2020-v1/CBS_PC4_2020_v1.shp")
+# voor PC6: https://download.cbs.nl/postcode/CBS-PC6-2020-v1.zip
+postcodes6_bestand <- paste0(downloadmap, "CBS-PC6-2020-v1/CBS_PC6_2020_v1.shp")
 
 
 # Helpfuncties ------------------------------------------------------------
@@ -162,6 +164,17 @@ geo_postcodes4 <- geo_postcodes4 %>%
             area_km2 = as.double(st_area(geometry) / 1000 ^ 2),
             geometry)
 
+# Postcode-6 kaart --------------------------------------------------------
+
+geo_postcodes6 <- st_read(postcodes6_bestand)
+geo_postcodes6 <- kaart_fixen(geo_postcodes6) # duurt ca. 2 min.
+# alleen relevante kolommen houden
+geo_postcodes6 <- geo_postcodes6 %>%
+  transmute(postcode = as.character(PC6),
+            inwoners = as.double(INWONER),
+            oppervlakte_km2 = as.double(st_area(geometry) / 1000 ^ 2),
+            geometry)
+geo_postcodes6$inwoners[geo_postcodes6$inwoners < 0] <- 0
 
 # Referentiewaarden aan `postcodes` toevoegen en kaarten opslaan ----------
 
@@ -270,6 +283,11 @@ geo_provincies <- inwoners_toevoegen(geo_provincies)
 geo_postcodes4 <- st_simplify(geo_postcodes4, dTolerance = 0.0001)
 geo_postcodes4$geometry <- st_cast(geo_postcodes4$geometry, , "MULTIPOLYGON")
 
+# geo_postcodes6 is ook veel te groot en bevat veel te veel detail
+geo_postcodes6 <- crop_certe(geo_postcodes6)
+geo_postcodes6 <- st_simplify(geo_postcodes6, dTolerance = 5)
+geo_postcodes6$geometry <- st_cast(geo_postcodes6$geometry, , "MULTIPOLYGON")
+
 # "Fryslân" vervangen door "Friesland"
 geo_provincies$provincie <- gsub("Fryslân", "Friesland", geo_provincies$provincie, fixed = TRUE)
 postcodes$provincie <- gsub("Fryslân", "Friesland", postcodes$provincie, fixed = TRUE)
@@ -282,6 +300,7 @@ usethis::use_data(geo_ggdregios, overwrite = TRUE, internal = FALSE, compress = 
 usethis::use_data(geo_nuts3, overwrite = TRUE, internal = FALSE, compress = "xz", version = 2)
 usethis::use_data(geo_postcodes4, overwrite = TRUE, internal = FALSE, compress = "xz", version = 2)
 usethis::use_data(geo_provincies, overwrite = TRUE, internal = FALSE, compress = "xz", version = 2)
+usethis::use_data(geo_postcodes6, overwrite = TRUE, internal = FALSE, compress = "xz", version = 2)
 
 # vanuit geo_postcodes4 ook geo_postcodes2 en geo_postcodes3 maken
 geo_postcodes2 <- geo_postcodes4 %>%

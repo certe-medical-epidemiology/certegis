@@ -18,7 +18,7 @@
 # ===================================================================== #
 
 .onAttach <- function(...) {
-  # find in R/data.R
-  packageStartupMessage(paste("Linking to CBS data -",
-                              paste0("'", names(CBS_VERSION), "' ", CBS_VERSION, collapse = ", ")))
+  # edit in R/data.R
+  packageStartupMessage(paste0("Linking to open data from Statistics Netherlands:\n",
+                               paste0(" * ", names(CBS_VERSION), ": ", CBS_VERSION, collapse = "\n")))
 }
