@@ -17,10 +17,10 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-CBS_VERSION <- c("Kerncijfers per postcode" = "ZIP 2020 v1",
-                 "Gebiedsindelingen" = "GPKG 2022 v1",
-                 "Bevolking per geslacht per postcode (data set 83503NED)" = "1 januari 2021",
-                 "Bevolking en leeftijd per postcode (data set 83502NED)" = "1 januari 2021")
+CBS_VERSION <- c("'Kerncijfers per postcode'" = "ZIP 2020 v1",
+                 "'Gebiedsindelingen'" = "GPKG 2022 v1",
+                 "'Bevolking per geslacht per postcode' (data set 83503NED)" = "1 januari 2021",
+                 "'Bevolking en leeftijd per postcode' (data set 83502NED)" = "1 januari 2021")
 
 included_datasets <- function() {
   DATASETS <- utils::data(package = "certegis")$results[, "Item", drop = TRUE]
