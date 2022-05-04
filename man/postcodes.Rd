@@ -19,7 +19,7 @@ A \link{data.frame} with 4,963 observations and 9 variables:
 }
 }
 \source{
-The data in this \link{data.frame} are retrieved from, and publicly available at, Statistics Netherlands: \emph{StatLine}, Centraal Bureau voor de Statistiek, 'Bevolking per geslacht per postcode (data set 83503NED)', 1 januari 2021, \url{https://opendata.cbs.nl}.
+The data in this \link{data.frame} are retrieved from, and publicly available at, Statistics Netherlands: \emph{StatLine}, Centraal Bureau voor de Statistiek, 'Bevolking per geslacht per postcode' (data set 83503NED), 1 januari 2021, \url{https://opendata.cbs.nl}.
 }
 \usage{
 postcodes

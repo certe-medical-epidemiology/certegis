@@ -55,9 +55,9 @@
 #' hospitals
 #' 
 #' if (require("certeplot2")) {
-#'   geo_gemeenten %>%
-#'     crop_certe() %>%
-#'     plot2(datalabels = FALSE) %>%
+#'   geo_gemeenten |>
+#'     crop_certe() |>
+#'     plot2(datalabels = FALSE) |>
 #'     add_sf(hospitals, colour = "certeroze", datalabels = place)
 #' }
 geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {

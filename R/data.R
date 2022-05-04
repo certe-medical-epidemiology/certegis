@@ -41,7 +41,7 @@ included_datasets <- function() {
 # - `huishoudens`\cr number of households in the zip code area
 # - `huishouden_grootte`\cr mean size of the household sizes in the zip code area
 #' @details See [the repository file](https://github.com/certe-medical-epidemiology/certegis/blob/main/data-raw/update_gis.R) to update this data set.
-#' @source The data in this [data.frame] are retrieved from, and publicly available at, Statistics Netherlands: *StatLine*, Centraal Bureau voor de Statistiek, '`r names(CBS_VERSION[names(CBS_VERSION) %like% "83503NED"])`', `r CBS_VERSION[names(CBS_VERSION) %like% "83503NED"]`, <https://opendata.cbs.nl>.
+#' @source The data in this [data.frame] are retrieved from, and publicly available at, Statistics Netherlands: *StatLine*, Centraal Bureau voor de Statistiek, `r names(CBS_VERSION[names(CBS_VERSION) %like% "83503NED"])`, `r CBS_VERSION[names(CBS_VERSION) %like% "83503NED"]`, <https://opendata.cbs.nl>.
 #' @examples 
 #' head(postcodes)
 #' str(postcodes)
@@ -55,7 +55,7 @@ included_datasets <- function() {
 #' - `inwoners_man`\cr total number of male inhabitants
 #' - `inwoners_vrouw`\cr total number of female inhabitants
 #' @details See [the repository file](https://github.com/certe-medical-epidemiology/certegis/blob/main/data-raw/update_gis.R) to update this data set.
-#' @source The data in this [data.frame] are retrieved from, and publicly available at, Statistics Netherlands: *StatLine*, Centraal Bureau voor de Statistiek, '`r names(CBS_VERSION[names(CBS_VERSION) %like% "83502NED"])`', `r CBS_VERSION[names(CBS_VERSION) %like% "83502NED"]`, <https://opendata.cbs.nl>.
+#' @source The data in this [data.frame] are retrieved from, and publicly available at, Statistics Netherlands: *StatLine*, Centraal Bureau voor de Statistiek, `r names(CBS_VERSION[names(CBS_VERSION) %like% "83502NED"])`, `r CBS_VERSION[names(CBS_VERSION) %like% "83502NED"]`, <https://opendata.cbs.nl>.
 #' @examples 
 #' head(inwoners_per_postcode_leeftijd)
 #' str(inwoners_per_postcode_leeftijd)
@@ -73,8 +73,8 @@ included_datasets <- function() {
 #' **NOTE**: all data sets contains all areas of the whole country of the Netherlands, except for `geo_postcodes6` which was cropped to only cover the Certe region (using [crop_certe()]).
 #' @source The data in these [data.frame]s are retrieved from, and publicly available at, Statistics Netherlands: 
 #' 
-#' * Centraal Bureau voor de Statistiek, '`r names(CBS_VERSION[names(CBS_VERSION) %like% "gebiedsindeling"])`', `r CBS_VERSION[names(CBS_VERSION) %like% "gebiedsindeling"]`, <https://www.cbs.nl>
-#' * Centraal Bureau voor de Statistiek, '`r names(CBS_VERSION[names(CBS_VERSION) %like% "kerncijfers"])`', `r CBS_VERSION[names(CBS_VERSION) %like% "kerncijfers"]`, <https://www.cbs.nl>
+#' * Centraal Bureau voor de Statistiek, `r names(CBS_VERSION[names(CBS_VERSION) %like% "gebiedsindeling"])`, `r CBS_VERSION[names(CBS_VERSION) %like% "gebiedsindeling"]`, <https://www.cbs.nl>
+#' * Centraal Bureau voor de Statistiek, `r names(CBS_VERSION[names(CBS_VERSION) %like% "kerncijfers"])`, `r CBS_VERSION[names(CBS_VERSION) %like% "kerncijfers"]`, <https://www.cbs.nl>
 #' @name cbs_geodata
 #' @rdname cbs_geodata
 #' @examples 
@@ -135,7 +135,7 @@ included_datasets <- function() {
 #' - `afstand_km`\cr distance in kilometres
 #' @source The data in this [data.frame] are retrieved from, and publicly available at, Statistics Netherlands: 
 #' 
-#' * Centraal Bureau voor de Statistiek, '`r names(CBS_VERSION[names(CBS_VERSION) %like% "gebiedsindeling"])`', `r CBS_VERSION[names(CBS_VERSION) %like% "gebiedsindeling"]`, <https://www.cbs.nl>
+#' * Centraal Bureau voor de Statistiek, `r names(CBS_VERSION[names(CBS_VERSION) %like% "gebiedsindeling"])`, `r CBS_VERSION[names(CBS_VERSION) %like% "gebiedsindeling"]`, <https://www.cbs.nl>
 #' @examples 
 #' head(postcodes4_afstanden)
 "postcodes4_afstanden"

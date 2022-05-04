@@ -15,7 +15,7 @@ A \link{data.frame} with 99,260 observations and 5 variables:
 }
 }
 \source{
-The data in this \link{data.frame} are retrieved from, and publicly available at, Statistics Netherlands: \emph{StatLine}, Centraal Bureau voor de Statistiek, 'Bevolking en leeftijd per postcode (data set 83502NED)', 1 januari 2021, \url{https://opendata.cbs.nl}.
+The data in this \link{data.frame} are retrieved from, and publicly available at, Statistics Netherlands: \emph{StatLine}, Centraal Bureau voor de Statistiek, 'Bevolking en leeftijd per postcode' (data set 83502NED), 1 januari 2021, \url{https://opendata.cbs.nl}.
 }
 \usage{
 inwoners_per_postcode_leeftijd

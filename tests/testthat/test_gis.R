@@ -53,7 +53,7 @@ test_that("gis functions work", {
   expect_true(is.numeric(latitude(geo_provincies)))
   expect_true(is.numeric(longitude(geo_provincies)))
   
-  expect_lt(nrow(geo_postcodes4 %>% filter_geolocation(gemeente == "Tytsjerksteradiel")),
+  expect_lt(nrow(geo_postcodes4 |> filter_geolocation(gemeente == "Tytsjerksteradiel")),
             nrow(geo_postcodes4))
-  expect_warning(geo_postcodes3 %>% filter_geolocation(gemeente == "Tytsjerksteradiel"))
+  expect_warning(geo_postcodes3 |> filter_geolocation(gemeente == "Tytsjerksteradiel"))
 })
