@@ -22,8 +22,7 @@
 
 on:
   push:
-    branches: '**' # matches every branch
-  pull_request:
+    branches: '**' # matches every branch  pull_request:
     branches: '**' # matches every branch
   schedule:
     # run a schedule every day at 1 AM.

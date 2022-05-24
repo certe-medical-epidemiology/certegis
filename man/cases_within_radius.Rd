@@ -15,24 +15,28 @@ cases_within_radius(
 \arguments{
 \item{data}{data set containing a column 'postcode'}
 
-\item{radius_km}{radius in kilometres from each zip code. The search \verb{*diameter*} is twice this number (since zip codes e.g. to the west and to the east are searched).}
+\item{radius_km}{radius in kilometres from each zip code. The search \emph{diameter} is twice this number (since zip codes e.g. to the west and to the east are searched).}
 
 \item{minimum_cases}{minimum number of cases to search for}
 
-\item{column_count}{column name in \code{data} with the number of case counts}
+\item{column_count}{column name in \code{data} with the number of case counts, defaults to the first column with numeric values}
 
 \item{...}{ignored, allows for future extensions}
+}
+\value{
+This function adds two columns (\code{"cases_within_radius"} \verb{<dbl>} and \code{"minimum_met"} \verb{<lgl>}) to the input data.
 }
 \description{
 Based on the \link{postcodes4_afstanden} data set, this function determines the specified minimum number of cases within a certain radius.
 }
 \examples{
-library(dplyr)
+library(dplyr, warn.conflicts = FALSE)
+
 postcodes_friesland <- geo_postcodes4 |> 
   filter_geolocation(provincie == "Friesland") |> 
   pull(postcode)
 
-# example with Norovirus cases
+# example with Norovirus cases:
 noro <- data.frame(postcode = postcodes_friesland,
                    n = floor(runif(length(postcodes_friesland),
                                    min = 0, max = 3)))
@@ -41,12 +45,23 @@ head(noro)
 radial_check <- cases_within_radius(noro, radius_km = 10, minimum_cases = 10)
 head(radial_check)
 
+
+# dplyr group support:
+mdro <- data.frame(type = rep(c("ESBL", "MRSA", "VRE"), 20),
+                   pc4 = postcodes_friesland[1:20],
+                   n = floor(runif(60, min = 0, max = 3)))
+mdro |> 
+  group_by(type) |> 
+  cases_within_radius()
+  
+  
+# plotting support:
 if (require("certeplot2")) {
 
   radial_check |>
     add_map() |>
     filter_geolocation(provincie == "Friesland") |>
-    plot2(category = cases_within_range,
+    plot2(category = cases_within_radius,
           category.title = "Cases",
           datalabels = FALSE,
           colour_fill = "viridis")

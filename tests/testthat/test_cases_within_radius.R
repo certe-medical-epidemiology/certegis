@@ -23,4 +23,8 @@ test_that("cases_within_radius works", {
   df <- data.frame(postcode = c(9001:9010),
                    n = floor(runif(10, min = 0, max = 30)))
   expect_s3_class(cases_within_radius(df), "data.frame")
+  expect_s3_class(df |> 
+                    dplyr::mutate(group = rep(c("A", "B"), 5)) |> 
+                    dplyr::group_by(group) |> 
+                    cases_within_radius(), "data.frame")
 })

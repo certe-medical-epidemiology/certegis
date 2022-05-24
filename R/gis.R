@@ -21,7 +21,7 @@
 #' 
 #' These are functions to work with geographical data. To determine coordinates based on a location (or vice versa), use [geocode()] / [reverse_geocode()].
 #' @param data [data.frame]
-#' @param maptype type of geometric data, must be one of: `r paste0("``\"", gsub("geo_", "", included_datasets()), "\"``", collapse = ", ")`. For [add_map()], this is determined automatically if left blank.
+#' @param maptype type of geometric data, must be one of: `r paste0("\u0060\"", gsub("geo_", "", included_datasets()), "\"\u0060", collapse = ", ")`. For [add_map()], this is determined automatically if left blank.
 #' @param crop_certe [logical] to keep only the Certe region
 #' @details All of these functions will check if the `sf` package is installed, and will load its namespace (but not attach the package).
 #' @rdname GIS
