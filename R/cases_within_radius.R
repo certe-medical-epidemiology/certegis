@@ -90,11 +90,12 @@ cases_within_radius <- function(data, radius_km = 10, minimum_cases = 10, column
     
     current_group <- current_group + 1
     if (length(data_group_rows) > 1) {
-      message("Analysing cases for group ", current_group, " out of ", length(data_group_rows))
+      message("Analysing cases for group ", current_group, " out of ", length(data_group_rows),
+              " (n = ", length(rows), ")... ",
+              appendLF = FALSE)
     }
     
     data_in_group <- data[rows, , drop = FALSE]
-    
     data_in_group$postcode <- data_in_group[, column_zip, drop = TRUE]
     
     unique_pc <- unique(data_in_group$postcode)
@@ -124,6 +125,9 @@ cases_within_radius <- function(data, radius_km = 10, minimum_cases = 10, column
     
     data[rows, "cases_within_radius"] <- warns$cases_within_radius
     data[rows, "minimum_met"] <- warns$minimum_met
+    if (length(data_group_rows) > 1) {
+      message("OK.")
+    }
   }
   data
 }
