@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">certegis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.2</span>
       </span>
     </div>
 
@@ -90,60 +90,87 @@
     <dl><dt>data</dt>
 <dd><p>data set containing a column 'postcode'</p></dd>
 <dt>radius_km</dt>
-<dd><p>radius in kilometres from each zip code. The search <code>*diameter*</code> is twice this number (since zip codes e.g. to the west and to the east are searched).</p></dd>
+<dd><p>radius in kilometres from each zip code. The search <em>diameter</em> is twice this number (since zip codes e.g. to the west and to the east are searched).</p></dd>
 <dt>minimum_cases</dt>
 <dd><p>minimum number of cases to search for</p></dd>
 <dt>column_count</dt>
-<dd><p>column name in <code>data</code> with the number of case counts</p></dd>
+<dd><p>column name in <code>data</code> with the number of case counts, defaults to the first column with numeric values</p></dd>
 <dt>...</dt>
 <dd><p>ignored, allows for future extensions</p></dd>
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    <p>This function adds two columns (<code>"cases_within_radius"</code><code>&lt;dbl&gt;</code> and <code>"minimum_met"</code><code>&lt;lgl&gt;</code>) to the input data.</p>
+    </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘dplyr’</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:stats’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     filter, lag</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:base’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     intersect, setdiff, setequal, union</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-in"></span>
 <span class="r-in"><span class="va">postcodes_friesland</span> <span class="op">&lt;-</span> <span class="va">geo_postcodes4</span> |&gt; </span>
 <span class="r-in">  <span class="fu"><a href="GIS.html">filter_geolocation</a></span><span class="op">(</span><span class="va">provincie</span> <span class="op">==</span> <span class="st">"Friesland"</span><span class="op">)</span> |&gt; </span>
 <span class="r-in">  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">postcode</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># example with Norovirus cases</span></span>
+<span class="r-in"><span class="co"># example with Norovirus cases:</span></span>
 <span class="r-in"><span class="va">noro</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>postcode <span class="op">=</span> <span class="va">postcodes_friesland</span>,</span>
 <span class="r-in">                   n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">postcodes_friesland</span><span class="op">)</span>,</span>
 <span class="r-in">                                   min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">noro</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   postcode n</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     8388 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     8389 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     8391 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     8392 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     8393 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     8388 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     8389 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     8391 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     8392 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     8393 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6     8394 0</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">radial_check</span> <span class="op">&lt;-</span> <span class="fu">cases_within_radius</span><span class="op">(</span><span class="va">noro</span>, radius_km <span class="op">=</span> <span class="fl">10</span>, minimum_cases <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using column 'n' for cases_within_radius()</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">radial_check</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   postcode cases_within_range minimum_met</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     8388                 36        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     8389                 44        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     8391                 46        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     8392                 35        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     8393                 40        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     8394                 50        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   postcode n cases_within_radius minimum_met</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     8388 2                  34        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     8389 1                  42        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     8391 0                  40        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     8392 2                  35        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     8393 2                  35        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     8394 0                  45        TRUE</span>
 <span class="r-in"></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># dplyr group support:</span></span>
+<span class="r-in"><span class="va">mdro</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ESBL"</span>, <span class="st">"MRSA"</span>, <span class="st">"VRE"</span><span class="op">)</span>, <span class="fl">20</span><span class="op">)</span>,</span>
+<span class="r-in">                   pc4 <span class="op">=</span> <span class="va">postcodes_friesland</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span>,</span>
+<span class="r-in">                   n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">60</span>, min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">mdro</span> |&gt; </span>
+<span class="r-in">  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">type</span><span class="op">)</span> |&gt; </span>
+<span class="r-in">  <span class="fu">cases_within_radius</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Using column 'n' for cases_within_radius()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Analysing cases for group 1 out of 3</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Analysing cases for group 2 out of 3</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Analysing cases for group 3 out of 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 60 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Groups:   type [3]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    type    pc4     n cases_within_radius minimum_met</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ESBL   <span style="text-decoration: underline;">8</span>388     2                  18 TRUE       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> MRSA   <span style="text-decoration: underline;">8</span>389     0                  20 TRUE       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> VRE    <span style="text-decoration: underline;">8</span>391     1                  11 TRUE       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ESBL   <span style="text-decoration: underline;">8</span>392     1                  17 TRUE       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> MRSA   <span style="text-decoration: underline;">8</span>393     1                  18 TRUE       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> VRE    <span style="text-decoration: underline;">8</span>394     1                  11 TRUE       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ESBL   <span style="text-decoration: underline;">8</span>395     2                  17 TRUE       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> MRSA   <span style="text-decoration: underline;">8</span>396     0                  12 TRUE       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> VRE    <span style="text-decoration: underline;">8</span>397     0                   5 FALSE      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ESBL   <span style="text-decoration: underline;">8</span>398     1                  12 TRUE       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 50 more rows</span></span>
+<span class="r-in">  </span>
+<span class="r-in">  </span>
+<span class="r-in"><span class="co"># plotting support:</span></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://certe-medical-epidemiology.github.io/certeplot2" class="external-link">"certeplot2"</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"></span>
 <span class="r-in">  <span class="va">radial_check</span> |&gt;</span>
 <span class="r-in">    <span class="fu"><a href="GIS.html">add_map</a></span><span class="op">(</span><span class="op">)</span> |&gt;</span>
 <span class="r-in">    <span class="fu"><a href="GIS.html">filter_geolocation</a></span><span class="op">(</span><span class="va">provincie</span> <span class="op">==</span> <span class="st">"Friesland"</span><span class="op">)</span> |&gt;</span>
-<span class="r-in">    <span class="fu"><a href="https://certe-medical-epidemiology.github.io/certeplot2/reference/plot2.html" class="external-link">plot2</a></span><span class="op">(</span>category <span class="op">=</span> <span class="va">cases_within_range</span>,</span>
+<span class="r-in">    <span class="fu"><a href="https://certe-medical-epidemiology.github.io/certeplot2/reference/plot2.html" class="external-link">plot2</a></span><span class="op">(</span>category <span class="op">=</span> <span class="va">cases_within_radius</span>,</span>
 <span class="r-in">          category.title <span class="op">=</span> <span class="st">"Cases"</span>,</span>
 <span class="r-in">          datalabels <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span class="r-in">          colour_fill <span class="op">=</span> <span class="st">"viridis"</span><span class="op">)</span></span>
