@@ -89,7 +89,7 @@ geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
   for (i in seq_len(length(place))) {
     url <- gsub("{place}", place[i], api, fixed = TRUE)
     osm <- tryCatch({
-      result <- jsonlite::fromJSON(url)
+      result <- jsonlite::fromJSON(utils::URLencode(url))
       # fair use is 1 per second
       Sys.sleep(0.25)
       if (NROW(result) > 1) {
@@ -194,7 +194,7 @@ reverse_geocode <- function(sf_data) {
     url <- gsub("{latitude}", lat[i], url, fixed = TRUE)
     url <- gsub("{longitude}", lon[i], url, fixed = TRUE)
     osm <- tryCatch({
-      result <- as.data.frame(jsonlite::fromJSON(url)$address, stringsAsFactors = FALSE)
+      result <- as.data.frame(jsonlite::fromJSON(utils::URLencode(url))$address, stringsAsFactors = FALSE)
       if (all(c("road", "house_number") %in% colnames(result))) {
         result$address <- trimws(paste(result$road, result$house_number))
       } else {
