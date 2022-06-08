@@ -176,7 +176,7 @@ crop_certe <- function(sf_data) {
       if (inherits(sf_data, c("sfg", "XY"))) {
         sf_data <- sf::st_sfc(sf_data)
       }
-      sf_data <- sf::st_as_sf(sf_data, crs = "EPSG:4326")
+      sf_data <- sf::st_as_sf(sf_data, crs = "EPSG:28992")
       sf_data <- suppressMessages(sf::st_filter(sf_data, sf::st_as_sfc(bbox), .predicate = sf::st_within))
       return(sf_data[, 1, drop = TRUE])
     }
@@ -187,7 +187,7 @@ crop_certe <- function(sf_data) {
 
 #' @rdname GIS
 #' @param sf_data a data set of class 'sf'
-#' @param xmin,xmax,ymin,ymax coordination filters for `sf_data`
+#' @param xmin,xmax,ymin,ymax coordination filters for `sf_data`, given in degrees following [EPSG:4326](https://epsg.io/4326) ('WGS 84')
 #' @details [filter_sf()] filters an sf object on coordinates, and is internally used by [crop_certe()].
 #' @export
 #' @examples 
@@ -201,12 +201,18 @@ filter_sf <- function(sf_data, xmin = NULL, xmax = NULL, ymin = NULL, ymax = NUL
   if(!is.sf(sf_data)) {
     sf_data <- sf::st_as_sf(sf_data)
   }
+  
+  old_crs <- sf::st_crs(sf_data)
+  sf_data <- sf::st_transform(sf_data, crs = 4326)
+  
   bb <- sf::st_bbox(sf_data)
   if (!is.null(xmin)) bb["xmin"] <- xmin
   if (!is.null(xmax)) bb["xmax"] <- xmax
   if (!is.null(ymin)) bb["ymin"] <- ymin
   if (!is.null(ymax)) bb["ymax"] <- ymax
-  suppressMessages(sf::st_filter(sf_data, sf::st_as_sfc(bb), .predicate = sf::st_within))
+  out <- suppressMessages(sf::st_filter(sf_data, sf::st_as_sfc(bb), .predicate = sf::st_within))
+  
+  sf::st_transform(out, crs = old_crs)
 }
 
 #' @rdname GIS
@@ -261,7 +267,7 @@ latitude <- function(sf_data) {
   loadNamespace("sf") # for use in other packages, otherwise the `vctrs` pkg will complain
   
   if (!isTRUE(sf::st_is_longlat(sf_data))) {
-    stop("`sf_data` does not contain geographic coordinates", call. = FALSE)
+    sf_data <- sf::st_transform(sf_data, crs = 4326)
   }
   as.data.frame(
     sf::st_coordinates(
@@ -278,7 +284,7 @@ longitude <- function(sf_data) {
   loadNamespace("sf") # for use in other packages, otherwise the `vctrs` pkg will complain
   
   if (!isTRUE(sf::st_is_longlat(sf_data))) {
-    stop("`sf_data` does not contain geographic coordinates", call. = FALSE)
+    sf_data <- sf::st_transform(sf_data, crs = 4326)
   }
   as.data.frame(
     sf::st_coordinates(

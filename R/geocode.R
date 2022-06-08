@@ -83,9 +83,12 @@ geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
   
   # HQ of Certe
   van_swietenlaan_2 <- sf::st_sfc(sf::st_point(c(6.5504128, 53.1931877)),
-                                  # take the CRS from included datasets
-                                  crs = sf::st_crs(certegis::geo_postcodes4))
-  
+                                  # set CRS to degrees
+                                  crs = 4326)
+  # now take the CRS from included datasets
+  van_swietenlaan_2 <- sf::st_transform(van_swietenlaan_2,
+                                        crs = sf::st_crs(certegis::geo_postcodes4))
+
   for (i in seq_len(length(place))) {
     url <- gsub("{place}", place[i], api, fixed = TRUE)
     osm <- tryCatch({

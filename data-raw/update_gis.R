@@ -303,8 +303,8 @@ usethis::use_data(geo_gemeenten, overwrite = TRUE, internal = FALSE, compress = 
 usethis::use_data(geo_ggdregios, overwrite = TRUE, internal = FALSE, compress = "xz", version = 2)
 usethis::use_data(geo_nuts3, overwrite = TRUE, internal = FALSE, compress = "xz", version = 2)
 usethis::use_data(geo_postcodes4, overwrite = TRUE, internal = FALSE, compress = "xz", version = 2)
-usethis::use_data(geo_provincies, overwrite = TRUE, internal = FALSE, compress = "xz", version = 2)
 usethis::use_data(geo_postcodes6, overwrite = TRUE, internal = FALSE, compress = "xz", version = 2)
+usethis::use_data(geo_provincies, overwrite = TRUE, internal = FALSE, compress = "xz", version = 2)
 
 # vanuit geo_postcodes4 ook geo_postcodes2 en geo_postcodes3 maken
 geo_postcodes2 <- geo_postcodes4 %>%
