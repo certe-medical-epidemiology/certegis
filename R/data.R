@@ -63,18 +63,20 @@ included_datasets <- function() {
 
 #' Data Sets with Geometries of Dutch Provinces, Municipalities and Zip Codes
 #' @details These [data.frame]s are of additional class `sf` and contain 3 variables:
-#' - `...`\cr name of the area, see *Examples*
+#' - `...`\cr name of the area, these are: `r paste0("\u0096", vapply(FUN.VALUE = character(1), get_geo_datasets(), function(d) paste0(d, "$", colnames(get(d, envir = asNamespace("certegis")))[1]), USE.NAMES = FALSE), "\u0096", collapse = ", ")`
 #' - `inwoners`\cr number of inhabitants in the area
 #' - `oppervlakte_km2`\cr area in square kilometres
-#' - `geometry`\cr the multipolygonal object of the area
+#' - `geometry`\cr multipolygonal object of the area
+#' 
+#' All data sets have the coordinate reference system (CRS) set to [EPSG:28992](https://epsg.io/28992) ('RD New'), following the sphere of Earth. They can be flattened to e.g. [EPSG:4326](https://epsg.io/4326) ('WGS 84') using [`st_transform()`][sf::st_transform()].
 #' 
 #' See [the repository file](https://github.com/certe-medical-epidemiology/certegis/blob/main/data-raw/update_gis.R) to update these data sets.
 #' 
 #' **NOTE**: all data sets contains all areas of the whole country of the Netherlands, except for `geo_postcodes6` which was cropped to only cover the Certe region (using [crop_certe()]).
 #' @source The data in these [data.frame]s are retrieved from, and publicly available at, Statistics Netherlands: 
 #' 
-#' * Centraal Bureau voor de Statistiek, `r names(CBS_VERSION[names(CBS_VERSION) %like% "gebiedsindeling"])`, `r CBS_VERSION[names(CBS_VERSION) %like% "gebiedsindeling"]`, <https://www.cbs.nl>
-#' * Centraal Bureau voor de Statistiek, `r names(CBS_VERSION[names(CBS_VERSION) %like% "kerncijfers"])`, `r CBS_VERSION[names(CBS_VERSION) %like% "kerncijfers"]`, <https://www.cbs.nl>
+#' * Centraal Bureau voor de Statistiek (CBS), `r names(CBS_VERSION[names(CBS_VERSION) %like% "gebiedsindeling"])`, `r CBS_VERSION[names(CBS_VERSION) %like% "gebiedsindeling"]`, <https://www.cbs.nl>
+#' * Centraal Bureau voor de Statistiek (CBS), `r names(CBS_VERSION[names(CBS_VERSION) %like% "kerncijfers"])`, `r CBS_VERSION[names(CBS_VERSION) %like% "kerncijfers"]`, <https://www.cbs.nl>
 #' @name cbs_geodata
 #' @rdname cbs_geodata
 #' @examples 

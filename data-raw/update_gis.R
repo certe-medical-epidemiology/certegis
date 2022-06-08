@@ -58,8 +58,10 @@ kaart_fixen <- function(kaart) {
     kaart <- st_set_geometry(kaart, geometry)
   }
   # geometrie als breedte- en lengtegraad, CRS transformeren van 28992 naar 4326
-  kaart <- st_transform(kaart, crs = 4326)
-
+  # kaart <- st_transform(kaart, crs = 4326)
+  # geometrie als breedte- en lengtegraad, CRS transformeren naar 28992 (incl bolling Aarde)
+  kaart <- st_transform(kaart, crs = 28992)
+  
   # alle ongeldige vormen geldig maken
   if (any(!st_is_valid(kaart$geometry))) {
     kaart$geometry <- st_make_valid(kaart$geometry)
@@ -72,7 +74,9 @@ kaart_fixen <- function(kaart) {
     st_crs(kaart) <- 28992
   }
   # geometrie als breedte- en lengtegraad, CRS transformeren van 28992 naar 4326
-  kaart <- st_transform(kaart, crs = 4326)
+  # kaart <- st_transform(kaart, crs = 4326)
+  # geometrie als breedte- en lengtegraad, CRS transformeren naar 28992 (incl bolling Aarde)
+  kaart <- st_transform(kaart, crs = 28992)
   # oppervlakte toevoegen
   kaart$area_km2 <- as.double(st_area(st_geometry(kaart)) / 1000 ^ 2)
   kaart
