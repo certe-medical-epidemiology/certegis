@@ -15,7 +15,7 @@ A \link{data.frame} with 562,330 observations and 3 variables:
 \source{
 The data in this \link{data.frame} are retrieved from, and publicly available at, Statistics Netherlands:
 \itemize{
-\item Centraal Bureau voor de Statistiek, 'Gebiedsindelingen', GPKG 2022 v1, \url{https://www.cbs.nl}
+\item Centraal Bureau voor de Statistiek (CBS), 'Gebiedsindelingen', GPKG 2022 v1, \url{https://www.cbs.nl}
 }
 }
 \usage{

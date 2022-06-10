@@ -39,7 +39,7 @@ check_is_installed <- function(pkgs) {
 }
 
 get_geo_datasets <- function() {
-  ds <- data(package = "certegis")$results[, "Item"]
+  ds <- utils::data(package = "certegis")$results[, "Item"]
   ds[ds %like% "^geo_"]
 }
 

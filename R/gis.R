@@ -202,6 +202,7 @@ filter_sf <- function(sf_data, xmin = NULL, xmax = NULL, ymin = NULL, ymax = NUL
     sf_data <- sf::st_as_sf(sf_data)
   }
   
+  # set CRS to degrees
   old_crs <- sf::st_crs(sf_data)
   sf_data <- sf::st_transform(sf_data, crs = 4326)
   
@@ -212,6 +213,7 @@ filter_sf <- function(sf_data, xmin = NULL, xmax = NULL, ymin = NULL, ymax = NUL
   if (!is.null(ymax)) bb["ymax"] <- ymax
   out <- suppressMessages(sf::st_filter(sf_data, sf::st_as_sfc(bb), .predicate = sf::st_within))
   
+  # set CRS back to input data
   sf::st_transform(out, crs = old_crs)
 }
 

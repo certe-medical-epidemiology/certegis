@@ -85,10 +85,7 @@ geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
   van_swietenlaan_2 <- sf::st_sfc(sf::st_point(c(6.5504128, 53.1931877)),
                                   # set CRS to degrees
                                   crs = 4326)
-  # now take the CRS from included datasets
-  van_swietenlaan_2 <- sf::st_transform(van_swietenlaan_2,
-                                        crs = sf::st_crs(certegis::geo_postcodes4))
-
+  
   for (i in seq_len(length(place))) {
     url <- gsub("{place}", place[i], api, fixed = TRUE)
     osm <- tryCatch({
@@ -102,8 +99,8 @@ geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
         result$metres_from_certe <- round(
           vapply(FUN.VALUE = double(1),
                  X = get_bbox(result$boundingbox,
-                              # take the CRS from included datasets
-                              crs = sf::st_crs(certegis::geo_postcodes4)),
+                              # set CRS to degrees
+                              crs = 4326),
                  FUN = function(x)
                    as.double(sf::st_distance(sf::st_as_sfc(x),
                                              van_swietenlaan_2))),
@@ -140,11 +137,15 @@ geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
   out <- sf::st_as_sf(out,
                       coords = c("longitude", "latitude"),
                       # take the CRS from included datasets
-                      crs = sf::st_crs(certegis::geo_postcodes4))
+                      crs = 4326)
   # replace lat=0,lon=0 coordinates with valid empty ones
   out$geometry[which(vapply(FUN.VALUE = logical(1),
                             out$geometry,
                             function(sfc) identical(unclass(sfc), c(0, 0))))] <- sf::st_point()
+  
+  # transform to same CRS as used in the included datasets
+  out <- sf::st_transform(out, crs = sf::st_crs(certegis::geo_postcodes4))
+  
   if (isTRUE(as_coordinates)) {
     out$geometry
   } else {
@@ -182,7 +183,6 @@ reverse_geocode <- function(sf_data) {
   coord <- unique(coord_long)
   lat <- lat[match(coord, coord_long)]
   lon <- lon[match(coord, coord_long)]
-  urls <- rep(api, length(coord))
   out <- data.frame(coord = coord,
                     name = rep(NA_character_, length(coord)),
                     address = rep(NA_character_, length(coord)),
