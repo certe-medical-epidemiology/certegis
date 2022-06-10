@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">certegis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.5</span>
       </span>
     </div>
 
@@ -106,16 +106,17 @@
     </div>
     <div id="source">
     <h2>Source</h2>
-    <p>The data in these <a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a>s are retrieved from, and publicly available at, Statistics Netherlands:</p><ul><li><p>Centraal Bureau voor de Statistiek, 'Gebiedsindelingen', GPKG 2022 v1, <a href="https://www.cbs.nl" class="external-link">https://www.cbs.nl</a></p></li>
-<li><p>Centraal Bureau voor de Statistiek, 'Kerncijfers per postcode', ZIP 2020 v1, <a href="https://www.cbs.nl" class="external-link">https://www.cbs.nl</a></p></li>
+    <p>The data in these <a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a>s are retrieved from, and publicly available at, Statistics Netherlands:</p><ul><li><p>Centraal Bureau voor de Statistiek (CBS), 'Gebiedsindelingen', GPKG 2022 v1, <a href="https://www.cbs.nl" class="external-link">https://www.cbs.nl</a></p></li>
+<li><p>Centraal Bureau voor de Statistiek (CBS), 'Kerncijfers per postcode', ZIP 2020 v1, <a href="https://www.cbs.nl" class="external-link">https://www.cbs.nl</a></p></li>
 </ul></div>
     <div id="details">
     <h2>Details</h2>
-    <p>These <a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a>s are of additional class <code>sf</code> and contain 3 variables:</p><ul><li><p><code>...</code><br> name of the area, see <em>Examples</em></p></li>
+    <p>These <a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a>s are of additional class <code>sf</code> and contain 3 variables:</p><ul><li><p><code>...</code><br> name of the area, these are: geo_gemeenten$gemeente, geo_ggdregios$ggdregio, geo_nuts3$nuts3, geo_postcodes2$postcode, geo_postcodes3$postcode, geo_postcodes4$postcode, geo_postcodes6$postcode, geo_provincies$provincie</p></li>
 <li><p><code>inwoners</code><br> number of inhabitants in the area</p></li>
 <li><p><code>oppervlakte_km2</code><br> area in square kilometres</p></li>
-<li><p><code>geometry</code><br> the multipolygonal object of the area</p></li>
-</ul><p>See <a href="https://github.com/certe-medical-epidemiology/certegis/blob/main/data-raw/update_gis.R" class="external-link">the repository file</a> to update these data sets.</p>
+<li><p><code>geometry</code><br> multipolygonal object of the area</p></li>
+</ul><p>All data sets have the coordinate reference system (CRS) set to <a href="https://epsg.io/28992" class="external-link">EPSG:28992</a> ('RD New'), following the sphere of Earth. They can be flattened to e.g. <a href="https://epsg.io/4326" class="external-link">EPSG:4326</a> ('WGS 84') using <code><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform()</a></code>.</p>
+<p>See <a href="https://github.com/certe-medical-epidemiology/certegis/blob/main/data-raw/update_gis.R" class="external-link">the repository file</a> to update these data sets.</p>
 <p><strong>NOTE</strong>: all data sets contains all areas of the whole country of the Netherlands, except for <code>geo_postcodes6</code> which was cropped to only cover the Certe region (using <code><a href="GIS.html">crop_certe()</a></code>).</p>
     </div>
 
@@ -130,12 +131,6 @@
 <span class="r-in">          title <span class="op">=</span> <span class="st">"City of Groningen"</span><span class="op">)</span></span>
 <span class="r-in">  </span>
 <span class="r-in"><span class="op">}</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>GDAL Error 1: PROJ: proj_as_wkt: DatumEnsemble can only be exported to WKT2:2019</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>GDAL Error 1: PROJ: proj_as_wkt: DatumEnsemble can only be exported to WKT2:2019</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>GDAL Error 1: PROJ: proj_as_wkt: DatumEnsemble can only be exported to WKT2:2019</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>GDAL Error 1: PROJ: proj_as_wkt: DatumEnsemble can only be exported to WKT2:2019</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>GDAL Error 1: PROJ: proj_as_wkt: DatumEnsemble can only be exported to WKT2:2019</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>GDAL Error 1: PROJ: proj_as_wkt: DatumEnsemble can only be exported to WKT2:2019</span>
 <span class="r-plt img"><img src="cbs_geodata-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://certe-medical-epidemiology.github.io/certeplot2" class="external-link">"certeplot2"</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -159,15 +154,15 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 6 features and 3 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: MULTIPOLYGON</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 4.1962 ymin: 51.664 xmax: 6.935685 ymax: 53.26989</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Geodetic CRS:  WGS 84</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 73315.68 ymin: 408354.7 xmax: 258967.1 ymax: 587337.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Projected CRS: Amersfoort / RD New</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           gemeente inwoners oppervlakte_km2                       geometry</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    's-Gravenhage   548260        85.59080 MULTIPOLYGON (((4.330435 52...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 's-Hertogenbosch   155485       117.75078 MULTIPOLYGON (((5.444026 51...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      Aa en Hunze    25405       278.77436 MULTIPOLYGON (((6.789827 53...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4         Aalsmeer    31990        32.32516 MULTIPOLYGON (((4.782931 52...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5           Aalten    27125        97.08071 MULTIPOLYGON (((6.559352 51...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    Achtkarspelen    28505       104.00588 MULTIPOLYGON (((6.218947 53...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    's-Gravenhage   548260        85.59080 MULTIPOLYGON (((82600.18 45...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 's-Hertogenbosch   155485       117.75078 MULTIPOLYGON (((158923.7 41...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      Aa en Hunze    25405       278.77436 MULTIPOLYGON (((248973.7 56...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4         Aalsmeer    31990        32.32516 MULTIPOLYGON (((113740.1 47...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5           Aalten    27125        97.08071 MULTIPOLYGON (((235537.5 44...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    Achtkarspelen    28505       104.00588 MULTIPOLYGON (((210504.1 58...</span>
 </code></pre></div>
     </div>
   </div>
