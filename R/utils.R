@@ -38,6 +38,11 @@ check_is_installed <- function(pkgs) {
   }
 }
 
+get_geo_datasets <- function() {
+  ds <- utils::data(package = "certegis")$results[, "Item"]
+  ds[ds %like% "^geo_"]
+}
+
 get_bbox <- function(lst, crs) {
   lapply(lst, function(bb) {
     bb <- as.double(bb)

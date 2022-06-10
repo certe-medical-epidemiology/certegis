@@ -42,7 +42,7 @@ longitude(sf_data)
 
 \item{sf_data}{a data set of class 'sf'}
 
-\item{xmin, xmax, ymin, ymax}{coordination filters for \code{sf_data}}
+\item{xmin, xmax, ymin, ymax}{coordination filters for \code{sf_data}, given in degrees following \href{https://epsg.io/4326}{EPSG:4326} ('WGS 84')}
 
 \item{...}{filters to set}
 
