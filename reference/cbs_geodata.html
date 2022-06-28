@@ -76,21 +76,21 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="va">geo_gemeenten</span>
-
-<span class="va">geo_ggdregios</span>
-
-<span class="va">geo_nuts3</span>
-
-<span class="va">geo_postcodes2</span>
-
-<span class="va">geo_postcodes3</span>
-
-<span class="va">geo_postcodes4</span>
-
-<span class="va">geo_postcodes6</span>
-
-<span class="va">geo_provincies</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="va">geo_gemeenten</span></span>
+<span></span>
+<span><span class="va">geo_ggdregios</span></span>
+<span></span>
+<span><span class="va">geo_nuts3</span></span>
+<span></span>
+<span><span class="va">geo_postcodes2</span></span>
+<span></span>
+<span><span class="va">geo_postcodes3</span></span>
+<span></span>
+<span><span class="va">geo_postcodes4</span></span>
+<span></span>
+<span><span class="va">geo_postcodes6</span></span>
+<span></span>
+<span><span class="va">geo_provincies</span></span></code></pre></div>
     </div>
 
     <div id="format">
@@ -122,33 +122,33 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://certe-medical-epidemiology.github.io/certeplot2" class="external-link">"certeplot2"</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="va">geo_postcodes6</span> |&gt;</span>
-<span class="r-in">    <span class="fu"><a href="GIS.html">filter_geolocation</a></span><span class="op">(</span><span class="va">plaats</span> <span class="op">==</span> <span class="st">"Groningen"</span><span class="op">)</span> |&gt;</span>
-<span class="r-in">    <span class="fu"><a href="https://certe-medical-epidemiology.github.io/certeplot2/reference/plot2.html" class="external-link">plot2</a></span><span class="op">(</span>category <span class="op">=</span> <span class="va">inwoners</span> <span class="op">/</span> <span class="va">oppervlakte_km2</span>,</span>
-<span class="r-in">          datalabels <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span class="r-in">          title <span class="op">=</span> <span class="st">"City of Groningen"</span><span class="op">)</span></span>
-<span class="r-in">  </span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://certe-medical-epidemiology.github.io/certeplot2" class="external-link">"certeplot2"</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">geo_postcodes6</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="GIS.html">filter_geolocation</a></span><span class="op">(</span><span class="va">plaats</span> <span class="op">==</span> <span class="st">"Groningen"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://certe-medical-epidemiology.github.io/certeplot2/reference/plot2.html" class="external-link">plot2</a></span><span class="op">(</span>category <span class="op">=</span> <span class="va">inwoners</span> <span class="op">/</span> <span class="va">oppervlakte_km2</span>,</span></span>
+<span class="r-in"><span>          datalabels <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>          title <span class="op">=</span> <span class="st">"City of Groningen"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  </span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-plt img"><img src="cbs_geodata-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://certe-medical-epidemiology.github.io/certeplot2" class="external-link">"certeplot2"</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="va">geo_postcodes4</span> |&gt;</span>
-<span class="r-in">    <span class="fu"><a href="GIS.html">filter_geolocation</a></span><span class="op">(</span><span class="va">plaats</span> <span class="op">==</span> <span class="st">"Groningen"</span><span class="op">)</span> |&gt;</span>
-<span class="r-in">    <span class="fu"><a href="https://certe-medical-epidemiology.github.io/certeplot2/reference/plot2.html" class="external-link">plot2</a></span><span class="op">(</span>category <span class="op">=</span> <span class="va">inwoners</span> <span class="op">/</span> <span class="va">oppervlakte_km2</span>,</span>
-<span class="r-in">          datalabels <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span class="r-in">          title <span class="op">=</span> <span class="st">"City of Groningen"</span><span class="op">)</span></span>
-<span class="r-in">  </span>
-<span class="r-in"><span class="op">}</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://certe-medical-epidemiology.github.io/certeplot2" class="external-link">"certeplot2"</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">geo_postcodes4</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="GIS.html">filter_geolocation</a></span><span class="op">(</span><span class="va">plaats</span> <span class="op">==</span> <span class="st">"Groningen"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://certe-medical-epidemiology.github.io/certeplot2/reference/plot2.html" class="external-link">plot2</a></span><span class="op">(</span>category <span class="op">=</span> <span class="va">inwoners</span> <span class="op">/</span> <span class="va">oppervlakte_km2</span>,</span></span>
+<span class="r-in"><span>          datalabels <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>          title <span class="op">=</span> <span class="st">"City of Groningen"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  </span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-plt img"><img src="cbs_geodata-2.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://r-spatial.github.io/sf/" class="external-link">"sf"</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">geo_gemeenten</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="op">}</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://r-spatial.github.io/sf/" class="external-link">"sf"</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">geo_gemeenten</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: sf</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1; sf_use_s2() is TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 6 features and 3 fields</span>
@@ -177,7 +177,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>
