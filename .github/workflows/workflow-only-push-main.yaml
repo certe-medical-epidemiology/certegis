@@ -17,19 +17,12 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# Remember that R-universe will hourly build binaries for macOS and Windows:
-# https://certe-medical-epidemiology.r-universe.dev
-
 on:
   push:
-    branches: '**' # matches every branch
-  schedule:
-    # run a schedule every day at 1 AM.
-    # this is to check that all dependencies are still available
-    - cron:  '0 1 * * *'
-
-name: R-CMD-check
+    # only run when pushed to the 'main' branch
+    branches: 'main' 
 
 jobs:
   R-CMD-check:
-    uses: certe-medical-epidemiology/template/.github/workflows/reusable-workflow-R-CMD-check.yml@main
+    uses: certe-medical-epidemiology/template/.github/workflows/reusable-workflow-website.yml@main
+    secrets: inherit
