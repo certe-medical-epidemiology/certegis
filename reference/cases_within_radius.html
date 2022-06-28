@@ -132,23 +132,23 @@
 <span class="r-in"><span>                                   min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">noro</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   postcode n</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     8388 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     8389 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     8388 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     8389 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3     8391 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4     8392 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     8393 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     8394 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     8393 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     8394 0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">radial_check</span> <span class="op">&lt;-</span> <span class="fu">cases_within_radius</span><span class="op">(</span><span class="va">noro</span>, radius_km <span class="op">=</span> <span class="fl">10</span>, minimum_cases <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using column 'n' for cases_within_radius()</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">radial_check</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   postcode n cases_within_radius minimum_met</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     8388 2                  24        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     8389 0                  26        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     8391 0                  26        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     8392 0                  24        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     8393 1                  26        TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     8394 1                  30        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     8388 0                  30        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     8389 2                  33        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     8391 0                  35        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     8392 0                  30        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     8393 0                  30        TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     8394 0                  40        TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># dplyr group support:</span></span></span>
@@ -169,16 +169,16 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Groups:   type [3]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    type    pc4     n cases_within_radius minimum_met</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ESBL   <span style="text-decoration: underline;">8</span>388     2                  14 TRUE       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> MRSA   <span style="text-decoration: underline;">8</span>389     1                  14 TRUE       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> VRE    <span style="text-decoration: underline;">8</span>391     2                  16 TRUE       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ESBL   <span style="text-decoration: underline;">8</span>392     0                  12 TRUE       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> MRSA   <span style="text-decoration: underline;">8</span>393     1                  11 TRUE       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> VRE    <span style="text-decoration: underline;">8</span>394     2                  16 TRUE       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ESBL   <span style="text-decoration: underline;">8</span>395     0                  14 TRUE       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> MRSA   <span style="text-decoration: underline;">8</span>396     0                   9 FALSE      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> VRE    <span style="text-decoration: underline;">8</span>397     0                  12 TRUE       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ESBL   <span style="text-decoration: underline;">8</span>398     2                  10 TRUE       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ESBL   <span style="text-decoration: underline;">8</span>388     0                  13 TRUE       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> MRSA   <span style="text-decoration: underline;">8</span>389     0                  20 TRUE       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> VRE    <span style="text-decoration: underline;">8</span>391     0                  18 TRUE       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ESBL   <span style="text-decoration: underline;">8</span>392     1                  16 TRUE       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> MRSA   <span style="text-decoration: underline;">8</span>393     1                  16 TRUE       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> VRE    <span style="text-decoration: underline;">8</span>394     0                  18 TRUE       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ESBL   <span style="text-decoration: underline;">8</span>395     2                  12 TRUE       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> MRSA   <span style="text-decoration: underline;">8</span>396     2                  11 TRUE       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> VRE    <span style="text-decoration: underline;">8</span>397     1                  10 TRUE       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ESBL   <span style="text-decoration: underline;">8</span>398     0                   8 FALSE      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 50 more rows</span></span>
 <span class="r-in"><span>  </span></span>
 <span class="r-in"><span>  </span></span>
