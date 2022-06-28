@@ -32,4 +32,4 @@ name: R-CMD-check
 
 jobs:
   R-CMD-check:
-    uses: certe-medical-epidemiology/template/.github/workflows/reusable-workflow.yml@main
+    uses: certe-medical-epidemiology/template/.github/workflows/reusable-workflow-R-CMD-check.yml@main
