@@ -22,3 +22,13 @@
   packageStartupMessage(paste0("Linking to open data from Statistics Netherlands:\n",
                                paste0(" * ", names(CBS_VERSION), ": ", CBS_VERSION, collapse = "\n")))
 }
+
+.onLoad <- function(...) {
+  if ("sf" %in% utils::installed.packages()) {
+    # load sf namespace on load, so that:
+    # - `certegis` geographic data sets will print correctly
+    # - `certegis` GIS functions can be used correctly
+    # - `certegis` GIS functions can be used in other packages (`vctrs` pkg will otherwise complain)
+    loadNamespace("sf")
+  }
+}

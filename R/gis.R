@@ -32,7 +32,6 @@
 #' get_map() # defaults to the geo_postcodes4 data set
 get_map <- function(maptype = "postcodes4") {
   check_is_installed("sf")
-  loadNamespace("sf") # for use in other packages, otherwise the `vctrs` pkg will complain
   
   maptype <- gsub("pc", "postcodes", tolower(maptype[1L]))
   if (maptype %unlike% "^geo_") {
@@ -55,7 +54,6 @@ get_map <- function(maptype = "postcodes4") {
 #'   add_map()
 add_map <- function(data, maptype = NULL, by = NULL, crop_certe = TRUE) {
   check_is_installed("sf")
-  loadNamespace("sf") # for use in other packages, otherwise the `vctrs` pkg will complain
   
   if (is.null(maptype)) {
     # determine automatically
@@ -117,7 +115,6 @@ is.sf <- function(sf_data) {
 #' @export
 as.sf <- function(data) {
   check_is_installed("sf")
-  loadNamespace("sf") # for use in other packages, otherwise the `vctrs` pkg will complain
   
   if (is.sf(data)) {
     data
@@ -135,8 +132,7 @@ as.sf <- function(data) {
 #' geo_provincies |> crop_certe()
 crop_certe <- function(sf_data) {
   check_is_installed("sf")
-  loadNamespace("sf") # for use in other packages, otherwise the `vctrs` pkg will complain
-
+  
   postcode_filter <- certegis::postcodes |>
     filter(provincie %in% c("Friesland", "Groningen", "Drenthe"))
   
@@ -196,7 +192,6 @@ crop_certe <- function(sf_data) {
 #' geo_provincies |> filter_sf(ymin = 52.5)
 filter_sf <- function(sf_data, xmin = NULL, xmax = NULL, ymin = NULL, ymax = NULL) {
   check_is_installed("sf")
-  loadNamespace("sf") # for use in other packages, otherwise the `vctrs` pkg will complain
   
   if(!is.sf(sf_data)) {
     sf_data <- sf::st_as_sf(sf_data)
@@ -234,7 +229,6 @@ filter_sf <- function(sf_data, xmin = NULL, xmax = NULL, ymin = NULL, ymax = NUL
 #' }
 filter_geolocation <- function(sf_data, ..., col_zipcode = NULL) {
   check_is_installed("sf")
-  loadNamespace("sf") # for use in other packages, otherwise the `vctrs` pkg will complain
   
   if (is.null(col_zipcode)) {
     col_zipcode <- rev(sort(colnames(sf_data)[which(colnames(sf_data) %in% c("postcode", paste0("pc", 2:4)))]))[1]
@@ -266,7 +260,6 @@ filter_geolocation <- function(sf_data, ..., col_zipcode = NULL) {
 #' longitude(geo_provincies)
 latitude <- function(sf_data) {
   check_is_installed("sf")
-  loadNamespace("sf") # for use in other packages, otherwise the `vctrs` pkg will complain
   
   if (!isTRUE(sf::st_is_longlat(sf_data))) {
     sf_data <- sf::st_transform(sf_data, crs = 4326)
@@ -283,7 +276,6 @@ latitude <- function(sf_data) {
 #' @export
 longitude <- function(sf_data) {
   check_is_installed("sf")
-  loadNamespace("sf") # for use in other packages, otherwise the `vctrs` pkg will complain
   
   if (!isTRUE(sf::st_is_longlat(sf_data))) {
     sf_data <- sf::st_transform(sf_data, crs = 4326)

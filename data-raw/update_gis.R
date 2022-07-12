@@ -3,6 +3,7 @@ library(tidyr)
 library(readr)
 library(AMR) # voor age_groups()
 library(sf) # let op: minimaal v1.0!
+library(sfheaders) # voor sf_remove_holes
 library(cleaner)
 
 ## HIERNA R/data.R UPDATEN MET VERSIENUMMER
@@ -110,9 +111,9 @@ downloaden_transformeren <- function(laag) {
 # Inwoners per postcode/leeftijd/geslacht ---------------------------------
 
 inwoners_per_postcode_leeftijd <- read_csv2(inwoners_bestand)
-inwoners_per_postcode_leeftijd <- inwoners_per_postcode_leeftijd %>%
-  rename(leeftijd = Leeftijd, postcode = Postcode, geslacht = Geslacht, inwoners = `Bevolking (aantal)`) %>% 
-  filter(!leeftijd %like% "totaal", postcode %like% "[0-9]") %>%
+inwoners_per_postcode_leeftijd <- inwoners_per_postcode_leeftijd |>
+  rename(leeftijd = Leeftijd, postcode = Postcode, geslacht = Geslacht, inwoners = `Bevolking (aantal)`) |>
+  filter(!leeftijd %like% "totaal", postcode %like% "[0-9]") |>
   mutate(postcode = as.double(postcode),
          geslacht = case_when(geslacht %like% "totaal" ~ "inwoners",
                               geslacht %like% "man"    ~ "inwoners_man",
@@ -123,34 +124,34 @@ inwoners_per_postcode_leeftijd <- inwoners_per_postcode_leeftijd %>%
          leeftijd_max = as.numeric(gsub("([0-9]+)[^0-9]+([0-9]+)[^0-9]+", "\\2", leeftijd)),
          leeftijd_nieuw = paste0(leeftijd_min, "-", leeftijd_max - 1),
          leeftijd_nieuw = gsub("95-NA", "95+", leeftijd_nieuw),
-         leeftijd = factor(leeftijd_nieuw, levels = levels(age_groups(0, 5 * c(1:19))), ordered = TRUE)) %>%
-  select(postcode, geslacht, leeftijd, inwoners) %>%
+         leeftijd = factor(leeftijd_nieuw, levels = levels(age_groups(0, 5 * c(1:19))), ordered = TRUE)) |>
+  select(postcode, geslacht, leeftijd, inwoners) |>
   pivot_wider(names_from = geslacht, values_from = inwoners)
 # alle PC2 en PC3 toevoegen
-inwoners_per_postcode_leeftijd <- inwoners_per_postcode_leeftijd %>%
-  bind_rows(inwoners_per_postcode_leeftijd %>%
-              group_by(postcode = clean_numeric(substr(postcode, 1, 2)), leeftijd) %>%
-              summarise(across(everything(), sum, na.rm = TRUE), .groups = "drop")) %>%
-  bind_rows(inwoners_per_postcode_leeftijd %>%
-              group_by(postcode = clean_numeric(substr(postcode, 1, 3)), leeftijd) %>%
-              summarise(across(everything(), sum, na.rm = TRUE), .groups = "drop")) %>%
+inwoners_per_postcode_leeftijd <- inwoners_per_postcode_leeftijd |>
+  bind_rows(inwoners_per_postcode_leeftijd |>
+              group_by(postcode = clean_numeric(substr(postcode, 1, 2)), leeftijd) |>
+              summarise(across(everything(), sum, na.rm = TRUE), .groups = "drop")) |>
+  bind_rows(inwoners_per_postcode_leeftijd |>
+              group_by(postcode = clean_numeric(substr(postcode, 1, 3)), leeftijd) |>
+              summarise(across(everything(), sum, na.rm = TRUE), .groups = "drop")) |>
   arrange(postcode, leeftijd)
 # korte check, moet allemaal gelijk zijn:
-inwoners_per_postcode_leeftijd %>% filter(postcode > 999) %>% pull(inwoners) %>% sum(na.rm = TRUE) # pc4
-inwoners_per_postcode_leeftijd %>% filter(!postcode < 100, !postcode > 999) %>% pull(inwoners) %>% sum(na.rm = TRUE) # pc3
-inwoners_per_postcode_leeftijd %>% filter(postcode < 100) %>% pull(inwoners) %>% sum(na.rm = TRUE) # pc2
+inwoners_per_postcode_leeftijd |> filter(postcode > 999) |> pull(inwoners) |> sum(na.rm = TRUE) # pc4
+inwoners_per_postcode_leeftijd |> filter(!postcode < 100, !postcode > 999) |> pull(inwoners) |> sum(na.rm = TRUE) # pc3
+inwoners_per_postcode_leeftijd |> filter(postcode < 100) |> pull(inwoners) |> sum(na.rm = TRUE) # pc2
 
 # Postcodes (wordt later alle referentiedata aan toegevoegd) --------------
 
 # `postcodes` is hier de vorige versie die we als `postcodes` gebruikten, deze wordt vernieuwd
-postcodes_plaats_gemeente <- certegis::postcodes %>%
-  filter(postcode > 999) %>% # alleen PC4 houden, wordt later weer aangevuld met PC2 en PC3
+postcodes_plaats_gemeente <- certegis::postcodes |>
+  filter(postcode > 999) |> # alleen PC4 houden, wordt later weer aangevuld met PC2 en PC3
   select(postcode, plaats, gemeente)
 
 postcodes <- read_csv2(postcodes_bestand)
 colnames(postcodes) <- c("postcode", "inwoners", "inwoners_man", "inwoners_vrouw")
-postcodes <- postcodes %>% 
-  filter(postcode %like% "[0-9]") %>% 
+postcodes <- postcodes |>
+  filter(postcode %like% "[0-9]") |>
   mutate(postcode = as.double(postcode))
 
 # Postcode-4 kaart --------------------------------------------------------
@@ -161,7 +162,7 @@ postcodes <- postcodes %>%
 geo_postcodes4 <- st_read(postcodes4_bestand)
 geo_postcodes4 <- kaart_fixen(geo_postcodes4) # duurt ca. 20 sec.
 # alleen relevante kolommen houden
-geo_postcodes4 <- geo_postcodes4 %>%
+geo_postcodes4 <- geo_postcodes4 |>
   transmute(postcode = as.double(as.character(PC4)),
             huishoudens = ifelse(AANTAL_HH < 0, NA_real_, AANTAL_HH),
             huishouden_grootte = ifelse(GEM_HH_GR < 0, NA_real_, GEM_HH_GR),
@@ -173,7 +174,7 @@ geo_postcodes4 <- geo_postcodes4 %>%
 geo_postcodes6 <- st_read(postcodes6_bestand)
 geo_postcodes6 <- kaart_fixen(geo_postcodes6) # duurt ca. 2 min.
 # alleen relevante kolommen houden
-geo_postcodes6 <- geo_postcodes6 %>%
+geo_postcodes6 <- geo_postcodes6 |>
   transmute(postcode = as.character(PC6),
             inwoners = as.double(INWONER),
             oppervlakte_km2 = as.double(st_area(geometry) / 1000 ^ 2),
@@ -201,21 +202,21 @@ for (i in 1:length(relevante_lagen)) {
       x_pc <<- pc
       p$tick()$print()
       suppressMessages(
-        verschillen <- as.double(st_area(st_difference(geo_postcodes4 %>% slice(pc),
+        verschillen <- as.double(st_area(st_difference(geo_postcodes4 |> slice(pc),
                                                        kaart)) /
-                                   st_area(geo_postcodes4 %>% slice(pc)))
+                                   st_area(geo_postcodes4 |> slice(pc)))
       )
       if (any(verschillen < 1)) {
         newvar[pc] <- as.character(kaart[, 1, drop = TRUE])[verschillen == min(verschillen)]
       } else {
-        kaart_ind <- as.double(suppressMessages(unlist(st_intersects(geo_postcodes4 %>% slice(pc), kaart))))[1]
+        kaart_ind <- as.double(suppressMessages(unlist(st_intersects(geo_postcodes4 |> slice(pc), kaart))))[1]
         newvar[pc] <- as.character(kaart[, 1, drop = TRUE])[kaart_ind]
       }
     }
     newdf <- data.frame(postcode = as.double(geo_postcodes4$postcode),
                         newvar = as.character(newvar),
                         stringsAsFactors = FALSE)
-    postcodes <- postcodes %>%
+    postcodes <- postcodes |>
       left_join(newdf, by = "postcode")
     colnames(postcodes)[colnames(postcodes) == "newvar"] <- relevante_lagen[i]
   }
@@ -233,45 +234,45 @@ for (i in 1:length(relevante_lagen)) {
 }
 
 # uit PC4-kaart van CBS ook nog wat kolommen halen, en die hoeven niet in dat kaartobject
-postcodes <- postcodes %>%
-  left_join(postcodes_plaats_gemeente, by = "postcode") %>%
-  select(postcode, matches("inwoner"), "plaats", "gemeente", "provincie", everything()) %>%
-  left_join(geo_postcodes4 %>%
-              as.data.frame(stringsAsFactors = FALSE) %>%
+postcodes <- postcodes |>
+  left_join(postcodes_plaats_gemeente, by = "postcode") |>
+  select(postcode, matches("inwoner"), "plaats", "gemeente", "provincie", everything()) |>
+  left_join(geo_postcodes4 |>
+              as.data.frame(stringsAsFactors = FALSE) |>
               select(-area_km2, -geometry),
             by = "postcode")
 
 # alles van PC2 en PC3 toevoegen
-postcodes <- postcodes %>%
-  bind_rows(postcodes %>%
-              group_by(postcode = clean_numeric(substr(postcode, 1, 2))) %>%
+postcodes <- postcodes |>
+  bind_rows(postcodes |>
+              group_by(postcode = clean_numeric(substr(postcode, 1, 2))) |>
               summarise(across(matches("inwoner"), sum, na.rm = TRUE),
                         across(matches("huishoudens"), sum, na.rm = TRUE),
                         across(matches("huishouden_grootte"), mean, na.rm = TRUE),
-                        across(where(is.character), function(x) x[1])) %>% 
-              select(colnames(postcodes))) %>%
-  bind_rows(postcodes %>%
-              group_by(postcode = clean_numeric(substr(postcode, 1, 3))) %>%
+                        across(where(is.character), function(x) x[1])) |>
+              select(colnames(postcodes))) |>
+  bind_rows(postcodes |>
+              group_by(postcode = clean_numeric(substr(postcode, 1, 3))) |>
               summarise(across(matches("inwoner"), sum, na.rm = TRUE),
                         across(matches("huishoudens"), sum, na.rm = TRUE),
                         across(matches("huishouden_grootte"), mean, na.rm = TRUE),
-                        across(where(is.character), function(x) x[1])) %>% 
-              select(colnames(postcodes))) %>%
+                        across(where(is.character), function(x) x[1])) |>
+              select(colnames(postcodes))) |>
   arrange(postcode)
 
 # huishoudens verwijderen
-geo_postcodes4 <- geo_postcodes4 %>% 
+geo_postcodes4 <- geo_postcodes4 |>
   select(postcode, area_km2, geometry)
 
 # inwoners toevoegen aan de kaarten
 inwoners_toevoegen <- function(kaart) {
-  out <- kaart %>%
-    left_join(postcodes %>%
-                filter(postcode > 999) %>%
-                group_by(across(colnames(kaart)[1])) %>%
-                summarise(inwoners = sum(inwoners, na.rm = TRUE))) %>%
-    relocate(inwoners, .before = area_km2) %>%
-    rename(oppervlakte_km2 = area_km2) %>% 
+  out <- kaart |>
+    left_join(postcodes |>
+                filter(postcode > 999) |>
+                group_by(across(colnames(kaart)[1])) |>
+                summarise(inwoners = sum(inwoners, na.rm = TRUE))) |>
+    relocate(inwoners, .before = area_km2) |>
+    rename(oppervlakte_km2 = area_km2) %>%
     arrange(across(colnames(.)[1]))
   message("Inwoners: ", sum(out$inwoners, na.rm = TRUE), " (", sum(is.na(out$inwoners)), " NA's)")
   out
@@ -284,6 +285,7 @@ geo_postcodes4 <- inwoners_toevoegen(geo_postcodes4)
 geo_provincies <- inwoners_toevoegen(geo_provincies)
 
 # geo_postcodes4 is veel te groot, we maken hem simpeler
+stop("Sinds CRS 28992 (Amersfoort / RD New) moet in 2023 gekeken worden wat hieronder een goede dTolerance is.")
 geo_postcodes4 <- st_simplify(geo_postcodes4, dTolerance = 0.0001)
 geo_postcodes4$geometry <- st_cast(geo_postcodes4$geometry, , "MULTIPOLYGON")
 
@@ -307,25 +309,31 @@ usethis::use_data(geo_postcodes6, overwrite = TRUE, internal = FALSE, compress =
 usethis::use_data(geo_provincies, overwrite = TRUE, internal = FALSE, compress = "xz", version = 2)
 
 # vanuit geo_postcodes4 ook geo_postcodes2 en geo_postcodes3 maken
-geo_postcodes2 <- geo_postcodes4 %>%
-  as.data.frame() %>%
-  mutate(postcode = as.double(substr(postcode, 1, 2))) %>%
-  group_by(postcode) %>%
+geo_postcodes2 <- geo_postcodes4 |>
+  group_by(postcode = as.double(substr(postcode, 1, 2))) |> 
   summarise(inwoners = sum(inwoners, na.rm = TRUE),
             oppervlakte_km2 = sum(oppervlakte_km2, na.rm = TRUE),
-            geometry = st_union(geometry)) %>% 
-  as.data.frame() %>%
+            geometry = geometry |> 
+              st_union() |> 
+              sf_remove_holes() |> 
+              st_simplify(dTolerance = 100)) |>
+  # will otherwise become sf'ed tibble:
+  as.data.frame() |>
   st_as_sf()
+geo_postcodes2$geometry <- st_cast(geo_postcodes2$geometry, , "MULTIPOLYGON")
 
-geo_postcodes3 <- geo_postcodes4 %>%
-  as.data.frame() %>%
-  mutate(postcode = as.double(substr(postcode, 1, 3))) %>%
-  group_by(postcode) %>%
+geo_postcodes3 <- geo_postcodes4 |>
+  group_by(postcode = as.double(substr(postcode, 1, 3))) |> 
   summarise(inwoners = sum(inwoners, na.rm = TRUE),
             oppervlakte_km2 = sum(oppervlakte_km2, na.rm = TRUE),
-            geometry = st_union(geometry)) %>% 
-  as.data.frame() %>%
+            geometry = geometry |> 
+              st_union() |> 
+              sf_remove_holes() |> 
+              st_simplify(dTolerance = 100)) |>
+  # will otherwise become sf'ed tibble:
+  as.data.frame() |>
   st_as_sf()
+geo_postcodes3$geometry <- st_cast(geo_postcodes3$geometry, , "MULTIPOLYGON")
 
 # instelling terugzetten
 sf_use_s2(sf_use_s2.old)

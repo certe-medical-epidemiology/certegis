@@ -26,8 +26,11 @@ check_is_installed <- function(pkgs) {
                                      "Install now?"))
     if (isTRUE(choice)) {
       utils::install.packages(to_install)
+      if ("sf" %in% pkgs) {
+        try(loadNamespace("sf"), silent = TRUE)
+      }
       # try again:
-      is_installed(pkgs)
+      check_is_installed(pkgs)
     } else {
       stop("Required package(s) ",
            paste0("'", to_install, "'", collapse = ", "), 
@@ -62,7 +65,6 @@ globalVariables(c(".",
                   "count",
                   "gemeente",
                   "ggdregio",
-                  "is_installed",
                   "n",
                   "nuts3",
                   "percentage",
