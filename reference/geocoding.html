@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">certegis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.7</span>
       </span>
     </div>
 
@@ -119,22 +119,22 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 1 feature and 2 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POINT</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 232742.3 ymin: 579131.1 xmax: 232742.3 ymax: 579131.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 232742.4 ymin: 579131.1 xmax: 232742.4 ymax: 579131.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Projected CRS: Amersfoort / RD New</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                          place  name                  geometry</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Van Swietenlaan 2, Groningen Certe POINT (232742.3 579131.1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                          place name                  geometry</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Van Swietenlaan 2, Groningen &lt;NA&gt; POINT (232742.4 579131.1)</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># reverse geocoding: get the name and address</span></span></span>
 <span class="r-in"><span><span class="fu">reverse_geocode</span><span class="op">(</span><span class="va">coord</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    name           address zipcode      city</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Certe Van Swietenlaan 2  9728NZ Groningen</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   name           address zipcode      city</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 &lt;NA&gt; Van Swietenlaan 2 9728 NZ Groningen</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># places can be any text, and the results are prioritised based on</span></span></span>
 <span class="r-in"><span><span class="co"># the distance from the main Certe building, so:</span></span></span>
 <span class="r-in"><span><span class="fu">reverse_geocode</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Certe"</span>, <span class="st">"IKEA"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    name           address zipcode      city</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Certe Van Swietenlaan 2  9728NZ Groningen</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  IKEA         Sontweg 9  9723AT Groningen</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   name           address zipcode      city</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 &lt;NA&gt; Van Swietenlaan 2 9728 NZ Groningen</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 IKEA         Sontweg 9 9723 AT Groningen</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">hospitals</span> <span class="op">&lt;-</span> <span class="fu">geocode</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Martini ziekenhuis"</span>,</span></span>
 <span class="r-in"><span>                       <span class="st">"Medisch Centrum Leeuwarden"</span>,</span></span>
@@ -146,11 +146,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 182893.9 ymin: 534265.7 xmax: 257962.9 ymax: 578958.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Projected CRS: Amersfoort / RD New</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                        place               name                  geometry</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1         Martini ziekenhuis Martini Ziekenhuis POINT (232784.4 578958.3)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Medisch Centrum Leeuwarden                MCL POINT (182893.9 578114.4)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   Tjongerschans Heerenveen Tjongerschansplein   POINT (190624 553347.8)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4              Scheper Emmen     Treant Scheper POINT (257962.9 534265.7)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        place name                  geometry</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1         Martini ziekenhuis &lt;NA&gt; POINT (232784.4 578958.3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Medisch Centrum Leeuwarden &lt;NA&gt; POINT (182893.9 578114.4)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   Tjongerschans Heerenveen &lt;NA&gt;   POINT (190624 553347.8)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4              Scheper Emmen &lt;NA&gt; POINT (257962.9 534265.7)</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://certe-medical-epidemiology.github.io/certeplot2" class="external-link">"certeplot2"</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="va">geo_gemeenten</span> <span class="op">|&gt;</span></span></span>
@@ -174,7 +174,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

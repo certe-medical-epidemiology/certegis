@@ -1,8 +1,8 @@
-pandoc: 2.14.2
-pkgdown: 2.0.5
+pandoc: 2.19.2
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles: {}
-last_built: 2022-07-12T19:24Z
+last_built: 2022-12-16T12:26Z
 urls:
   reference: https://certe-medical-epidemiology.github.io/certegis/reference
   article: https://certe-medical-epidemiology.github.io/certegis/articles
