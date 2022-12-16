@@ -24,11 +24,9 @@
 }
 
 .onLoad <- function(...) {
-  if ("sf" %in% utils::installed.packages()) {
-    # load sf namespace on load, so that:
-    # - `certegis` geographic data sets will print correctly
-    # - `certegis` GIS functions can be used correctly
-    # - `certegis` GIS functions can be used in other packages (`vctrs` pkg will otherwise complain)
-    loadNamespace("sf")
-  }
+  # load sf namespace on load, so that:
+  # - `certegis` geographic data sets will print correctly
+  # - `certegis` GIS functions can be used in this package
+  # - `certegis` GIS functions can be used in other packages (`vctrs` pkg will otherwise complain)
+  requireNamespace("sf", quietly = TRUE)
 }

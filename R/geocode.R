@@ -61,7 +61,7 @@
 #'     add_sf(hospitals, colour = "certeroze", datalabels = place)
 #' }
 geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
-  check_is_installed(c("jsonlite", "sf"))
+  check_is_installed("sf")
   
   api <- paste("https://nominatim.openstreetmap.org/search?format=json",
                "q={place}",
@@ -87,7 +87,7 @@ geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
   for (i in seq_len(length(place))) {
     url <- gsub("{place}", place[i], api, fixed = TRUE)
     osm <- tryCatch({
-      result <- jsonlite::fromJSON(utils::URLencode(url))
+      result <- get_df_from_remote_json(url)
       # fair use is 1 per second
       Sys.sleep(0.25)
       if (NROW(result) > 1) {
@@ -154,7 +154,7 @@ geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
 #' @rdname geocoding
 #' @export
 reverse_geocode <- function(sf_data) {
-  check_is_installed(c("jsonlite", "sf"))
+  check_is_installed("sf")
   
   api <- paste("https://nominatim.openstreetmap.org/reverse?format=json",
                "lat={latitude}",
@@ -193,7 +193,7 @@ reverse_geocode <- function(sf_data) {
     url <- gsub("{latitude}", lat[i], url, fixed = TRUE)
     url <- gsub("{longitude}", lon[i], url, fixed = TRUE)
     osm <- tryCatch({
-      result <- as.data.frame(jsonlite::fromJSON(utils::URLencode(url))$address, stringsAsFactors = FALSE)
+      result <- as.data.frame(get_df_from_remote_json(url)$address, stringsAsFactors = FALSE)
       if (all(c("road", "house_number") %in% colnames(result))) {
         result$address <- trimws(paste(result$road, result$house_number))
       } else {

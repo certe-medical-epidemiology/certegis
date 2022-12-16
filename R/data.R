@@ -86,7 +86,7 @@ included_datasets <- function() {
 #'     filter_geolocation(plaats == "Groningen") |>
 #'     plot2(category = inwoners / oppervlakte_km2,
 #'           datalabels = FALSE,
-#'           title = "City of Groningen")
+#'           title = "City of Groningen (PC6 level)")
 #'   
 #' }
 #' 
@@ -96,7 +96,7 @@ included_datasets <- function() {
 #'     filter_geolocation(plaats == "Groningen") |>
 #'     plot2(category = inwoners / oppervlakte_km2,
 #'           datalabels = FALSE,
-#'           title = "City of Groningen")
+#'           title = "City of Groningen (PC4 level)")
 #'   
 #' }
 #' 

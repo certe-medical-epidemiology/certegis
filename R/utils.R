@@ -17,6 +17,15 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+globalVariables(c("afstand_km",
+                  "gemeente",
+                  "ggdregio",
+                  "nuts3",
+                  "postcode",
+                  "postcode.x",
+                  "postcode.y",
+                  "provincie"))
+
 check_is_installed <- function(pkgs) {
   to_install <- pkgs[which(!pkgs %in% rownames(utils::installed.packages()))]
   if (length(to_install) > 0) {
@@ -57,27 +66,11 @@ get_bbox <- function(lst, crs) {
   })
 }
 
-globalVariables(c(".",
-                  "afstand",
-                  "afstand_km",
-                  "arrange_at",
-                  "bind_rows",
-                  "count",
-                  "gemeente",
-                  "ggdregio",
-                  "n",
-                  "nuts3",
-                  "percentage",
-                  "plaats",
-                  "postcode",
-                  "postcode.x",
-                  "postcode.y",
-                  "postcodes",
-                  "postcodes4",
-                  "postcodes4_afstanden",
-                  "provincie",
-                  "pull",
-                  "row_number",
-                  "select",
-                  "teams",
-                  "uitslag_int"))
+get_df_from_remote_json <- function(x) {
+  check_is_installed(c("httr", "jsonlite"))
+  result <- httr::GET(utils::URLencode(x))
+  httr::stop_for_status(result)
+  result |>
+    httr::content(type = "text", encoding = "UTF-8") |>
+    jsonlite::fromJSON(flatten = TRUE)
+}
