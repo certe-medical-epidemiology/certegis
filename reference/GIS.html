@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">certegis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.8</span>
       </span>
     </div>
 
@@ -84,6 +84,12 @@
 <span></span>
 <span><span class="fu">as.sf</span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">convert_to_degrees_CRS4326</span><span class="op">(</span><span class="va">sf_data</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">convert_to_metre_CRS28992</span><span class="op">(</span><span class="va">sf_data</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">degrees_to_sf</span><span class="op">(</span><span class="va">longitudes</span>, <span class="va">latitudes</span>, crs <span class="op">=</span> <span class="fl">28992</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">crop_certe</span><span class="op">(</span><span class="va">sf_data</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">filter_sf</span><span class="op">(</span><span class="va">sf_data</span>, xmin <span class="op">=</span> <span class="cn">NULL</span>, xmax <span class="op">=</span> <span class="cn">NULL</span>, ymin <span class="op">=</span> <span class="cn">NULL</span>, ymax <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
@@ -117,6 +123,14 @@
 <dd><p>a data set of class 'sf'</p></dd>
 
 
+<dt>longitudes</dt>
+<dd><p>vector of longitudes</p></dd>
+
+
+<dt>crs</dt>
+<dd><p>the coordinate reference system (CRS) to use as output</p></dd>
+
+
 <dt>xmin, xmax, ymin, ymax</dt>
 <dd><p>coordination filters for <code>sf_data</code>, given in degrees following <a href="https://epsg.io/4326" class="external-link">EPSG:4326</a> ('WGS 84')</p></dd>
 
@@ -128,6 +142,10 @@
 <dt>col_zipcode</dt>
 <dd><p>column with zip codes</p></dd>
 
+
+<dt>latitutes</dt>
+<dd><p>vector of latitutes</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -138,6 +156,8 @@
     <div id="details">
     <h2>Details</h2>
     <p>All of these functions will check if the <code>sf</code> package is installed, and will load its namespace (but not attach the package).</p>
+<p><code>convert_to_degrees_CRS4326()</code> will transform SF data to <a href="https://epsg.io/4326" class="external-link">WGS 84 -- WGS84 - World Geodetic System 1984, used in GPS</a>, CRS 4326.</p>
+<p><code>convert_to_metre_CRS28992()</code> will transform SF data to <a href="https://epsg.io/28992" class="external-link">Amersfoort / RD New -- Netherlands - Holland - Dutch</a>, CRS 28992.</p>
 <p><code>crop_certe()</code> cuts any geometry on the Certe region (more or less the Northern three provinces of the Netherlands).</p>
 <p><code>filter_sf()</code> filters an sf object on coordinates, and is internally used by <code>crop_certe()</code>.</p>
 <p><code>latitude()</code> specifies the north-south position ('y axis') and <code>longitude()</code> specifies the east-west position ('x axis'). They return the numeric coordinate of the centre of a simple feature.</p>
@@ -227,6 +247,7 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: certeplot2</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: ggplot2</span>
 <span class="r-plt img"><img src="GIS-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">latitude</span><span class="op">(</span><span class="va">geo_provincies</span><span class="op">)</span></span></span>
