@@ -6,6 +6,9 @@
 \alias{add_map}
 \alias{is.sf}
 \alias{as.sf}
+\alias{convert_to_degrees_CRS4326}
+\alias{convert_to_metre_CRS28992}
+\alias{degrees_to_sf}
 \alias{crop_certe}
 \alias{filter_sf}
 \alias{filter_geolocation}
@@ -20,6 +23,12 @@ add_map(data, maptype = NULL, by = NULL, crop_certe = TRUE)
 is.sf(sf_data)
 
 as.sf(data)
+
+convert_to_degrees_CRS4326(sf_data)
+
+convert_to_metre_CRS28992(sf_data)
+
+degrees_to_sf(longitudes, latitudes, crs = 28992)
 
 crop_certe(sf_data)
 
@@ -42,11 +51,17 @@ longitude(sf_data)
 
 \item{sf_data}{a data set of class 'sf'}
 
+\item{longitudes}{vector of longitudes}
+
+\item{crs}{the coordinate reference system (CRS) to use as output}
+
 \item{xmin, xmax, ymin, ymax}{coordination filters for \code{sf_data}, given in degrees following \href{https://epsg.io/4326}{EPSG:4326} ('WGS 84')}
 
 \item{...}{filters to set}
 
 \item{col_zipcode}{column with zip codes}
+
+\item{latitutes}{vector of latitutes}
 }
 \value{
 An \code{sf} model. The column with geodata is always called \code{"geometry"}.
@@ -56,6 +71,10 @@ These are functions to work with geographical data. To determine coordinates bas
 }
 \details{
 All of these functions will check if the \code{sf} package is installed, and will load its namespace (but not attach the package).
+
+\code{\link[=convert_to_degrees_CRS4326]{convert_to_degrees_CRS4326()}} will transform SF data to \href{https://epsg.io/4326}{WGS 84 -- WGS84 - World Geodetic System 1984, used in GPS}, CRS 4326.
+
+\code{\link[=convert_to_metre_CRS28992]{convert_to_metre_CRS28992()}} will transform SF data to \href{https://epsg.io/28992}{Amersfoort / RD New -- Netherlands - Holland - Dutch}, CRS 28992.
 
 \code{\link[=crop_certe]{crop_certe()}} cuts any geometry on the Certe region (more or less the Northern three provinces of the Netherlands).
 

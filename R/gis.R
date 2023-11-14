@@ -115,13 +115,42 @@ is.sf <- function(sf_data) {
 #' @export
 as.sf <- function(data) {
   check_is_installed("sf")
-  
   if (is.sf(data)) {
     data
   } else {
     sf::st_as_sf(data)
   }
 }
+
+#' @rdname GIS
+#' @export
+#' @details [convert_to_degrees_CRS4326()] will transform SF data to [WGS 84 -- WGS84 - World Geodetic System 1984, used in GPS](https://epsg.io/4326), CRS 4326.
+convert_to_degrees_CRS4326 <- function(sf_data) {
+  check_is_installed("sf")
+  sf::st_transform(sf_data, crs = 4326)
+}
+
+#' @rdname GIS
+#' @export
+#' @details [convert_to_metre_CRS28992()] will transform SF data to [Amersfoort / RD New -- Netherlands - Holland - Dutch](https://epsg.io/28992), CRS 28992.
+convert_to_metre_CRS28992 <- function(sf_data) {
+  check_is_installed("sf")
+  sf::st_transform(sf_data, crs = 28992)
+}
+
+#' @rdname GIS
+#' @param longitudes vector of longitudes
+#' @param latitutes vector of latitutes
+#' @param crs the coordinate reference system (CRS) to use as output
+#' @export
+degrees_to_sf <- function(longitudes, latitudes, crs = 28992) {
+  check_is_installed("sf")
+  sf::st_as_sf(data.frame(long = longitudes, lat = latitudes),
+               coords = c("long", "lat"),
+               crs = 4326) |> 
+    sf::st_transform(crs = crs)
+}
+    
 
 #' @rdname GIS
 #' @importFrom dplyr mutate filter 

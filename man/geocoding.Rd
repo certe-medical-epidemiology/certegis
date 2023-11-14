@@ -26,13 +26,13 @@ reverse_geocode(sf_data)
 \strong{Geocoding} is the process of retrieving geographic coordinates based on text, such as an address or the name of a place (\href{https://en.wikipedia.org/wiki/Address_geocoding}{Wikipedia page}). On the other hand, \strong{reverse geocoding} is the process of retrieving the name and address from geographic coordinates (\href{https://en.wikipedia.org/wiki/Reverse_geocoding}{Wikipedia page}).
 }
 \details{
-These functions use \href{https://openstreetmap.org}{OpenStreetMap (OSM)}.
+These functions use \href{https://openstreetmap.org}{OpenStreetMap (OSM)}, by using the API of \url{https://geocode.maps.co}.
 
 \code{\link[=geocode]{geocode()}} provides geocoding and returns an 'sf' \link{data.frame} at default. In case of multiple results, the distance from the main Certe building in Groningen is leading.
 
 \code{\link[=reverse_geocode]{reverse_geocode()}} provides reversed geocoding and returns a \link{data.frame} with the columns "name", "address", "zipcode" and "city".
 
-For both functions, the OSM API will only be called on unique input values, to increase speed.
+For both functions, the \url{https://geocode.maps.co} API will only be called on unique input values, to increase speed.
 }
 \examples{
 # geocoding: retrieve 'sf' data.frame based on place names

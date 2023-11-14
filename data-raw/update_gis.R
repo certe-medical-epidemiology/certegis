@@ -2,7 +2,7 @@ library(dplyr)
 library(tidyr)
 library(readr)
 library(AMR) # voor age_groups()
-library(sf) # let op: minimaal v1.0!
+library(sf) # minimaal v1.0-14
 library(sfheaders) # voor sf_remove_holes
 library(cleaner)
 
@@ -10,6 +10,7 @@ library(cleaner)
 
 # MB/ 2021-12-31 ik kon vandaag dit hele script doorlopen zonder fouten.
 # MB/ 2022-05-02 PC6 toegevoegd
+# MB/ 2023-07-30 paar bugfixen met oppervlakteberekening en inwoners per wijk opgehaald om gemeenten vast te stellen
 
 # Bronnen -----------------------------------------------------------------
 
@@ -22,22 +23,25 @@ postcodes_bestand <- paste0(downloadmap, "Bevolking__geslacht__migratieachtergro
 
 # download inwoners per 5 jaar leeftijd en geslacht hier voor het huidige jaar als 'CSV zonder statistische symbolen:
 # https://opendata.cbs.nl/#/CBS/nl/dataset/83502NED/table?dl=42FE0
-inwoners_bestand <- paste0(downloadmap, "Bevolking__leeftijd__postcode_30122021_210658.csv")
+inwoners_bestand <- paste0(downloadmap, "Bevolking__leeftijd__postcode_30072023_141509.csv")
 
 # download gebiedsindelingen hier:
 # https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/cbs-gebiedsindelingen
-gebiedsindelingen_bestand <- paste0(downloadmap, "cbsgebiedsindelingen_2022_v1.gpkg")
+# in 2023 heette het bestand "cbsgebiedsindelingen2016-2023.zip" - pak het uit na downloaden
+gebiedsindelingen_bestand <- paste0(downloadmap, "cbsgebiedsindelingen2023.gpkg")
 
 # download postcodes 4 onder 'Downloads' ('Numeriek deel van de postcode (PC4)') hier:
 # https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/gegevens-per-postcode
-# NB. eind 2021 stond de link voor 2020 niet op de site. De link van 2017 wel:
-# https://download.cbs.nl/postcode/CBS-PC4-2017-v3.zip
-# daarvan gemaakt:
-# https://download.cbs.nl/postcode/CBS-PC4-2020-v1.zip (en die bestond gewoon)
-postcodes4_bestand <- paste0(downloadmap, "CBS-PC4-2020-v1/CBS_PC4_2020_v1.shp")
-# voor PC6: https://download.cbs.nl/postcode/CBS-PC6-2020-v1.zip
-postcodes6_bestand <- paste0(downloadmap, "CBS-PC6-2020-v1/CBS_PC6_2020_v1.shp")
+# voor PC4: https://download.cbs.nl/postcode/2023-CBS_pc4_2022_v1.zip
+postcodes4_bestand <- paste0(downloadmap, "cbs_pc4_2022_v1.gpkg")
+# voor PC6: https://download.cbs.nl/postcode/2023-cbs_pc6_2022_v1.zip
+postcodes6_bestand <- paste0(downloadmap, "cbs_pc6_2022_v1.gpkg")
 
+# gemeentenamen hier in juli 2023 kunnen vinden
+# https://www.cbs.nl/nl-nl/maatwerk/2022/37/buurt-wijk-en-gemeente-2022-voor-postcode-huisnummer
+# eigenlijk hebben we nog een betere bron nodig waar PC4, gemeente, provincie goed staat
+pc6_wijken <- paste0(downloadmap, "pc6hnr20220801_gwb.csv")
+gemeente_codes_namen <- paste0(downloadmap, "gem2022.csv")
 
 # Helpfuncties ------------------------------------------------------------
 
@@ -85,9 +89,13 @@ kaart_fixen <- function(kaart) {
 
 lagen_beschikbaar <- sort(st_layers(gebiedsindelingen_bestand)$name)
 downloaden_transformeren <- function(laag) {
+  if (laag %like% "corop|nuts3") {
+    # bij COROP en NUTS3 naar beide zoeken; sinds 2023 heet NUTS3 ineens weer COROP (is identiek aan elkaar)
+    laag <- "corop|nuts3"
+  }
   zoeklaag <- sort(lagen_beschikbaar[lagen_beschikbaar %like% laag &
                                        lagen_beschikbaar %like% "gegeneraliseerd" &
-                                       !lagen_beschikbaar %like% "niet"])
+                                       lagen_beschikbaar %unlike% "niet"])
   if (length(zoeklaag) == 0) {
     stop("Geen laag gevonden")
   }
@@ -98,6 +106,10 @@ downloaden_transformeren <- function(laag) {
   kaart <- kaart_fixen(kaart)
 
   message(", met ", nrow(kaart), " geometrieën")
+  if (laag %like% "corop|nuts3") {
+    # wij blijven het nuts3 noemen
+    laag <- "nuts3"
+  }
   colnames(kaart)[colnames(kaart) %like% "naam"] <- laag
   # geen factor
   kaart[, laag] <- as.character(kaart[, laag, drop = TRUE])
@@ -131,10 +143,10 @@ inwoners_per_postcode_leeftijd <- inwoners_per_postcode_leeftijd |>
 inwoners_per_postcode_leeftijd <- inwoners_per_postcode_leeftijd |>
   bind_rows(inwoners_per_postcode_leeftijd |>
               group_by(postcode = clean_numeric(substr(postcode, 1, 2)), leeftijd) |>
-              summarise(across(everything(), sum, na.rm = TRUE), .groups = "drop")) |>
+              summarise(across(everything(), function(x) sum(x, na.rm = TRUE)), .groups = "drop")) |>
   bind_rows(inwoners_per_postcode_leeftijd |>
               group_by(postcode = clean_numeric(substr(postcode, 1, 3)), leeftijd) |>
-              summarise(across(everything(), sum, na.rm = TRUE), .groups = "drop")) |>
+              summarise(across(everything(), function(x) sum(x, na.rm = TRUE)), .groups = "drop")) |>
   arrange(postcode, leeftijd)
 # korte check, moet allemaal gelijk zijn:
 inwoners_per_postcode_leeftijd |> filter(postcode > 999) |> pull(inwoners) |> sum(na.rm = TRUE) # pc4
@@ -142,11 +154,6 @@ inwoners_per_postcode_leeftijd |> filter(!postcode < 100, !postcode > 999) |> pu
 inwoners_per_postcode_leeftijd |> filter(postcode < 100) |> pull(inwoners) |> sum(na.rm = TRUE) # pc2
 
 # Postcodes (wordt later alle referentiedata aan toegevoegd) --------------
-
-# `postcodes` is hier de vorige versie die we als `postcodes` gebruikten, deze wordt vernieuwd
-postcodes_plaats_gemeente <- certegis::postcodes |>
-  filter(postcode > 999) |> # alleen PC4 houden, wordt later weer aangevuld met PC2 en PC3
-  select(postcode, plaats, gemeente)
 
 postcodes <- read_csv2(postcodes_bestand)
 colnames(postcodes) <- c("postcode", "inwoners", "inwoners_man", "inwoners_vrouw")
@@ -160,14 +167,23 @@ postcodes <- postcodes |>
 # dus de geometrie van postcode 9251 valt in het snijvlak van de de geometrie van de gemeente Tytsjerksteradiel
 # en dus is Tytsjerksteradiel de gemeente van postcode 9251 (en zo verder voor NUTS-3, GGD-regio, ...)
 geo_postcodes4 <- st_read(postcodes4_bestand)
-geo_postcodes4 <- kaart_fixen(geo_postcodes4) # duurt ca. 20 sec.
-# alleen relevante kolommen houden
+geo_postcodes4 <- kaart_fixen(geo_postcodes4)
+# alleen relevante kolommen houden, inwoners komen later
 geo_postcodes4 <- geo_postcodes4 |>
-  transmute(postcode = as.double(as.character(PC4)),
-            huishoudens = ifelse(AANTAL_HH < 0, NA_real_, AANTAL_HH),
-            huishouden_grootte = ifelse(GEM_HH_GR < 0, NA_real_, GEM_HH_GR),
-            area_km2 = as.double(st_area(geometry) / 1000 ^ 2),
+  transmute(postcode = as.double(as.character(postcode4)),
+            oppervlakte_km2 = as.double(st_area(geometry) / 1000 ^ 2),
             geometry)
+
+postcodes_plaats_gemeente <- read_csv2(pc6_wijken) |>
+  group_by(postcode = substr(PC6, 1, 4)) |> 
+  summarise(across(everything(), first)) |> 
+  left_join(read_csv2(gemeente_codes_namen) |> rename(Gemeente2022 = Gemcode2022)) |> 
+  select(postcode, gemeente = Gemeentenaam2022) |> 
+  left_join(certegis::postcodes |>
+              filter(postcode > 999, postcode <= 9999) |> 
+              select(postcode, plaats),
+            by = "postcode")
+postcodes_plaats_gemeente |> filter(is.na(plaats) | is.na(gemeente))
 
 # Postcode-6 kaart --------------------------------------------------------
 
@@ -175,8 +191,8 @@ geo_postcodes6 <- st_read(postcodes6_bestand)
 geo_postcodes6 <- kaart_fixen(geo_postcodes6) # duurt ca. 2 min.
 # alleen relevante kolommen houden
 geo_postcodes6 <- geo_postcodes6 |>
-  transmute(postcode = as.character(PC6),
-            inwoners = as.double(INWONER),
+  transmute(postcode = as.character(postcode),
+            inwoners = as.double(aantal_inwoners),
             oppervlakte_km2 = as.double(st_area(geometry) / 1000 ^ 2),
             geometry)
 geo_postcodes6$inwoners[geo_postcodes6$inwoners < 0] <- 0
@@ -193,22 +209,22 @@ relevante_lagen <- c("gemeente",
 for (i in 1:length(relevante_lagen)) {
   message("\n>> zoeken naar ", relevante_lagen[i])
   kaart <- downloaden_transformeren(relevante_lagen[i])
-  x_kaart <<- kaart
   if (!relevante_lagen[i] %in% c("plaats", "gemeente")) {
-  # referentiedata toevoegen aan 'postcodes'
+    # referentiedata toevoegen aan 'postcodes'
+    # niet van plaats en gemeente, dat zou veel te lang duren (alleen gemeent met 380 geometrieën al 2 uur)
     p <- dplyr::progress_estimated(length(geo_postcodes4$geometry))
     newvar <- character(length = nrow(geo_postcodes4))
     for (pc in 1:nrow(geo_postcodes4)) {
-      x_pc <<- pc
       p$tick()$print()
-      suppressMessages(
-        verschillen <- as.double(st_area(st_difference(geo_postcodes4 |> slice(pc),
-                                                       kaart)) /
-                                   st_area(geo_postcodes4 |> slice(pc)))
+      suppressWarnings(
+        verschillen <- round(as.double(st_area(st_difference(geo_postcodes4 |> slice(pc),
+                                                             kaart)) /
+                                         st_area(geo_postcodes4 |> slice(pc))))
       )
       if (any(verschillen < 1)) {
-        newvar[pc] <- as.character(kaart[, 1, drop = TRUE])[verschillen == min(verschillen)]
+        newvar[pc] <- as.character(kaart[, 1, drop = TRUE])[verschillen == min(verschillen)][1]
       } else {
+        # hier wordt de nuts3 of GGD-regio gezocht waarvan het PC4-gebied het meest overlapt
         kaart_ind <- as.double(suppressMessages(unlist(st_intersects(geo_postcodes4 |> slice(pc), kaart))))[1]
         newvar[pc] <- as.character(kaart[, 1, drop = TRUE])[kaart_ind]
       }
@@ -216,9 +232,9 @@ for (i in 1:length(relevante_lagen)) {
     newdf <- data.frame(postcode = as.double(geo_postcodes4$postcode),
                         newvar = as.character(newvar),
                         stringsAsFactors = FALSE)
+    colnames(newdf)[colnames(newdf) == "newvar"] <- relevante_lagen[i]
     postcodes <- postcodes |>
       left_join(newdf, by = "postcode")
-    colnames(postcodes)[colnames(postcodes) == "newvar"] <- relevante_lagen[i]
   }
 
   object_naam <- case_when(relevante_lagen[i] == "gemeente" ~ "geo_gemeenten",
@@ -233,39 +249,37 @@ for (i in 1:length(relevante_lagen)) {
          envir = globalenv())
 }
 
-# uit PC4-kaart van CBS ook nog wat kolommen halen, en die hoeven niet in dat kaartobject
+# we nemen het inwoneraantal 'inwoners_per_postcode_leeftijd'
 postcodes <- postcodes |>
   left_join(postcodes_plaats_gemeente, by = "postcode") |>
-  select(postcode, matches("inwoner"), "plaats", "gemeente", "provincie", everything()) |>
-  left_join(geo_postcodes4 |>
-              as.data.frame(stringsAsFactors = FALSE) |>
-              select(-area_km2, -geometry),
-            by = "postcode")
+  select(-matches("inwoner")) |> 
+  left_join(inwoners_per_postcode_leeftijd |>
+              filter(postcode > 999, postcode <= 9999) |>
+              select(-leeftijd) |>
+              group_by(postcode) |>
+              summarise(across(everything(), function(x) sum(x, na.rm = TRUE))),
+            by = "postcode") |> 
+  select(postcode, matches("inwoner"), "plaats", "gemeente", "nuts3", "provincie", everything())
 
 # alles van PC2 en PC3 toevoegen
 postcodes <- postcodes |>
   bind_rows(postcodes |>
               group_by(postcode = clean_numeric(substr(postcode, 1, 2))) |>
-              summarise(across(matches("inwoner"), sum, na.rm = TRUE),
-                        across(matches("huishoudens"), sum, na.rm = TRUE),
-                        across(matches("huishouden_grootte"), mean, na.rm = TRUE),
-                        across(where(is.character), function(x) x[1])) |>
-              select(colnames(postcodes))) |>
+              summarise(across(where(is.double), sum),
+                        across(where(is.character), function(x) x[1]))) |>
   bind_rows(postcodes |>
               group_by(postcode = clean_numeric(substr(postcode, 1, 3))) |>
-              summarise(across(matches("inwoner"), sum, na.rm = TRUE),
-                        across(matches("huishoudens"), sum, na.rm = TRUE),
-                        across(matches("huishouden_grootte"), mean, na.rm = TRUE),
-                        across(where(is.character), function(x) x[1])) |>
-              select(colnames(postcodes))) |>
+              summarise(across(where(is.double), sum),
+                        across(where(is.character), function(x) x[1]))) |>
   arrange(postcode)
 
-# huishoudens verwijderen
-geo_postcodes4 <- geo_postcodes4 |>
-  select(postcode, area_km2, geometry)
+message("Nieuwe gemeenten:\n", paste0("'", unique(geo_gemeenten$gemeente[!geo_gemeenten$gemeente %in% postcodes$gemeente]), "'", collapse = ", "))
+message("Verlopen gemeenten:\n", paste0("'", unique(postcodes$gemeente[!postcodes$gemeente %in% geo_gemeenten$gemeente]), "'", collapse = ", "))
 
 # inwoners toevoegen aan de kaarten
 inwoners_toevoegen <- function(kaart) {
+  kaart <- kaart |> select(-matches("inwoner"))
+  colnames(kaart)[colnames(kaart) %like% "oppervlak"] <- "area_km2"
   out <- kaart |>
     left_join(postcodes |>
                 filter(postcode > 999) |>
@@ -296,6 +310,7 @@ geo_postcodes6$geometry <- st_cast(geo_postcodes6$geometry, , "MULTIPOLYGON")
 
 # "Fryslân" vervangen door "Friesland"
 geo_provincies$provincie <- gsub("Fryslân", "Friesland", geo_provincies$provincie, fixed = TRUE)
+geo_nuts3$nuts3 <- gsub("Fryslân", "Friesland", geo_nuts3$nuts3, fixed = TRUE)
 postcodes$provincie <- gsub("Fryslân", "Friesland", postcodes$provincie, fixed = TRUE)
 
 # nu kan alles opgeslagen worden in het certegis pakket:

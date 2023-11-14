@@ -25,13 +25,13 @@
 #' @param as_coordinates a [logical] to indicate whether the result should be returned as coordinates (i.e., class `sfc_POINT`)
 #' @param only_netherlands a [logical] to indicate whether only Dutch places should be searched
 #' @details
-#' These functions use [OpenStreetMap (OSM)](https://openstreetmap.org).
+#' These functions use [OpenStreetMap (OSM)](https://openstreetmap.org), by using the API of <https://geocode.maps.co>.
 #'
 #' [geocode()] provides geocoding and returns an 'sf' [data.frame] at default. In case of multiple results, the distance from the main Certe building in Groningen is leading.
 #'
 #' [reverse_geocode()] provides reversed geocoding and returns a [data.frame] with the columns "name", "address", "zipcode" and "city".
 #'
-#' For both functions, the OSM API will only be called on unique input values, to increase speed. 
+#' For both functions, the <https://geocode.maps.co> API will only be called on unique input values, to increase speed. 
 #' @source Data © OpenStreetMap contributors, ODbL 1.0. <https://osm.org/copyright>
 #' @name geocoding
 #' @rdname geocoding
@@ -63,7 +63,7 @@
 geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
   check_is_installed("sf")
   
-  api <- paste("https://nominatim.openstreetmap.org/search?format=json",
+  api <- paste("https://geocode.maps.co/search?format=json",
                "q={place}",
                ifelse(isTRUE(only_netherlands), "countrycodes=nl", ""),
                "limit=50",
@@ -156,7 +156,7 @@ geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
 reverse_geocode <- function(sf_data) {
   check_is_installed("sf")
   
-  api <- paste("https://nominatim.openstreetmap.org/reverse?format=json",
+  api <- paste("https://geocode.maps.co/reverse?format=json",
                "lat={latitude}",
                "lon={longitude}",
                "limit=50",
