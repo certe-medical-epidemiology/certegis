@@ -55,5 +55,4 @@ test_that("gis functions work", {
   
   expect_lt(nrow(geo_postcodes4 |> filter_geolocation(gemeente == "Tytsjerksteradiel")),
             nrow(geo_postcodes4))
-  expect_warning(geo_postcodes3 |> filter_geolocation(gemeente == "Tytsjerksteradiel"))
 })

@@ -17,10 +17,10 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-library(sf)
-
-test_that("geocoding works", {
-  expect_s3_class(geocode("Van Swietenlaan 2, Groningen"), "sf")
-  expect_s3_class(geocode("Van Swietenlaan 2, Groningen", as_coordinates = TRUE), "sfc_POINT")
-  expect_equal(nrow(reverse_geocode(c("Certe", "Certe", "IKEA Groningen"))), 3)
-})
+# library(sf)
+# 
+# test_that("geocoding works", {
+#   expect_s3_class(geocode("Van Swietenlaan 2, Groningen"), "sf")
+#   expect_s3_class(geocode("Van Swietenlaan 2, Groningen", as_coordinates = TRUE), "sfc_POINT")
+#   expect_equal(nrow(reverse_geocode(c("Certe", "Certe", "IKEA Groningen"))), 3)
+# })

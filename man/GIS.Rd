@@ -6,12 +6,12 @@
 \alias{add_map}
 \alias{is.sf}
 \alias{as.sf}
+\alias{crop_certe}
+\alias{filter_geolocation}
+\alias{filter_sf}
 \alias{convert_to_degrees_CRS4326}
 \alias{convert_to_metre_CRS28992}
 \alias{degrees_to_sf}
-\alias{crop_certe}
-\alias{filter_sf}
-\alias{filter_geolocation}
 \alias{latitude}
 \alias{longitude}
 \title{Geodata Functions}
@@ -24,17 +24,17 @@ is.sf(sf_data)
 
 as.sf(data)
 
+crop_certe(sf_data)
+
+filter_geolocation(sf_data, ...)
+
+filter_sf(sf_data, xmin = NULL, xmax = NULL, ymin = NULL, ymax = NULL)
+
 convert_to_degrees_CRS4326(sf_data)
 
 convert_to_metre_CRS28992(sf_data)
 
 degrees_to_sf(longitudes, latitudes, crs = 28992)
-
-crop_certe(sf_data)
-
-filter_sf(sf_data, xmin = NULL, xmax = NULL, ymin = NULL, ymax = NULL)
-
-filter_geolocation(sf_data, ..., col_zipcode = NULL)
 
 latitude(sf_data)
 
@@ -51,17 +51,15 @@ longitude(sf_data)
 
 \item{sf_data}{a data set of class 'sf'}
 
-\item{longitudes}{vector of longitudes}
-
-\item{crs}{the coordinate reference system (CRS) to use as output}
+\item{...}{filters to set}
 
 \item{xmin, xmax, ymin, ymax}{coordination filters for \code{sf_data}, given in degrees following \href{https://epsg.io/4326}{EPSG:4326} ('WGS 84')}
 
-\item{...}{filters to set}
+\item{longitudes}{vector of longitudes}
 
-\item{col_zipcode}{column with zip codes}
+\item{latitudes}{vector of latitudes}
 
-\item{latitutes}{vector of latitutes}
+\item{crs}{the coordinate reference system (CRS) to use as output}
 }
 \value{
 An \code{sf} model. The column with geodata is always called \code{"geometry"}.
@@ -72,34 +70,85 @@ These are functions to work with geographical data. To determine coordinates bas
 \details{
 All of these functions will check if the \code{sf} package is installed, and will load its namespace (but not attach the package).
 
+\code{\link[=crop_certe]{crop_certe()}} cuts any geometry to the Certe region (more of less): the Northern three provinces of the Netherlands and municipalities of Noordoostpolder, Urk, and Steenwijkerland. This will be based on \link{postcodes}.
+
+\code{\link[=filter_geolocation]{filter_geolocation()}} filters an sf object on qualitative values such as 'gemeente' and 'provincie'. The input data \code{sf_data} will be joined with \link{postcodes} and filtering can thus be done on any of these columns: postcode, inwoners, inwoners_man, inwoners_vrouw, plaats, gemeente, provincie, nuts3, ggdregio.
+
+\code{\link[=filter_sf]{filter_sf()}} filters an sf object on coordinates, and is internally used by \code{\link[=crop_certe]{crop_certe()}}.
+
 \code{\link[=convert_to_degrees_CRS4326]{convert_to_degrees_CRS4326()}} will transform SF data to \href{https://epsg.io/4326}{WGS 84 -- WGS84 - World Geodetic System 1984, used in GPS}, CRS 4326.
 
 \code{\link[=convert_to_metre_CRS28992]{convert_to_metre_CRS28992()}} will transform SF data to \href{https://epsg.io/28992}{Amersfoort / RD New -- Netherlands - Holland - Dutch}, CRS 28992.
 
-\code{\link[=crop_certe]{crop_certe()}} cuts any geometry on the Certe region (more or less the Northern three provinces of the Netherlands).
-
-\code{\link[=filter_sf]{filter_sf()}} filters an sf object on coordinates, and is internally used by \code{\link[=crop_certe]{crop_certe()}}.
-
 \code{\link[=latitude]{latitude()}} specifies the north-south position ('y axis') and \code{\link[=longitude]{longitude()}} specifies the east-west position ('x axis'). They return the numeric coordinate of the centre of a simple feature.
 }
 \examples{
+# Retrieving and joining maps ------------------------------------------
+
 get_map() # defaults to the geo_postcodes4 data set
 
+# adding a map applies a RIGHT JOIN to get all relevant geometric data
 data.frame(postcode = 7753, number_of_cases = 3) |> 
   add_map()
 
+
+# Cropping to Certe region ---------------------------------------------
+
+# Note: provinces do not include Flevoland
 geo_provincies |> crop_certe()
 
-# filter on a latitude of 52.5 degrees and higher
-geo_provincies |> filter_sf(ymin = 52.5)
+# but other geometries do, such as geo_gemeenten
+if (require("certeplot2")) {
+  geo_gemeenten |> crop_certe() |>    # cropped municipalities
+    plot2(title = "Certe Region") |>
+    add_sf(
+      geo_provincies |> crop_certe(), # cropped provinces
+      colour_fill = NA,
+      colour = "black",
+      linewidth = 0.5)
+}
+
+
+# Filtering geometries -------------------------------------------------
+
+geo_gemeenten |>
+  crop_certe() |>
+  # notice that the `provincie` column is not even in `geo_gemeenten`
+  filter_geolocation(provincie == "Flevoland")
+  
+geo_gemeenten |>
+  crop_certe() |>
+  filter_geolocation(inwoners_vrouw >= 50000)
 
 if (require("certeplot2")) {
-
   geo_postcodes4 |> 
     filter_geolocation(gemeente == "Tytsjerksteradiel") |> 
     plot2(category = inwoners,
           datalabels = postcode)
 
+}
+
+# filter on a latitude of 52.5 degrees and higher
+geo_provincies |> filter_sf(ymin = 52.5)
+
+
+# Transforming Coordinate Reference System (CRS) -----------------------
+
+geo_provincies |> convert_to_degrees_CRS4326()
+
+geo_provincies |> convert_to_metre_CRS28992()
+
+
+# Other functions ------------------------------------------------------
+
+degrees_to_sf(4.5, 54)
+
+if (require("certeplot2")) {
+  geo_provincies |>
+      crop_certe() |> 
+      plot2(category = NULL, colour_fill = NA) |> 
+      add_sf(degrees_to_sf(6.5, 53),
+             datalabels = "Some Point!")
 }
 
 latitude(geo_provincies)

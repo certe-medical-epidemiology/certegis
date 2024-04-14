@@ -29,9 +29,12 @@
 #' @return An `sf` model. The column with geodata is always called `"geometry"`.
 #' @export
 #' @examples 
+#' # Retrieving and joining maps ------------------------------------------
+#' 
 #' get_map() # defaults to the geo_postcodes4 data set
 get_map <- function(maptype = "postcodes4") {
   check_is_installed("sf")
+  loadNamespace("sf")
   
   maptype <- gsub("pc", "postcodes", tolower(maptype[1L]))
   if (maptype %unlike% "^geo_") {
@@ -50,10 +53,12 @@ get_map <- function(maptype = "postcodes4") {
 #' @export
 #' @examples 
 #' 
+#' # adding a map applies a RIGHT JOIN to get all relevant geometric data
 #' data.frame(postcode = 7753, number_of_cases = 3) |> 
 #'   add_map()
 add_map <- function(data, maptype = NULL, by = NULL, crop_certe = TRUE) {
   check_is_installed("sf")
+  loadNamespace("sf")
   
   if (is.null(maptype)) {
     # determine automatically
@@ -74,7 +79,7 @@ add_map <- function(data, maptype = NULL, by = NULL, crop_certe = TRUE) {
   if (isTRUE(crop_certe)) {
     geo_data <- crop_certe(geo_data)
   }
-
+  
   if (is.null(by)) {
     # search for the 'by'
     by <- intersect(colnames(data), colnames(geo_data))
@@ -108,6 +113,8 @@ add_map <- function(data, maptype = NULL, by = NULL, crop_certe = TRUE) {
 #' @rdname GIS
 #' @export
 is.sf <- function(sf_data) {
+  check_is_installed("sf")
+  loadNamespace("sf")
   inherits(sf_data, "sf")
 }
 
@@ -115,6 +122,7 @@ is.sf <- function(sf_data) {
 #' @export
 as.sf <- function(data) {
   check_is_installed("sf")
+  loadNamespace("sf")
   if (is.sf(data)) {
     data
   } else {
@@ -122,52 +130,39 @@ as.sf <- function(data) {
   }
 }
 
-#' @rdname GIS
-#' @export
-#' @details [convert_to_degrees_CRS4326()] will transform SF data to [WGS 84 -- WGS84 - World Geodetic System 1984, used in GPS](https://epsg.io/4326), CRS 4326.
-convert_to_degrees_CRS4326 <- function(sf_data) {
-  check_is_installed("sf")
-  sf::st_transform(sf_data, crs = 4326)
-}
-
-#' @rdname GIS
-#' @export
-#' @details [convert_to_metre_CRS28992()] will transform SF data to [Amersfoort / RD New -- Netherlands - Holland - Dutch](https://epsg.io/28992), CRS 28992.
-convert_to_metre_CRS28992 <- function(sf_data) {
-  check_is_installed("sf")
-  sf::st_transform(sf_data, crs = 28992)
-}
-
-#' @rdname GIS
-#' @param longitudes vector of longitudes
-#' @param latitutes vector of latitutes
-#' @param crs the coordinate reference system (CRS) to use as output
-#' @export
-degrees_to_sf <- function(longitudes, latitudes, crs = 28992) {
-  check_is_installed("sf")
-  sf::st_as_sf(data.frame(long = longitudes, lat = latitudes),
-               coords = c("long", "lat"),
-               crs = 4326) |> 
-    sf::st_transform(crs = crs)
-}
-    
 
 #' @rdname GIS
 #' @importFrom dplyr mutate filter 
-#' @details [crop_certe()] cuts any geometry on the Certe region (more or less the Northern three provinces of the Netherlands).
+#' @details [crop_certe()] cuts any geometry to the Certe region (more of less): the Northern three provinces of the Netherlands and municipalities of Noordoostpolder, Urk, and Steenwijkerland. This will be based on [certegis::postcodes].
 #' @export
-#' @examples 
+#' @examples
 #' 
+#' 
+#' # Cropping to Certe region ---------------------------------------------
+#' 
+#' # Note: provinces do not include Flevoland
 #' geo_provincies |> crop_certe()
+#' 
+#' # but other geometries do, such as geo_gemeenten
+#' if (require("certeplot2")) {
+#'   geo_gemeenten |> crop_certe() |>    # cropped municipalities
+#'     plot2(title = "Certe Region") |>
+#'     add_sf(
+#'       geo_provincies |> crop_certe(), # cropped provinces
+#'       colour_fill = NA,
+#'       colour = "black",
+#'       linewidth = 0.5)
+#' }
 crop_certe <- function(sf_data) {
   check_is_installed("sf")
+  loadNamespace("sf")
   
   postcode_filter <- certegis::postcodes |>
-    filter(provincie %in% c("Friesland", "Groningen", "Drenthe"))
+    filter(provincie %in% c("Friesland", "Groningen", "Drenthe") | gemeente %in% c("Noordoostpolder", "Urk", "Steenwijkerland"))
   
   if ("provincie" %in% colnames(sf_data)) {
     sf_data <- sf_data |>
-      filter(provincie %in% postcode_filter$provincie)
+      filter(provincie %in% c("Friesland", "Groningen", "Drenthe"))
     return(sf_data)
   } else if ("gemeente" %in% colnames(sf_data)) {
     sf_data <- sf_data |>
@@ -179,20 +174,8 @@ crop_certe <- function(sf_data) {
     sf_data <- sf_data |>
       filter(ggdregio %in% postcode_filter$ggdregio)
   } else if ("postcode" %in% colnames(sf_data)) {
-    max_nchar <- max(nchar(as.character(sf_data$postcode)), na.rm = TRUE)
-    if (max_nchar == 2) {
-      # PC2
-      sf_data <- sf_data |>
-        filter(!as.integer(gsub("[^0-9]|", "", as.character(postcode))) %in% c(0:77, 80:82))
-    } else if (max_nchar == 3) { 
-      # PC3
-      sf_data <- sf_data |>
-        filter(!as.integer(gsub("[^0-9]|", "", as.character(postcode))) %in% c(0:774, 777:779, 800:829))
-    } else {
-      # PC4 and PC6
-      sf_data <- sf_data |>
-        filter(!as.integer(gsub("[^0-9]|", "", as.character(postcode))) %in% c(0:7749, 7770:7799, 8000:8299))
-    }
+    sf_data <- sf_data |>
+      filter(as.numeric(substr(as.character(postcode), 1, 4)) %in% postcode_filter$postcode)
   } else {
     # try a bounding box based on PC4 level
     bbox <- sf::st_bbox(crop_certe(certegis::geo_postcodes4))
@@ -211,6 +194,72 @@ crop_certe <- function(sf_data) {
 }
 
 #' @rdname GIS
+#' @param ... filters to set
+#' @details [filter_geolocation()] filters an sf object on qualitative values such as 'gemeente' and 'provincie'. The input data `sf_data` will be joined with [certegis::postcodes] and filtering can thus be done on any of these columns: `r toString(colnames(certegis::postcodes))`.
+#' @importFrom dplyr filter group_by across summarise everything select all_of mutate left_join
+#' @export
+#' @examples 
+#' 
+#' 
+#' # Filtering geometries -------------------------------------------------
+#' 
+#' geo_gemeenten |>
+#'   crop_certe() |>
+#'   # notice that the `provincie` column is not even in `geo_gemeenten`
+#'   filter_geolocation(provincie == "Flevoland")
+#'   
+#' geo_gemeenten |>
+#'   crop_certe() |>
+#'   filter_geolocation(inwoners_vrouw >= 50000)
+#' 
+#' if (require("certeplot2")) {
+#'   geo_postcodes4 |> 
+#'     filter_geolocation(gemeente == "Tytsjerksteradiel") |> 
+#'     plot2(category = inwoners,
+#'           datalabels = postcode)
+#' 
+#' }
+filter_geolocation <- function(sf_data, ...) {
+  check_is_installed("sf")
+  loadNamespace("sf")
+  
+  current_cols <- colnames(sf_data)
+  if (!any(current_cols %in% colnames(certegis::postcodes))) {
+    stop("The input data set should contain one of these columns: ", toString(colnames(certegis::postcodes)))
+  }
+  
+  # only keep unique numbers in the postcodes data set
+  # this allows to use a filter such as `inwoners > 150000` for `gemeente`
+  join_col <- current_cols[which(current_cols %in% colnames(certegis::postcodes))][1]
+  if (join_col != "postcode") {
+    pcdata_to_join <- certegis::postcodes |> filter(postcode >= 1000)
+  } else {
+    # the join col is postcode, determine which group we need: pc2, pc3 or pc4
+    max_pc_length <- max(nchar(sf_data$postcode))
+    if (max_pc_length == 2) {
+      pcdata_to_join <- certegis::postcodes |> filter(postcode < 100)
+    } else if (max_pc_length == 3) {
+      pcdata_to_join <- certegis::postcodes |> filter(postcode >= 100 & postcode < 1000)
+    } else {
+      pcdata_to_join <- certegis::postcodes |> filter(postcode >= 1000)
+    }
+  }
+  pcdata_to_join <- pcdata_to_join |>
+    mutate(postcode = as.character(postcode)) |> 
+    group_by(across(all_of(join_col))) |>
+    summarise(across(everything(), function(x) if (is.numeric(x)) sum(x, na.rm = TRUE) else x[1]))
+  if ("postcode" %in% colnames(sf_data) && is.numeric(sf_data$postcode)) {
+    pcdata_to_join <- pcdata_to_join |>
+      mutate(postcode = as.numeric(postcode))
+  }
+  
+  sf_data |>
+    left_join(pcdata_to_join, by = join_col, suffix = c("", "_pcdata")) |>
+    filter(...) |> 
+    select(all_of(current_cols))
+}
+
+#' @rdname GIS
 #' @param sf_data a data set of class 'sf'
 #' @param xmin,xmax,ymin,ymax coordination filters for `sf_data`, given in degrees following [EPSG:4326](https://epsg.io/4326) ('WGS 84')
 #' @details [filter_sf()] filters an sf object on coordinates, and is internally used by [crop_certe()].
@@ -221,6 +270,7 @@ crop_certe <- function(sf_data) {
 #' geo_provincies |> filter_sf(ymin = 52.5)
 filter_sf <- function(sf_data, xmin = NULL, xmax = NULL, ymin = NULL, ymax = NULL) {
   check_is_installed("sf")
+  loadNamespace("sf")
   
   if(!is.sf(sf_data)) {
     sf_data <- sf::st_as_sf(sf_data)
@@ -242,41 +292,57 @@ filter_sf <- function(sf_data, xmin = NULL, xmax = NULL, ymin = NULL, ymax = NUL
 }
 
 #' @rdname GIS
-#' @param ... filters to set
-#' @param col_zipcode column with zip codes
-#' @importFrom dplyr mutate filter 
 #' @export
-#' @examples 
+#' @details [convert_to_degrees_CRS4326()] will transform SF data to [WGS 84 -- WGS84 - World Geodetic System 1984, used in GPS](https://epsg.io/4326), CRS 4326.
+#' @examples
+#' 
+#' 
+#' # Transforming Coordinate Reference System (CRS) -----------------------
+#' 
+#' geo_provincies |> convert_to_degrees_CRS4326()
+#' 
+#' geo_provincies |> convert_to_metre_CRS28992()
+convert_to_degrees_CRS4326 <- function(sf_data) {
+  check_is_installed("sf")
+  loadNamespace("sf")
+  sf::st_transform(sf_data, crs = 4326)
+}
+
+#' @rdname GIS
+#' @export
+#' @details [convert_to_metre_CRS28992()] will transform SF data to [Amersfoort / RD New -- Netherlands - Holland - Dutch](https://epsg.io/28992), CRS 28992.
+convert_to_metre_CRS28992 <- function(sf_data) {
+  check_is_installed("sf")
+  loadNamespace("sf")
+  sf::st_transform(sf_data, crs = 28992)
+}
+
+#' @rdname GIS
+#' @param longitudes vector of longitudes
+#' @param latitudes vector of latitudes
+#' @param crs the coordinate reference system (CRS) to use as output
+#' @export
+#' @examples
+#' 
+#' 
+#' # Other functions ------------------------------------------------------
+#' 
+#' degrees_to_sf(4.5, 54)
 #' 
 #' if (require("certeplot2")) {
-#' 
-#'   geo_postcodes4 |> 
-#'     filter_geolocation(gemeente == "Tytsjerksteradiel") |> 
-#'     plot2(category = inwoners,
-#'           datalabels = postcode)
-#' 
+#'   geo_provincies |>
+#'       crop_certe() |> 
+#'       plot2(category = NULL, colour_fill = NA) |> 
+#'       add_sf(degrees_to_sf(6.5, 53),
+#'              datalabels = "Some Point!")
 #' }
-filter_geolocation <- function(sf_data, ..., col_zipcode = NULL) {
+degrees_to_sf <- function(longitudes, latitudes, crs = 28992) {
   check_is_installed("sf")
-  
-  if (is.null(col_zipcode)) {
-    col_zipcode <- rev(sort(colnames(sf_data)[which(colnames(sf_data) %in% c("postcode", paste0("pc", 2:4)))]))[1]
-    if (is.na(col_zipcode)) {
-      stop("set column for zipcodes with 'col_zipcode'")
-    }
-  }
-  if (!col_zipcode %in% colnames(sf_data)) {
-    stop("'sf_data' must contain the column '", col_zipcode, "'")
-  }
-  min_char <- min(nchar(as.character(gsub("[^0-9]|", "", sf_data[, col_zipcode, drop = TRUE]))))
-  if (min_char < 4) {
-    warning("filter may not be accurate since (some) zip codes only contain ", min_char, " numbers", call. = FALSE)
-  }
-  filtered <- certegis::postcodes |> filter(...)
-  filtered_sf <- sf_data |>
-    mutate(postcode = as.double(gsub("[^0-9]", "", sf_data[, col_zipcode, drop = TRUE]))) |>
-    filter(postcode %in% filtered$postcode)
-  filtered_sf[, colnames(sf_data), drop = FALSE]
+  loadNamespace("sf")
+  sf::st_as_sf(data.frame(long = longitudes, lat = latitudes),
+               coords = c("long", "lat"),
+               crs = 4326) |> 
+    sf::st_transform(crs = crs)
 }
 
 #' @rdname GIS
@@ -289,6 +355,7 @@ filter_geolocation <- function(sf_data, ..., col_zipcode = NULL) {
 #' longitude(geo_provincies)
 latitude <- function(sf_data) {
   check_is_installed("sf")
+  loadNamespace("sf")
   
   if (!isTRUE(sf::st_is_longlat(sf_data))) {
     sf_data <- sf::st_transform(sf_data, crs = 4326)
@@ -305,6 +372,7 @@ latitude <- function(sf_data) {
 #' @export
 longitude <- function(sf_data) {
   check_is_installed("sf")
+  loadNamespace("sf")
   
   if (!isTRUE(sf::st_is_longlat(sf_data))) {
     sf_data <- sf::st_transform(sf_data, crs = 4326)

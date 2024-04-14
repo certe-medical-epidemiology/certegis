@@ -9,9 +9,19 @@
 Data © OpenStreetMap contributors, ODbL 1.0. \url{https://osm.org/copyright}
 }
 \usage{
-geocode(place, as_coordinates = FALSE, only_netherlands = TRUE)
+geocode(
+  place,
+  as_coordinates = FALSE,
+  only_netherlands = TRUE,
+  api_key = read_secret("gis.api_key"),
+  api_requests_per_second = 1
+)
 
-reverse_geocode(sf_data)
+reverse_geocode(
+  sf_data,
+  api_key = read_secret("gis.api_key"),
+  api_requests_per_second = 1
+)
 }
 \arguments{
 \item{place}{a (vector of) names or addresses of places}
@@ -19,6 +29,10 @@ reverse_geocode(sf_data)
 \item{as_coordinates}{a \link{logical} to indicate whether the result should be returned as coordinates (i.e., class \code{sfc_POINT})}
 
 \item{only_netherlands}{a \link{logical} to indicate whether only Dutch places should be searched}
+
+\item{api_key}{free API key created at \url{https://geocode.maps.co}}
+
+\item{api_requests_per_second}{number of requests per second}
 
 \item{sf_data}{an 'sf' object or an 'sfc' object (i.e., a vector with geometric \code{sfc_POINT}s). Can also be a character vector, in which case \code{\link[=geocode]{geocode()}} will be called first.}
 }
@@ -35,6 +49,8 @@ These functions use \href{https://openstreetmap.org}{OpenStreetMap (OSM)}, by us
 For both functions, the \url{https://geocode.maps.co} API will only be called on unique input values, to increase speed.
 }
 \examples{
+\dontrun{
+
 # geocoding: retrieve 'sf' data.frame based on place names
 coord <- geocode("Van Swietenlaan 2, Groningen")
 coord
@@ -57,5 +73,7 @@ if (require("certeplot2")) {
     crop_certe() |>
     plot2(datalabels = FALSE) |>
     add_sf(hospitals, colour = "certeroze", datalabels = place)
+}
+
 }
 }

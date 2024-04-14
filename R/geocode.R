@@ -24,6 +24,8 @@
 #' @param sf_data an 'sf' object or an 'sfc' object (i.e., a vector with geometric `sfc_POINT`s). Can also be a character vector, in which case [geocode()] will be called first.
 #' @param as_coordinates a [logical] to indicate whether the result should be returned as coordinates (i.e., class `sfc_POINT`)
 #' @param only_netherlands a [logical] to indicate whether only Dutch places should be searched
+#' @param api_key free API key created at <https://geocode.maps.co>
+#' @param api_requests_per_second number of requests per second
 #' @details
 #' These functions use [OpenStreetMap (OSM)](https://openstreetmap.org), by using the API of <https://geocode.maps.co>.
 #'
@@ -37,6 +39,8 @@
 #' @rdname geocoding
 #' @export
 #' @examples
+#' \dontrun{
+#' 
 #' # geocoding: retrieve 'sf' data.frame based on place names
 #' coord <- geocode("Van Swietenlaan 2, Groningen")
 #' coord
@@ -60,7 +64,9 @@
 #'     plot2(datalabels = FALSE) |>
 #'     add_sf(hospitals, colour = "certeroze", datalabels = place)
 #' }
-geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
+#' 
+#' }
+geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE, api_key = read_secret("gis.api_key"), api_requests_per_second = 1) {
   check_is_installed("sf")
   
   api <- paste("https://geocode.maps.co/search?format=json",
@@ -68,6 +74,7 @@ geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
                ifelse(isTRUE(only_netherlands), "countrycodes=nl", ""),
                "limit=50",
                "namedetails=1",
+               paste0("api_key=", api_key),
                sep = "&")
   
   place_long <- place
@@ -84,12 +91,14 @@ geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
                                   # set CRS to degrees
                                   crs = 4326)
   
+  message("Geocoding (", api_requests_per_second, " per second) ", appendLF = FALSE)
   for (i in seq_len(length(place))) {
+    message(".", appendLF = FALSE)
     url <- gsub("{place}", place[i], api, fixed = TRUE)
     osm <- tryCatch({
       result <- get_df_from_remote_json(url)
-      # fair use is 1 per second
-      Sys.sleep(0.25)
+      # wait for new API requests
+      Sys.sleep(1 / api_requests_per_second)
       if (NROW(result) > 1) {
         # keep track of how the OSM algorithm sorts:
         result$osm_sorting <- seq_len(nrow(result))
@@ -113,7 +122,7 @@ geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
       return(NULL)
     })
     if (is.null(osm) || length(osm) == 0 || is.na(osm[[1]])) {
-      message("No coordinates found for '", place[i], "'")
+      message("No coordinates found for '", place[i], "'", appendLF = TRUE)
       out$latitude[i] <- 0
       out$longitude[i] <- 0
     } else {
@@ -126,6 +135,7 @@ geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
       out$longitude[i] <- as.double(osm$lon)
     }
   }
+  message(" Done.")
   
   # 'de-uniquify' the data set
   out <- out[match(place_long, place), , drop = FALSE]
@@ -152,20 +162,23 @@ geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE) {
 }
 
 #' @rdname geocoding
+#' @importFrom dplyr filter
 #' @export
-reverse_geocode <- function(sf_data) {
+reverse_geocode <- function(sf_data, api_key = read_secret("gis.api_key"), api_requests_per_second = 1) {
   check_is_installed("sf")
+  loadNamespace("sf")
   
   api <- paste("https://geocode.maps.co/reverse?format=json",
                "lat={latitude}",
                "lon={longitude}",
                "limit=50",
                "namedetails=1",
+               paste0("api_key=", api_key),
                sep = "&")
   
   if (NCOL(sf_data) == 1 && is.character(sf_data)) {
     # no coordinates but text instead, do regular geocoding first
-    sf_data <- geocode(sf_data)
+    sf_data <- geocode(sf_data, api_key = api_key, api_requests_per_second = api_requests_per_second)
   }
   
   # get the lat/lon
