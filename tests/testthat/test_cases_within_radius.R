@@ -27,4 +27,4 @@ test_that("cases_within_radius works", {
                     dplyr::mutate(group = rep(c("A", "B"), 5)) |> 
                     dplyr::group_by(group) |> 
                     cases_within_radius(), "data.frame")
-})
+}) 
