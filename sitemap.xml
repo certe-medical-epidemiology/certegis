@@ -1,42 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://certe-medical-epidemiology.github.io/certegis/404.html</loc>
-  </url>
-  <url>
-    <loc>https://certe-medical-epidemiology.github.io/certegis/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://certe-medical-epidemiology.github.io/certegis/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://certe-medical-epidemiology.github.io/certegis/index.html</loc>
-  </url>
-  <url>
-    <loc>https://certe-medical-epidemiology.github.io/certegis/reference/GIS.html</loc>
-  </url>
-  <url>
-    <loc>https://certe-medical-epidemiology.github.io/certegis/reference/cases_within_radius.html</loc>
-  </url>
-  <url>
-    <loc>https://certe-medical-epidemiology.github.io/certegis/reference/cbs_geodata.html</loc>
-  </url>
-  <url>
-    <loc>https://certe-medical-epidemiology.github.io/certegis/reference/certegis-package.html</loc>
-  </url>
-  <url>
-    <loc>https://certe-medical-epidemiology.github.io/certegis/reference/geocoding.html</loc>
-  </url>
-  <url>
-    <loc>https://certe-medical-epidemiology.github.io/certegis/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://certe-medical-epidemiology.github.io/certegis/reference/inwoners_per_postcode_leeftijd.html</loc>
-  </url>
-  <url>
-    <loc>https://certe-medical-epidemiology.github.io/certegis/reference/postcodes.html</loc>
-  </url>
-  <url>
-    <loc>https://certe-medical-epidemiology.github.io/certegis/reference/postcodes4_afstanden.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://certe-medical-epidemiology.github.io/certegis/404.html</loc></url>
+<url><loc>https://certe-medical-epidemiology.github.io/certegis/LICENSE.html</loc></url>
+<url><loc>https://certe-medical-epidemiology.github.io/certegis/authors.html</loc></url>
+<url><loc>https://certe-medical-epidemiology.github.io/certegis/index.html</loc></url>
+<url><loc>https://certe-medical-epidemiology.github.io/certegis/reference/GIS.html</loc></url>
+<url><loc>https://certe-medical-epidemiology.github.io/certegis/reference/cases_within_radius.html</loc></url>
+<url><loc>https://certe-medical-epidemiology.github.io/certegis/reference/cbs_geodata.html</loc></url>
+<url><loc>https://certe-medical-epidemiology.github.io/certegis/reference/certegis-package.html</loc></url>
+<url><loc>https://certe-medical-epidemiology.github.io/certegis/reference/geocoding.html</loc></url>
+<url><loc>https://certe-medical-epidemiology.github.io/certegis/reference/index.html</loc></url>
+<url><loc>https://certe-medical-epidemiology.github.io/certegis/reference/inwoners_per_postcode_leeftijd.html</loc></url>
+<url><loc>https://certe-medical-epidemiology.github.io/certegis/reference/postcodes.html</loc></url>
+<url><loc>https://certe-medical-epidemiology.github.io/certegis/reference/postcodes4_afstanden.html</loc></url>
 </urlset>
+
