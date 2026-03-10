@@ -55,6 +55,14 @@
 #' get_weather_hourly()
 #' get_weather_daily() # default: between 08:00-17:59
 #' 
+#' 
+#' assen <- geocode("Assen", as_coordinates = TRUE, crs = 4326)
+#' latitude(assen)
+#' longitude(assen)
+#' get_weather_daily(latitude = latitude(assen),
+#'                   longitude = longitude(assen))
+#' 
+#' 
 #' # wind speed with 3-day forecast
 #' get_weather_hourly(metrics = "wind_speed_10m", past_days = 7, forecast_days = 3)
 #'
@@ -67,13 +75,13 @@
 #'                    forecast_days = 2)
 #' }
 get_weather_hourly <- function(latitude = 53.22,
-                        longitude = 6.57,
-                        metrics = "temperature_2m",
-                        past_days = 30,
-                        forecast_days = 0,
-                        model = "knmi_seamless",
-                        timezone = "Europe/Amsterdam",
-                        api_url = "https://api.open-meteo.com/v1/forecast") {
+                               longitude = 6.57,
+                               metrics = "temperature_2m",
+                               past_days = 30,
+                               forecast_days = 0,
+                               model = "knmi_seamless",
+                               timezone = "Europe/Amsterdam",
+                               api_url = "https://api.open-meteo.com/v1/forecast") {
   
   check_is_installed("httr")
   check_is_installed("jsonlite")
@@ -135,14 +143,14 @@ get_weather_hourly <- function(latitude = 53.22,
 }
 
 #' @param min_hour First hour of the day to include on a `0-23` scale. Default: `8`.
-#' @param max_hour Last hour of the day to include on a `0-23` scale. Default: `18`.
+#' @param max_hour Last hour of the day to include on a `0-23` scale. Default: `17`.
 #' @param fun Function to use for calculation, defaults to [mean()].
-#' @param ... Argument passed on to `get_weather_hourly()`.
+#' @param ... Arguments passed on to `get_weather_hourly()`.
 #' @importFrom dplyr mutate filter group_by summarise across all_of everything
 #' @rdname weather
 #' @export
 get_weather_daily <- function(min_hour = 8,
-                              max_hour = 18,
+                              max_hour = 17,
                               fun = base::mean,
                               ...) {
   

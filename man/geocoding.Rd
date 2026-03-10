@@ -14,7 +14,8 @@ geocode(
   as_coordinates = FALSE,
   only_netherlands = TRUE,
   api_key = read_secret("gis.api_key"),
-  api_requests_per_second = 1
+  api_requests_per_second = 1,
+  crs = NULL
 )
 
 reverse_geocode(
@@ -33,6 +34,8 @@ reverse_geocode(
 \item{api_key}{free API key created at \url{https://geocode.maps.co}}
 
 \item{api_requests_per_second}{number of requests per second}
+
+\item{crs}{Coordinate Reference System of the output. Use \code{4326} for a regular longitude/latitude.}
 
 \item{sf_data}{an 'sf' object or an 'sfc' object (i.e., a vector with geometric \code{sfc_POINT}s). Can also be a character vector, in which case \code{\link[=geocode]{geocode()}} will be called first.}
 }

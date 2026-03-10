@@ -17,7 +17,7 @@ get_weather_hourly(
   api_url = "https://api.open-meteo.com/v1/forecast"
 )
 
-get_weather_daily(min_hour = 8, max_hour = 18, fun = base::mean, ...)
+get_weather_daily(min_hour = 8, max_hour = 17, fun = base::mean, ...)
 }
 \arguments{
 \item{latitude}{Latitude in decimal degrees (WGS84). Default: \code{53.22} (Groningen). Use negative values for the Southern Hemisphere.}
@@ -50,11 +50,11 @@ See the \href{https://open-meteo.com/en/docs/knmi-api}{KNMI API documentation} f
 
 \item{min_hour}{First hour of the day to include on a \code{0-23} scale. Default: \code{8}.}
 
-\item{max_hour}{Last hour of the day to include on a \code{0-23} scale. Default: \code{18}.}
+\item{max_hour}{Last hour of the day to include on a \code{0-23} scale. Default: \code{17}.}
 
 \item{fun}{Function to use for calculation, defaults to \code{\link[=mean]{mean()}}.}
 
-\item{...}{Argument passed on to \code{get_weather_hourly()}.}
+\item{...}{Arguments passed on to \code{get_weather_hourly()}.}
 }
 \value{
 A \link{data.frame} with columns:
@@ -75,6 +75,14 @@ blends KNMI HARMONIE AROME with ECMWF IFS beyond the 2.5-day KNMI horizon.
 # temperature in Groningen over the past 30 days
 get_weather_hourly()
 get_weather_daily() # default: between 08:00-17:59
+
+
+assen <- geocode("Assen", as_coordinates = TRUE, crs = 4326)
+latitude(assen)
+longitude(assen)
+get_weather_daily(latitude = latitude(assen),
+                  longitude = longitude(assen))
+
 
 # wind speed with 3-day forecast
 get_weather_hourly(metrics = "wind_speed_10m", past_days = 7, forecast_days = 3)

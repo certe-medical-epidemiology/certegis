@@ -26,6 +26,7 @@
 #' @param only_netherlands a [logical] to indicate whether only Dutch places should be searched
 #' @param api_key free API key created at <https://geocode.maps.co>
 #' @param api_requests_per_second number of requests per second
+#' @param crs Coordinate Reference System of the output. Use `4326` for a regular longitude/latitude.
 #' @details
 #' These functions use [OpenStreetMap (OSM)](https://openstreetmap.org), by using the API of <https://geocode.maps.co>.
 #'
@@ -66,7 +67,12 @@
 #' }
 #' 
 #' }
-geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE, api_key = read_secret("gis.api_key"), api_requests_per_second = 1) {
+geocode <- function(place,
+                    as_coordinates = FALSE,
+                    only_netherlands = TRUE,
+                    api_key = read_secret("gis.api_key"),
+                    api_requests_per_second = 1,
+                    crs = NULL) {
   check_is_installed("sf")
   
   api <- paste("https://geocode.maps.co/search?format=json",
@@ -152,7 +158,10 @@ geocode <- function(place, as_coordinates = FALSE, only_netherlands = TRUE, api_
                             function(sfc) identical(unclass(sfc), c(0, 0))))] <- sf::st_point()
   
   # transform to same CRS as used in the included datasets
-  out <- sf::st_transform(out, crs = sf::st_crs(certegis::geo_postcodes4))
+  if (is.null(crs)) {
+    crs <- sf::st_crs(certegis::geo_postcodes4)
+  }
+  out <- sf::st_transform(out, crs = crs)
   
   if (isTRUE(as_coordinates)) {
     out$geometry
