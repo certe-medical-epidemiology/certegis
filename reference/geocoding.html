@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">certegis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.1</span>
       </span>
     </div>
 
@@ -81,7 +81,8 @@
 <span>  as_coordinates <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  only_netherlands <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  api_key <span class="op">=</span> <span class="fu">read_secret</span><span class="op">(</span><span class="st">"gis.api_key"</span><span class="op">)</span>,</span>
-<span>  api_requests_per_second <span class="op">=</span> <span class="fl">1</span></span>
+<span>  api_requests_per_second <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  crs <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">reverse_geocode</span><span class="op">(</span></span>
@@ -117,6 +118,10 @@
 
 <dt id="arg-api-requests-per-second">api_requests_per_second<a class="anchor" aria-label="anchor" href="#arg-api-requests-per-second"></a></dt>
 <dd><p>number of requests per second</p></dd>
+
+
+<dt id="arg-crs">crs<a class="anchor" aria-label="anchor" href="#arg-crs"></a></dt>
+<dd><p>Coordinate Reference System of the output. Use <code>4326</code> for a regular longitude/latitude.</p></dd>
 
 
 <dt id="arg-sf-data">sf_data<a class="anchor" aria-label="anchor" href="#arg-sf-data"></a></dt>

@@ -21,7 +21,7 @@ blends KNMI HARMONIE AROME with ECMWF IFS beyond the 2.5-day KNMI horizon.'><met
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">certegis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.1</span>
       </span>
     </div>
 
@@ -95,7 +95,7 @@ blends KNMI HARMONIE AROME with ECMWF IFS beyond the 2.5-day KNMI horizon.</p>
 <span>  api_url <span class="op">=</span> <span class="st">"https://api.open-meteo.com/v1/forecast"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">get_weather_daily</span><span class="op">(</span>min_hour <span class="op">=</span> <span class="fl">8</span>, max_hour <span class="op">=</span> <span class="fl">18</span>, fun <span class="op">=</span> <span class="fu">base</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">get_weather_daily</span><span class="op">(</span>min_hour <span class="op">=</span> <span class="fl">8</span>, max_hour <span class="op">=</span> <span class="fl">17</span>, fun <span class="op">=</span> <span class="fu">base</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -147,7 +147,7 @@ blends KNMI HARMONIE AROME with ECMWF IFS beyond the 2.5-day KNMI horizon.</p>
 
 
 <dt id="arg-max-hour">max_hour<a class="anchor" aria-label="anchor" href="#arg-max-hour"></a></dt>
-<dd><p>Last hour of the day to include on a <code>0-23</code> scale. Default: <code>18</code>.</p></dd>
+<dd><p>Last hour of the day to include on a <code>0-23</code> scale. Default: <code>17</code>.</p></dd>
 
 
 <dt id="arg-fun">fun<a class="anchor" aria-label="anchor" href="#arg-fun"></a></dt>
@@ -155,7 +155,7 @@ blends KNMI HARMONIE AROME with ECMWF IFS beyond the 2.5-day KNMI horizon.</p>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Argument passed on to <code>get_weather_hourly()</code>.</p></dd>
+<dd><p>Arguments passed on to <code>get_weather_hourly()</code>.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -170,6 +170,14 @@ blends KNMI HARMONIE AROME with ECMWF IFS beyond the 2.5-day KNMI horizon.</p>
 <span class="r-in"><span><span class="co"># temperature in Groningen over the past 30 days</span></span></span>
 <span class="r-in"><span><span class="fu">get_weather_hourly</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">get_weather_daily</span><span class="op">(</span><span class="op">)</span> <span class="co"># default: between 08:00-17:59</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">assen</span> <span class="op">&lt;-</span> <span class="fu"><a href="geocoding.html">geocode</a></span><span class="op">(</span><span class="st">"Assen"</span>, as_coordinates <span class="op">=</span> <span class="cn">TRUE</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="GIS.html">latitude</a></span><span class="op">(</span><span class="va">assen</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="GIS.html">longitude</a></span><span class="op">(</span><span class="va">assen</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">get_weather_daily</span><span class="op">(</span>latitude <span class="op">=</span> <span class="fu"><a href="GIS.html">latitude</a></span><span class="op">(</span><span class="va">assen</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                  longitude <span class="op">=</span> <span class="fu"><a href="GIS.html">longitude</a></span><span class="op">(</span><span class="va">assen</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># wind speed with 3-day forecast</span></span></span>
 <span class="r-in"><span><span class="fu">get_weather_hourly</span><span class="op">(</span>metrics <span class="op">=</span> <span class="st">"wind_speed_10m"</span>, past_days <span class="op">=</span> <span class="fl">7</span>, forecast_days <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
