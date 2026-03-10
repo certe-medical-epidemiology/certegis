@@ -20,11 +20,13 @@
 globalVariables(c("afstand_km",
                   "gemeente",
                   "ggdregio",
+                  "hour",
                   "nuts3",
                   "postcode",
                   "postcode.x",
                   "postcode.y",
-                  "provincie"))
+                  "provincie",
+                  "time"))
 
 check_is_installed <- function(pkgs) {
   to_install <- pkgs[which(!pkgs %in% rownames(utils::installed.packages()))]

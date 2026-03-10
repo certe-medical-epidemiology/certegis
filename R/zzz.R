@@ -19,8 +19,10 @@
 
 .onAttach <- function(...) {
   # edit in R/data.R
-  packageStartupMessage(paste0("Linking to open data from Statistics Netherlands:\n",
-                               paste0(" * ", names(CBS_VERSION), ": ", CBS_VERSION, collapse = "\n")))
+  if (interactive()) {
+    packageStartupMessage(paste0("Linking to open data from Statistics Netherlands:\n",
+                                 paste0(" * ", names(CBS_VERSION), ": ", CBS_VERSION, collapse = "\n")))
+  }
 }
 
 .onLoad <- function(...) {
