@@ -1,6 +1,6 @@
 Package: certegis
 Title: A Certe R Package for Geographic Information Science
-Version: 1.4.1
+Version: 1.5.0
 Authors@R: c(
   person(given = c("Matthijs", "S."), 
          family = "Berends",
@@ -10,6 +10,10 @@ Authors@R: c(
          family = "Hassing", 
          role = c("aut"),
          email = "e.hassing@certe.nl"),
+  person(given = c("Erwin"),
+         family = "Dijkstra", 
+         role = c("aut"),
+         email = "e.dijkstra@certe.nl"),
   person(given = "Certe Medical Diagnostics & Advice Foundation",
          role = c("cph", "fnd")))
 Description: A Certe R package for geographic information science (GIS),
