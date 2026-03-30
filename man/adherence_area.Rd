@@ -37,12 +37,12 @@ The following hospitals and their zipcodes are hard-coded:\tabular{ll}{
 }
 
 
-zipcodes not found in \link{postcodes4_afstanden} return \code{NA}.
+Zipcodes not found in \link{postcodes4_afstanden} return \code{NA}.
 }
 \examples{
 adherence_area("9700")
-adherence_area(c("9700", "7702", "8600"))
+adherence_area(c("9713", "7702", "8896"))
 
 # six-character zipcodes are automatically truncated
-adherence_area("9700AB")
+adherence_area("9251AB")
 }

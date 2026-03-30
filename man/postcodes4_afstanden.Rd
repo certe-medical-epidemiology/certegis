@@ -5,7 +5,7 @@
 \alias{postcodes4_afstanden}
 \title{Distance from Zip Code to Zip Code}
 \format{
-A \link{data.frame} with 562,330 observations and 3 variables:
+A \link{data.frame} with 1,123,600 observations and 3 variables:
 \itemize{
 \item \code{postcode.x}\cr zip code (PC4)
 \item \code{postcode.y}\cr zip code (PC4)

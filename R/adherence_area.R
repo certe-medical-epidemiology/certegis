@@ -45,17 +45,17 @@
 #' | Treant              | 7824     |
 #' | Wilhelmina          | 9401     |
 #'
-#' zipcodes not found in [postcodes4_afstanden] return `NA`.
+#' Zipcodes not found in [postcodes4_afstanden] return `NA`.
 #'
 #' @return A character vector of hospital names, the same length as `zipcode`.
 #' @export
 #' @importFrom dplyr filter inner_join arrange distinct select tibble
 #' @examples
 #' adherence_area("9700")
-#' adherence_area(c("9700", "7702", "8600"))
+#' adherence_area(c("9713", "7702", "8896"))
 #'
 #' # six-character zipcodes are automatically truncated
-#' adherence_area("9700AB")
+#' adherence_area("9251AB")
 adherence_area <- function(zipcode) {
   
   hosp_zipcodes <- c(
@@ -70,24 +70,21 @@ adherence_area <- function(zipcode) {
   )
   
   zipcode <- as.character(zipcode)
-  zipcode <- ifelse(nchar(zipcode) == 6, substr(zipcode, 1, 4), zipcode)
+  zipcode <- substr(trimws(zipcode), 1, 4)
   
-  # build full lookup: one row per postcode, nearest hospital
-  lookup <- certegis::postcodes4_afstanden |>
+  dist <- certegis::postcodes4_afstanden |>
     filter(postcode.y %in% hosp_zipcodes) |>
-    inner_join(
-      tibble(
-        hosp_name = names(hosp_zipcodes),
-        hosp_zipcode = unname(hosp_zipcodes)
-      ),
-      by = c("postcode.y" = "hosp_zipcode")
-    ) |>
-    arrange(postcode.x, afstand_km) |>
-    distinct(postcode.x, .keep_all = TRUE) |>
-    select(postcode.x, hosp_name)
+    arrange(afstand_km)
+  out <- character(length(zipcode))
+  for (i in seq_along(out)) {
+    mtch <- match(zipcode[i], dist$postcode.x)[1]
+    if (is.na(mtch)) {
+      out[i] <- NA_character_
+    } else {
+      hosp_zip <- dist$postcode.y[mtch]
+      out[i] <- names(hosp_zipcodes[hosp_zipcodes == hosp_zip])
+    }
+  }
   
-  # named vector for O(1) lookup per postcode
-  lookup_vec <- setNames(lookup$hosp_name, lookup$postcode.x)
-  
-  unname(lookup_vec[zipcode])
+  out
 }
