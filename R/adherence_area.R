@@ -71,6 +71,13 @@ adherence_area <- function(zipcode) {
   
   zipcode <- as.character(zipcode)
   zipcode <- substr(trimws(zipcode), 1, 4)
+  nas <- !zipcode %in% certegis::postcodes4_afstanden$postcode.x
+  for (i in which(nas)) {
+    zip.bak <- zipcode[i]
+    zip2 <- substr(zipcode[i], 1, 2)
+    zipcode[i] <- certegis::postcodes4_afstanden$postcode.x[substr(certegis::postcodes4_afstanden$postcode.x, 1, 2) == zip2][1]
+    message("Interpreting missing ", zip.bak, " as closest higher ", zipcode[i])
+  }
   
   dist <- certegis::postcodes4_afstanden |>
     filter(postcode.y %in% hosp_zipcodes) |>

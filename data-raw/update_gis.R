@@ -1,8 +1,8 @@
 library(dplyr)
 library(tidyr)
 library(readr)
-library(AMR) # voor age_groups()
-library(sf) # minimaal v1.0-14
+library(AMR)       # voor age_groups()
+library(sf)        # minimaal v1.0-14
 library(sfheaders) # voor sf_remove_holes
 library(cleaner)
 
@@ -14,12 +14,12 @@ library(cleaner)
 
 # Bronnen -----------------------------------------------------------------
 
-downloadmap <- "/Users/msberends/Downloads/"
+downloadmap <- "C:\\Users\\5580\\Downloads\\"
 
 # download inwoners (gescheiden op geslacht) per postcode hier als 'CSV volgens tabelindeling':
-# https://opendata.cbs.nl/#/CBS/nl/dataset/83503NED/table?dl=5F8EB
+# https://opendata.cbs.nl/#/CBS/nl/dataset/83504NED/table?dl=C8407
 # verwijder dan de eerste rijen en de laatste rij ("Bron: CBS")
-postcodes_bestand <- paste0(downloadmap, "Bevolking__geslacht__migratieachtergrond__viercijferige_postcode__1_januari_30122021_210450.csv")
+postcodes_bestand <- paste0(downloadmap, "Bevolking__geslacht__positie_huishouden__viercijferige_postcode__1_januari_09102025_164710.csv")
 
 # download inwoners per 5 jaar leeftijd en geslacht hier voor het huidige jaar als 'CSV zonder statistische symbolen:
 # https://opendata.cbs.nl/#/CBS/nl/dataset/83502NED/table?dl=42FE0
@@ -27,15 +27,15 @@ inwoners_bestand <- paste0(downloadmap, "Bevolking__leeftijd__postcode_30072023_
 
 # download gebiedsindelingen hier:
 # https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/cbs-gebiedsindelingen
-# in 2023 heette het bestand "cbsgebiedsindelingen2016-2023.zip" - pak het uit na downloaden
-gebiedsindelingen_bestand <- paste0(downloadmap, "cbsgebiedsindelingen2023.gpkg")
+# in 2025 heette het bestand "cbsgebiedsindelingen2016-2025.zip" - pak het uit na downloaden
+gebiedsindelingen_bestand <- paste0(downloadmap, "cbsgebiedsindelingen2025.gpkg")
 
 # download postcodes 4 onder 'Downloads' ('Numeriek deel van de postcode (PC4)') hier:
 # https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/gegevens-per-postcode
 # voor PC4: https://download.cbs.nl/postcode/2023-CBS_pc4_2022_v1.zip
-postcodes4_bestand <- paste0(downloadmap, "cbs_pc4_2022_v1.gpkg")
+postcodes4_bestand <- paste0(downloadmap, "cbs_pc4_2024_v1.gpkg")
 # voor PC6: https://download.cbs.nl/postcode/2023-cbs_pc6_2022_v1.zip
-postcodes6_bestand <- paste0(downloadmap, "cbs_pc6_2022_v1.gpkg")
+postcodes6_bestand <- paste0(downloadmap, "cbs_pc6_2024_v1.gpkg")
 
 # gemeentenamen hier in juli 2023 kunnen vinden
 # https://www.cbs.nl/nl-nl/maatwerk/2022/37/buurt-wijk-en-gemeente-2022-voor-postcode-huisnummer
