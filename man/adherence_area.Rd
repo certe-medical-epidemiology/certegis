@@ -45,4 +45,15 @@ adherence_area(c("9713", "7702", "8896"))
 
 # six-character zipcodes are automatically truncated
 adherence_area("9251AB")
+
+if (requireNamespace("plot2", quietly = TRUE)) {
+  library(certeplot2)
+  geo_postcodes4 |>
+     crop_certe() |>
+     mutate(adherence = suppressMessages(adherence_area(postcode)),
+            .after = 1) |>
+     plot2(category = adherence) |>
+     add_sf(geo_provincies |> crop_certe(),
+            colour_fill = NA, colour = "black", linewidth = 0.5)
+}
 }

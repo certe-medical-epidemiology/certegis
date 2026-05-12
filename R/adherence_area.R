@@ -49,13 +49,24 @@
 #'
 #' @return A character vector of hospital names, the same length as `zipcode`.
 #' @export
-#' @importFrom dplyr filter inner_join arrange distinct select tibble
+#' @importFrom dplyr filter arrange
 #' @examples
 #' adherence_area("9700")
 #' adherence_area(c("9713", "7702", "8896"))
 #'
 #' # six-character zipcodes are automatically truncated
 #' adherence_area("9251AB")
+#' 
+#' if (requireNamespace("plot2", quietly = TRUE)) {
+#'   library(certeplot2)
+#'   geo_postcodes4 |>
+#'      crop_certe() |>
+#'      mutate(adherence = suppressMessages(adherence_area(postcode)),
+#'             .after = 1) |>
+#'      plot2(category = adherence) |>
+#'      add_sf(geo_provincies |> crop_certe(),
+#'             colour_fill = NA, colour = "black", linewidth = 0.5)
+#' }
 adherence_area <- function(zipcode) {
   
   hosp_zipcodes <- c(
@@ -75,7 +86,17 @@ adherence_area <- function(zipcode) {
   for (i in which(nas)) {
     zip.bak <- zipcode[i]
     zip2 <- substr(zipcode[i], 1, 2)
-    zipcode[i] <- certegis::postcodes4_afstanden$postcode.x[substr(certegis::postcodes4_afstanden$postcode.x, 1, 2) == zip2][1]
+    candidates <- certegis::postcodes4_afstanden$postcode.x[
+      as.integer(certegis::postcodes4_afstanden$postcode.x) > as.integer(zip.bak) &
+        substr(certegis::postcodes4_afstanden$postcode.x, 1, 2) == zip2
+    ]
+    candidate <- candidates[which.min(as.integer(candidates) - as.integer(zip.bak))]
+    if (length(candidate) == 0) {
+      # happens when not in our region
+      zipcode[i] <- NA
+    } else {
+      zipcode[i] <- candidates[which.min(as.integer(candidates) - as.integer(zip.bak))]
+    }
     message("Interpreting missing ", zip.bak, " as closest higher ", zipcode[i])
   }
   
@@ -92,6 +113,9 @@ adherence_area <- function(zipcode) {
       out[i] <- names(hosp_zipcodes[hosp_zipcodes == hosp_zip])
     }
   }
+  
+  # overwrite NoordOostPolder as Antonius
+  out[zipcode %in% postcodes$postcode[postcodes$gemeente %in% c("Noordoostpolder", "Urk")]] <- "Antonius"
   
   out
 }
