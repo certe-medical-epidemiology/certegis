@@ -80,42 +80,50 @@ adherence_area <- function(zipcode) {
     "Wilhelmina"         = "9401"
   )
   
-  zipcode <- as.character(zipcode)
-  zipcode <- substr(trimws(zipcode), 1, 4)
-  nas <- !zipcode %in% certegis::postcodes4_afstanden$postcode.x
-  for (i in which(nas)) {
-    zip.bak <- zipcode[i]
-    zip2 <- substr(zipcode[i], 1, 2)
-    candidates <- certegis::postcodes4_afstanden$postcode.x[
-      as.integer(certegis::postcodes4_afstanden$postcode.x) > as.integer(zip.bak) &
-        substr(certegis::postcodes4_afstanden$postcode.x, 1, 2) == zip2
-    ]
-    candidate <- candidates[which.min(as.integer(candidates) - as.integer(zip.bak))]
-    if (length(candidate) == 0) {
-      # happens when not in our region
-      zipcode[i] <- NA
+  zipcode <- substr(trimws(as.character(zipcode)), 1, 4)
+  
+  # Work on unique codes only
+  uzip <- unique(zipcode)
+  known <- certegis::postcodes4_afstanden$postcode.x
+  
+  # Substitute missing codes with nearest higher, per unique missing code
+  missing <- uzip[!uzip %in% known]
+  substitutes <- setNames(uzip, uzip)  # identity map for all, overwrite missing below
+  
+  for (z in missing) {
+    zip2 <- substr(z, 1, 2)
+    candidates <- known[substr(known, 1, 2) == zip2 & as.integer(known) > as.integer(z)]
+    if (length(candidates) == 0L) {
+      substitutes[z] <- NA_character_
     } else {
-      zipcode[i] <- candidates[which.min(as.integer(candidates) - as.integer(zip.bak))]
+      substitutes[z] <- candidates[which.min(as.integer(candidates) - as.integer(z))]
     }
-    message("Interpreting missing ", zip.bak, " as closest higher ", zipcode[i])
+    message("Interpreting missing ", z, " as closest higher ", substitutes[z])
   }
   
+  # Map full input to substituted unique codes
+  zip_sub <- substitutes[zipcode]
+  
+  # Pre-filter distance table once, then find nearest hospital per unique substituted code
   dist <- certegis::postcodes4_afstanden |>
     filter(postcode.y %in% hosp_zipcodes) |>
     arrange(afstand_km)
-  out <- character(length(zipcode))
-  for (i in seq_along(out)) {
-    mtch <- match(zipcode[i], dist$postcode.x)[1]
-    if (is.na(mtch)) {
-      out[i] <- NA_character_
-    } else {
-      hosp_zip <- dist$postcode.y[mtch]
-      out[i] <- names(hosp_zipcodes[hosp_zipcodes == hosp_zip])
-    }
-  }
   
-  # overwrite NoordOostPolder as Antonius
+  u_sub <- unique(zip_sub[!is.na(zip_sub)])
+  hosp_lookup <- setNames(
+    sapply(u_sub, function(z) {
+      mtch <- match(z, dist$postcode.x)
+      if (is.na(mtch)) NA_character_
+      else names(hosp_zipcodes[hosp_zipcodes == dist$postcode.y[mtch]])
+    }),
+    u_sub
+  )
+  
+  out <- hosp_lookup[zip_sub]
+  out[is.na(zip_sub)] <- NA_character_
+  
+  # Overwrite Noordoostpolder / Urk as Antonius
   out[zipcode %in% postcodes$postcode[postcodes$gemeente %in% c("Noordoostpolder", "Urk")]] <- "Antonius"
   
-  out
+  unname(out)
 }
