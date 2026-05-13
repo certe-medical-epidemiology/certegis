@@ -50,9 +50,8 @@ if (requireNamespace("plot2", quietly = TRUE)) {
   library(certeplot2)
   geo_postcodes4 |>
      crop_certe() |>
-     mutate(adherence = suppressMessages(adherence_area(postcode)),
-            .after = 1) |>
-     plot2(category = adherence) |>
+     plot2(category = suppressMessages(adherence_area(postcode)),
+           datalabels = FALSE) |>
      add_sf(geo_provincies |> crop_certe(),
             colour_fill = NA, colour = "black", linewidth = 0.5)
 }
