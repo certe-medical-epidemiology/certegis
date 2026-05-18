@@ -92,10 +92,11 @@ adherence_area <- function(zipcode) {
   for (z in missing) {
     zip2 <- substr(z, 1, 2)
     candidates <- known[substr(known, 1, 2) == zip2 & as.integer(known) > as.integer(z)]
-    if (length(candidates) == 0L) {
+    candidate <- candidates[which.min(as.integer(candidates) - as.integer(z))]
+    if (length(candidate) == 0L) {
       substitutes[z] <- NA_character_
     } else {
-      substitutes[z] <- candidates[which.min(as.integer(candidates) - as.integer(z))]
+      substitutes[z] <- candidate
     }
     message("Interpreting missing ", z, " as closest higher ", substitutes[z])
   }
