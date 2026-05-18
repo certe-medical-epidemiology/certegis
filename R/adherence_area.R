@@ -123,7 +123,7 @@ adherence_area <- function(zipcode) {
   out[is.na(zip_sub)] <- NA_character_
   
   # Overwrite Noordoostpolder / Urk as Antonius
-  out[zipcode %in% postcodes$postcode[postcodes$gemeente %in% c("Noordoostpolder", "Urk")]] <- "Antonius"
+  out[zipcode %in% certegis::postcodes$postcode[certegis::postcodes$gemeente %in% c("Noordoostpolder", "Urk")]] <- "Antonius"
   
   unname(out)
 }
