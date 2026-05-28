@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">certegis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.0</span>
       </span>
     </div>
 
@@ -94,6 +94,8 @@
 <span></span>
 <span><span class="fu">convert_to_metre_CRS28992</span><span class="op">(</span><span class="va">sf_data</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">zip_to_sf</span><span class="op">(</span><span class="va">zipcode</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">degrees_to_sf</span><span class="op">(</span><span class="va">longitudes</span>, <span class="va">latitudes</span>, crs <span class="op">=</span> <span class="fl">28992</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">latitude</span><span class="op">(</span><span class="va">sf_data</span><span class="op">)</span></span>
@@ -133,6 +135,10 @@
 <dd><p>coordination filters for <code>sf_data</code>, given in degrees following <a href="https://epsg.io/4326" class="external-link">EPSG:4326</a> ('WGS 84')</p></dd>
 
 
+<dt id="arg-zipcode">zipcode<a class="anchor" aria-label="anchor" href="#arg-zipcode"></a></dt>
+<dd><p>zipcode to transform to an <a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">sf point</a></p></dd>
+
+
 <dt id="arg-longitudes">longitudes<a class="anchor" aria-label="anchor" href="#arg-longitudes"></a></dt>
 <dd><p>vector of longitudes</p></dd>
 
@@ -157,6 +163,7 @@
 <p><code>filter_sf()</code> filters an sf object on coordinates, and is internally used by <code>crop_certe()</code>.</p>
 <p><code>convert_to_degrees_CRS4326()</code> will transform SF data to <a href="https://epsg.io/4326" class="external-link">WGS 84 – WGS84 - World Geodetic System 1984, used in GPS</a>, CRS 4326.</p>
 <p><code>convert_to_metre_CRS28992()</code> will transform SF data to <a href="https://epsg.io/28992" class="external-link">Amersfoort / RD New – Netherlands - Holland - Dutch</a>, CRS 28992.</p>
+<p><code>zip_to_sf()</code> converts a zipcode to sf data as an <a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">sf point</a>, using <code><a href="adherence_area.html">adherence_area()</a></code> and the <a href="cbs_geodata.html">geo_postcodes4</a> data set internally. It returns the midpoint (centroid) of the zipcode on the map.</p>
 <p><code>latitude()</code> specifies the north-south position ('y axis') and <code>longitude()</code> specifies the east-west position ('x axis'). They return the numeric coordinate of the centre of a simple feature.</p>
     </div>
 
@@ -235,7 +242,7 @@
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://certe-medical-epidemiology.github.io/certeplot2" class="external-link">"certeplot2"</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="va">geo_gemeenten</span> <span class="op">|&gt;</span> <span class="fu">crop_certe</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span>    <span class="co"># cropped municipalities</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://msberends.github.io/plot2/reference/plot2.html" class="external-link">plot2</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Certe Region"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="https://msberends.github.io/plot2/reference/add_type.html" class="external-link">add_sf</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="fu">plot2</span><span class="fu">::</span><span class="fu"><a href="https://msberends.github.io/plot2/reference/add_type.html" class="external-link">add_sf</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>      <span class="va">geo_provincies</span> <span class="op">|&gt;</span> <span class="fu">crop_certe</span><span class="op">(</span><span class="op">)</span>, <span class="co"># cropped provinces</span></span></span>
 <span class="r-in"><span>      colour_fill <span class="op">=</span> <span class="cn">NA</span>,</span></span>
 <span class="r-in"><span>      colour <span class="op">=</span> <span class="st">"black"</span>,</span></span>
@@ -245,6 +252,8 @@
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: plot2</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Adding white to the <span style="color: #0000BB;">category</span> scale - set two colours to <span style="color: #0000BB;">colour_fill</span> to</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> prevent this.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Downloaded font <span style="color: #0000BB;">https://fonts.google.com/specimen/Source+Sans+Pro</span> from Google</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fonts</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">category = inwoners</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">datalabels = gemeente</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Omitting printing of 43 datalabels - use <span style="color: #0000BB;">datalabels = TRUE</span> to force printing</span>
@@ -345,6 +354,21 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10       Utrecht  1360955        1553.980 MULTIPOLYGON (((130059 4794...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Converting zip codes to points on a map ------------------------------</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://certe-medical-epidemiology.github.io/certeplot2" class="external-link">"certeplot2"</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="va">geo_provincies</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>    <span class="fu">crop_certe</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://msberends.github.io/plot2/reference/plot2.html" class="external-link">plot2</a></span><span class="op">(</span>category <span class="op">=</span> <span class="cn">NULL</span>, colour_fill <span class="op">=</span> <span class="cn">NA</span>, datalabels <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span> </span></span>
+<span class="r-in"><span>    <span class="fu">plot2</span><span class="fu">::</span><span class="fu"><a href="https://msberends.github.io/plot2/reference/add_type.html" class="external-link">add_sf</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="fu">zip_to_sf</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9201</span>, <span class="fl">9713</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      datalabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Dit is nou Drachten"</span>, <span class="st">"En dit Groningen"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      colour<span class="op">=</span> <span class="st">"red"</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-plt img"><img src="GIS-3.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Other functions ------------------------------------------------------</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">degrees_to_sf</span><span class="op">(</span><span class="fl">4.5</span>, <span class="fl">54</span><span class="op">)</span></span></span>
@@ -358,15 +382,17 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://certe-medical-epidemiology.github.io/certeplot2" class="external-link">"certeplot2"</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="va">geo_provincies</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>      <span class="fu">crop_certe</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span></span>
-<span class="r-in"><span>      <span class="fu"><a href="https://msberends.github.io/plot2/reference/plot2.html" class="external-link">plot2</a></span><span class="op">(</span>category <span class="op">=</span> <span class="cn">NULL</span>, colour_fill <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">|&gt;</span> </span></span>
-<span class="r-in"><span>      <span class="fu"><a href="https://msberends.github.io/plot2/reference/add_type.html" class="external-link">add_sf</a></span><span class="op">(</span><span class="fu">degrees_to_sf</span><span class="op">(</span><span class="fl">6.5</span>, <span class="fl">53</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>             datalabels <span class="op">=</span> <span class="st">"Some Point!"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="fu">crop_certe</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://msberends.github.io/plot2/reference/plot2.html" class="external-link">plot2</a></span><span class="op">(</span>category <span class="op">=</span> <span class="cn">NULL</span>, colour_fill <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">|&gt;</span> </span></span>
+<span class="r-in"><span>    <span class="fu">plot2</span><span class="fu">::</span><span class="fu"><a href="https://msberends.github.io/plot2/reference/add_type.html" class="external-link">add_sf</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="fu">degrees_to_sf</span><span class="op">(</span><span class="fl">6.5</span>, <span class="fl">53</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      datalabels <span class="op">=</span> <span class="st">"Dit is (6.5, 53)!"</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">datalabels.centroid = TRUE</span>. Set to FALSE for a point-on-surface</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> placing of datalabels.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">datalabels = provincie</span></span>
-<span class="r-plt img"><img src="GIS-3.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="GIS-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">latitude</span><span class="op">(</span><span class="va">geo_provincies</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 52.86228 52.52686 53.10848 52.06070 53.21673 51.20786 51.56101 52.58150</span>
