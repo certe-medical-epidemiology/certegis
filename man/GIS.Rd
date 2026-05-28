@@ -11,6 +11,7 @@
 \alias{filter_sf}
 \alias{convert_to_degrees_CRS4326}
 \alias{convert_to_metre_CRS28992}
+\alias{zip_to_sf}
 \alias{degrees_to_sf}
 \alias{latitude}
 \alias{longitude}
@@ -34,6 +35,8 @@ convert_to_degrees_CRS4326(sf_data)
 
 convert_to_metre_CRS28992(sf_data)
 
+zip_to_sf(zipcode)
+
 degrees_to_sf(longitudes, latitudes, crs = 28992)
 
 latitude(sf_data)
@@ -54,6 +57,8 @@ longitude(sf_data)
 \item{...}{filters to set}
 
 \item{xmin, xmax, ymin, ymax}{coordination filters for \code{sf_data}, given in degrees following \href{https://epsg.io/4326}{EPSG:4326} ('WGS 84')}
+
+\item{zipcode}{zipcode to transform to an \link[sf:st]{sf point}}
 
 \item{longitudes}{vector of longitudes}
 
@@ -80,6 +85,8 @@ All of these functions will check if the \code{sf} package is installed, and wil
 
 \code{\link[=convert_to_metre_CRS28992]{convert_to_metre_CRS28992()}} will transform SF data to \href{https://epsg.io/28992}{Amersfoort / RD New -- Netherlands - Holland - Dutch}, CRS 28992.
 
+\code{\link[=zip_to_sf]{zip_to_sf()}} converts a zipcode to sf data as an \link[sf:st]{sf point}, using \code{\link[=adherence_area]{adherence_area()}} and the \link{geo_postcodes4} data set internally. It returns the midpoint (centroid) of the zipcode on the map.
+
 \code{\link[=latitude]{latitude()}} specifies the north-south position ('y axis') and \code{\link[=longitude]{longitude()}} specifies the east-west position ('x axis'). They return the numeric coordinate of the centre of a simple feature.
 }
 \examples{
@@ -101,7 +108,7 @@ geo_provincies |> crop_certe()
 if (require("certeplot2")) {
   geo_gemeenten |> crop_certe() |>    # cropped municipalities
     plot2(title = "Certe Region") |>
-    add_sf(
+    plot2::add_sf(
       geo_provincies |> crop_certe(), # cropped provinces
       colour_fill = NA,
       colour = "black",
@@ -139,16 +146,32 @@ geo_provincies |> convert_to_degrees_CRS4326()
 geo_provincies |> convert_to_metre_CRS28992()
 
 
+# Converting zip codes to points on a map ------------------------------
+
+if (require("certeplot2")) {
+  geo_provincies |>
+    crop_certe() |> 
+    plot2(category = NULL, colour_fill = NA, datalabels = FALSE) |> 
+    plot2::add_sf(
+      zip_to_sf(c(9201, 9713)),
+      datalabels = c("Dit is nou Drachten", "En dit Groningen"),
+      colour= "red"
+    )
+}
+
+
 # Other functions ------------------------------------------------------
 
 degrees_to_sf(4.5, 54)
 
 if (require("certeplot2")) {
   geo_provincies |>
-      crop_certe() |> 
-      plot2(category = NULL, colour_fill = NA) |> 
-      add_sf(degrees_to_sf(6.5, 53),
-             datalabels = "Some Point!")
+    crop_certe() |> 
+    plot2(category = NULL, colour_fill = NA) |> 
+    plot2::add_sf(
+      degrees_to_sf(6.5, 53),
+      datalabels = "Dit is (6.5, 53)!"
+    )
 }
 
 latitude(geo_provincies)

@@ -17,37 +17,17 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-#' Determine Hospital Adherence Area
+#' Determine (Hospital) Adherence Area
 #'
-#' Looks up the nearest hospital for a given zipcode (4 digits) based on
-#' the shortest distance in the [postcodes4_afstanden] dataset.
-#'
-#' @param zipcode A character or numeric vector of zipcodes. Six-character
-#'   zipcodes are automatically truncated to the first 4 digits using
-#'   `substr()`.
-#'
+#' Looks up the nearest reference name for a given zipcode (4 digits) based on the shortest distance in the [postcodes4_afstanden] dataset.
+#' @param zipcode A character or numeric vector of zipcodes. Six-character zipcodes are automatically truncated to the first 4 digits using `substr()`.
+#' @param reference A character vector of zipcodes to use as reference, preferably named. Defaults to hospitals in the region.
 #' @details
-#' The function looks up the distance from each input zipcode to all
-#' hospital zipcodes in [postcodes4_afstanden]. The hospital with the
-#' shortest distance is returned. In case of equal distances, the first
-#' hospital in definition order is chosen.
-#'
-#' The following hospitals and their zipcodes are hard-coded:
-#'
-#' | Hospital            | Zip Code |
-#' |---------------------|----------|
-#' | Antonius            | 8601     |
-#' | Frisius Heerenveen  | 8441     |
-#' | Frisius Leeuwarden  | 8934     |
-#' | Martini             | 9728     |
-#' | Nij Smellinghe      | 9202     |
-#' | Ommelander          | 9679     |
-#' | Treant              | 7824     |
-#' | Wilhelmina          | 9401     |
+#' The function looks up the distance from each input zipcode to all zipcodes of `reference` in [postcodes4_afstanden]. The names with the shortest distance is returned. In case of equal distances, the first name in definition order is chosen.
 #'
 #' Zipcodes not found in [postcodes4_afstanden] return `NA`.
 #'
-#' @return A character vector of hospital names, the same length as `zipcode`.
+#' @return A character vector of names of `reference`, the same length as `zipcode`.
 #' @export
 #' @importFrom dplyr filter arrange
 #' @examples
@@ -57,27 +37,52 @@
 #' # six-character zipcodes are automatically truncated
 #' adherence_area("9251AB")
 #' 
-#' if (requireNamespace("plot2", quietly = TRUE)) {
-#'   library(certeplot2)
+#' if (requireNamespace("certeplot2", quietly = TRUE)) {
 #'   geo_postcodes4 |>
 #'      crop_certe() |>
 #'      plot2(category = suppressMessages(adherence_area(postcode)),
 #'            datalabels = FALSE) |>
-#'      add_sf(geo_provincies |> crop_certe(),
+#'      plot2::add_sf(geo_provincies |> crop_certe(),
 #'             colour_fill = NA, colour = "black", linewidth = 0.5)
 #' }
-adherence_area <- function(zipcode) {
+#' 
+#' if (requireNamespace("certeplot2", quietly = TRUE)) {
+#'   hospitals <- c("Antonius"           = "8601",
+#'                  "Frisius Heerenveen" = "8441",
+#'                  "Frisius Leeuwarden" = "8934",
+#'                  "Martini"            = "9728",
+#'                  "Nij Smellinghe"     = "9202",
+#'                  "Ommelander"         = "9679",
+#'                  "Treant"             = "7824",
+#'                  "Wilhelmina"         = "9401")
+#'   zip4 <- geo_postcodes4 |> crop_certe()
+#' 
+#'   zip4 |>
+#'     plot2(category = adherence_area(postcode, reference = hospitals),
+#'           datalabels = FALSE) |>
+#'     plot2::add_sf(geo_provincies |> crop_certe(),
+#'            colour_fill = "#FFFFFF77", colour = "black", linewidth = 0.5) |>
+#'     plot2::add_sf(zip_to_sf(hospitals),
+#'            datalabels = names(hospitals),
+#'            colour = "black")
+#' }
+adherence_area <- function(zipcode,
+                           reference = c(
+                             "Antonius"           = "8601",
+                             "Frisius Heerenveen" = "8441",
+                             "Frisius Leeuwarden" = "8934",
+                             "Martini"            = "9728",
+                             "Nij Smellinghe"     = "9202",
+                             "Ommelander"         = "9679",
+                             "Treant"             = "7824",
+                             "Wilhelmina"         = "9401"
+                           )) {
   
-  hosp_zipcodes <- c(
-    "Antonius"           = "8601",
-    "Frisius Heerenveen" = "8441",
-    "Frisius Leeuwarden" = "8934",
-    "Martini"            = "9728",
-    "Nij Smellinghe"     = "9202",
-    "Ommelander"         = "9679",
-    "Treant"             = "7824",
-    "Wilhelmina"         = "9401"
-  )
+  if (is.null(names(reference))) {
+    names(reference) <- reference
+  } else {
+    names(reference)[names(reference) == ""] <- reference[names(reference) == ""]
+  }
   
   zipcode <- substr(trimws(as.character(zipcode)), 1, 4)
   
@@ -87,7 +92,7 @@ adherence_area <- function(zipcode) {
   
   # Substitute missing codes with nearest higher, per unique missing code
   missing <- uzip[!uzip %in% known]
-  substitutes <- setNames(uzip, uzip)  # identity map for all, overwrite missing below
+  substitutes <- stats::setNames(uzip, uzip)  # identity map for all, overwrite missing below
   
   for (z in missing) {
     zip2 <- substr(z, 1, 2)
@@ -104,17 +109,17 @@ adherence_area <- function(zipcode) {
   # Map full input to substituted unique codes
   zip_sub <- substitutes[zipcode]
   
-  # Pre-filter distance table once, then find nearest hospital per unique substituted code
+  # Pre-filter distance table once, then find nearest value per unique substituted code
   dist <- certegis::postcodes4_afstanden |>
-    filter(postcode.y %in% hosp_zipcodes) |>
+    filter(postcode.y %in% reference) |>
     arrange(afstand_km)
   
   u_sub <- unique(zip_sub[!is.na(zip_sub)])
-  hosp_lookup <- setNames(
+  hosp_lookup <- stats::setNames(
     sapply(u_sub, function(z) {
       mtch <- match(z, dist$postcode.x)
       if (is.na(mtch)) NA_character_
-      else names(hosp_zipcodes[hosp_zipcodes == dist$postcode.y[mtch]])
+      else names(reference[reference == dist$postcode.y[mtch]])
     }),
     u_sub
   )

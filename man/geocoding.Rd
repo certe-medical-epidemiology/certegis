@@ -75,7 +75,7 @@ if (require("certeplot2")) {
   geo_gemeenten |>
     crop_certe() |>
     plot2(datalabels = FALSE) |>
-    add_sf(hospitals, colour = "certeroze", datalabels = place)
+    plot2::add_sf(hospitals, colour = "certeroze", datalabels = place)
 }
 
 }

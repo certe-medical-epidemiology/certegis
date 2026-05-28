@@ -2,40 +2,28 @@
 % Please edit documentation in R/adherence_area.R
 \name{adherence_area}
 \alias{adherence_area}
-\title{Determine Hospital Adherence Area}
+\title{Determine (Hospital) Adherence Area}
 \usage{
-adherence_area(zipcode)
+adherence_area(
+  zipcode,
+  reference = c(Antonius = "8601", `Frisius Heerenveen` = "8441", `Frisius Leeuwarden` =
+    "8934", Martini = "9728", `Nij Smellinghe` = "9202", Ommelander = "9679", Treant =
+    "7824", Wilhelmina = "9401")
+)
 }
 \arguments{
-\item{zipcode}{A character or numeric vector of zipcodes. Six-character
-zipcodes are automatically truncated to the first 4 digits using
-\code{substr()}.}
+\item{zipcode}{A character or numeric vector of zipcodes. Six-character zipcodes are automatically truncated to the first 4 digits using \code{substr()}.}
+
+\item{reference}{A character vector of zipcodes to use as reference, preferably named. Defaults to hospitals in the region.}
 }
 \value{
-A character vector of hospital names, the same length as \code{zipcode}.
+A character vector of names of \code{reference}, the same length as \code{zipcode}.
 }
 \description{
-Looks up the nearest hospital for a given zipcode (4 digits) based on
-the shortest distance in the \link{postcodes4_afstanden} dataset.
+Looks up the nearest reference name for a given zipcode (4 digits) based on the shortest distance in the \link{postcodes4_afstanden} dataset.
 }
 \details{
-The function looks up the distance from each input zipcode to all
-hospital zipcodes in \link{postcodes4_afstanden}. The hospital with the
-shortest distance is returned. In case of equal distances, the first
-hospital in definition order is chosen.
-
-The following hospitals and their zipcodes are hard-coded:\tabular{ll}{
-   Hospital \tab Zip Code \cr
-   Antonius \tab 8601 \cr
-   Frisius Heerenveen \tab 8441 \cr
-   Frisius Leeuwarden \tab 8934 \cr
-   Martini \tab 9728 \cr
-   Nij Smellinghe \tab 9202 \cr
-   Ommelander \tab 9679 \cr
-   Treant \tab 7824 \cr
-   Wilhelmina \tab 9401 \cr
-}
-
+The function looks up the distance from each input zipcode to all zipcodes of \code{reference} in \link{postcodes4_afstanden}. The names with the shortest distance is returned. In case of equal distances, the first name in definition order is chosen.
 
 Zipcodes not found in \link{postcodes4_afstanden} return \code{NA}.
 }
@@ -46,13 +34,33 @@ adherence_area(c("9713", "7702", "8896"))
 # six-character zipcodes are automatically truncated
 adherence_area("9251AB")
 
-if (requireNamespace("plot2", quietly = TRUE)) {
-  library(certeplot2)
+if (requireNamespace("certeplot2", quietly = TRUE)) {
   geo_postcodes4 |>
      crop_certe() |>
      plot2(category = suppressMessages(adherence_area(postcode)),
            datalabels = FALSE) |>
-     add_sf(geo_provincies |> crop_certe(),
+     plot2::add_sf(geo_provincies |> crop_certe(),
             colour_fill = NA, colour = "black", linewidth = 0.5)
+}
+
+if (requireNamespace("certeplot2", quietly = TRUE)) {
+  hospitals <- c("Antonius"           = "8601",
+                 "Frisius Heerenveen" = "8441",
+                 "Frisius Leeuwarden" = "8934",
+                 "Martini"            = "9728",
+                 "Nij Smellinghe"     = "9202",
+                 "Ommelander"         = "9679",
+                 "Treant"             = "7824",
+                 "Wilhelmina"         = "9401")
+  zip4 <- geo_postcodes4 |> crop_certe()
+
+  zip4 |>
+    plot2(category = adherence_area(postcode, reference = hospitals),
+          datalabels = FALSE) |>
+    plot2::add_sf(geo_provincies |> crop_certe(),
+           colour_fill = "#FFFFFF77", colour = "black", linewidth = 0.5) |>
+    plot2::add_sf(zip_to_sf(hospitals),
+           datalabels = names(hospitals),
+           colour = "black")
 }
 }

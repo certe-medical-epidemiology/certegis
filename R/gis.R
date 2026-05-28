@@ -147,7 +147,7 @@ as.sf <- function(data) {
 #' if (require("certeplot2")) {
 #'   geo_gemeenten |> crop_certe() |>    # cropped municipalities
 #'     plot2(title = "Certe Region") |>
-#'     add_sf(
+#'     plot2::add_sf(
 #'       geo_provincies |> crop_certe(), # cropped provinces
 #'       colour_fill = NA,
 #'       colour = "black",
@@ -318,6 +318,39 @@ convert_to_metre_CRS28992 <- function(sf_data) {
 }
 
 #' @rdname GIS
+#' @param zipcode zipcode to transform to an [sf point][sf::st_point()]
+#' @details
+#' [zip_to_sf()] converts a zipcode to sf data as an [sf point][sf::st_point()], using [adherence_area()] and the [geo_postcodes4] data set internally. It returns the midpoint (centroid) of the zipcode on the map.
+#' @export
+#' @examples
+#' 
+#' 
+#' # Converting zip codes to points on a map ------------------------------
+#' 
+#' if (require("certeplot2")) {
+#'   geo_provincies |>
+#'     crop_certe() |> 
+#'     plot2(category = NULL, colour_fill = NA, datalabels = FALSE) |> 
+#'     plot2::add_sf(
+#'       zip_to_sf(c(9201, 9713)),
+#'       datalabels = c("Dit is nou Drachten", "En dit Groningen"),
+#'       colour= "red"
+#'     )
+#' }
+zip_to_sf <- function(zipcode) {
+  check_is_installed("sf")
+  loadNamespace("sf")
+  
+  out_zip <- adherence_area(zipcode, certegis::geo_postcodes4$postcode)
+  sf_data <- certegis::geo_postcodes4[match(as.numeric(out_zip), certegis::geo_postcodes4$postcode), ]
+  
+  out <- suppressWarnings(sf::st_centroid(sf_data))
+  rownames(out) <- NULL
+  out
+}
+
+
+#' @rdname GIS
 #' @param longitudes vector of longitudes
 #' @param latitudes vector of latitudes
 #' @param crs the coordinate reference system (CRS) to use as output
@@ -331,10 +364,12 @@ convert_to_metre_CRS28992 <- function(sf_data) {
 #' 
 #' if (require("certeplot2")) {
 #'   geo_provincies |>
-#'       crop_certe() |> 
-#'       plot2(category = NULL, colour_fill = NA) |> 
-#'       add_sf(degrees_to_sf(6.5, 53),
-#'              datalabels = "Some Point!")
+#'     crop_certe() |> 
+#'     plot2(category = NULL, colour_fill = NA) |> 
+#'     plot2::add_sf(
+#'       degrees_to_sf(6.5, 53),
+#'       datalabels = "Dit is (6.5, 53)!"
+#'     )
 #' }
 degrees_to_sf <- function(longitudes, latitudes, crs = 28992) {
   check_is_installed("sf")
