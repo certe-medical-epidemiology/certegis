@@ -77,6 +77,7 @@ adherence_area <- function(zipcode,
                              "Treant"             = "7824",
                              "Wilhelmina"         = "9401"
                            )) {
+  reference_missing <- missing(reference)
   
   if (is.null(names(reference))) {
     names(reference) <- reference
@@ -128,7 +129,9 @@ adherence_area <- function(zipcode,
   out[is.na(zip_sub)] <- NA_character_
   
   # Overwrite Noordoostpolder / Urk as Antonius
-  out[zipcode %in% certegis::postcodes$postcode[certegis::postcodes$gemeente %in% c("Noordoostpolder", "Urk")]] <- "Antonius"
+  if (reference_missing) {
+      out[zipcode %in% certegis::postcodes$postcode[certegis::postcodes$gemeente %in% c("Noordoostpolder", "Urk")]] <- "Antonius"
+  }
   
   unname(out)
 }
