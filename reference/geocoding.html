@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">certegis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.7.0</span>
       </span>
     </div>
 
@@ -157,11 +157,11 @@
 <span class="r-in"><span>                       <span class="st">"Scheper Emmen"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">hospitals</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://certe-medical-epidemiology.github.io/certeplot2" class="external-link">"certeplot2"</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://msberends.github.io/plot2" class="external-link">"plot2"</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="va">geo_gemeenten</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="GIS.html">crop_certe</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://msberends.github.io/plot2/reference/plot2.html" class="external-link">plot2</a></span><span class="op">(</span>datalabels <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>    <span class="fu">plot2</span><span class="fu">::</span><span class="fu"><a href="https://msberends.github.io/plot2/reference/add_type.html" class="external-link">add_sf</a></span><span class="op">(</span><span class="va">hospitals</span>, colour <span class="op">=</span> <span class="st">"certeroze"</span>, datalabels <span class="op">=</span> <span class="va">place</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://msberends.github.io/plot2/reference/add_type.html" class="external-link">add_sf</a></span><span class="op">(</span><span class="va">hospitals</span>, colour <span class="op">=</span> <span class="st">"certeroze"</span>, datalabels <span class="op">=</span> <span class="va">place</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
@@ -179,7 +179,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer></div>
