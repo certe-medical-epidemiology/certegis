@@ -55,7 +55,7 @@
 #'   
 #'   
 #' # plotting support:
-#' if (require("certeplot2")) {
+#' if (require("plot2")) {
 #' 
 #'   radial_check |>
 #'     add_map() |>

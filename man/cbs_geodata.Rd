@@ -72,7 +72,7 @@ See \href{https://github.com/certe-medical-epidemiology/certegis/blob/main/data-
 \strong{NOTE}: all data sets contains all areas of the whole country of the Netherlands, except for \code{geo_postcodes6} which was cropped to only cover the Certe region (using \code{\link[=crop_certe]{crop_certe()}}).
 }
 \examples{
-if (require("certeplot2")) {
+if (require("plot2")) {
 
   geo_postcodes6 |>
     filter_geolocation(plaats == "Groningen") |>
@@ -82,7 +82,7 @@ if (require("certeplot2")) {
   
 }
 
-if (require("certeplot2")) {
+if (require("plot2")) {
 
   geo_postcodes4 |>
     filter_geolocation(plaats == "Groningen") |>

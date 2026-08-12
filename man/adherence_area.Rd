@@ -34,16 +34,16 @@ adherence_area(c("9713", "7702", "8896"))
 # six-character zipcodes are automatically truncated
 adherence_area("9251AB")
 
-if (requireNamespace("certeplot2", quietly = TRUE)) {
+if (require("plot2", quietly = TRUE)) {
   geo_postcodes4 |>
      crop_certe() |>
      plot2(category = suppressMessages(adherence_area(postcode)),
            datalabels = FALSE) |>
-     plot2::add_sf(geo_provincies |> crop_certe(),
+     add_sf(geo_provincies |> crop_certe(),
             colour_fill = NA, colour = "black", linewidth = 0.5)
 }
 
-if (requireNamespace("certeplot2", quietly = TRUE)) {
+if (require("plot2", quietly = TRUE)) {
   hospitals <- c("Antonius"           = "8601",
                  "Frisius Heerenveen" = "8441",
                  "Frisius Leeuwarden" = "8934",
@@ -57,9 +57,9 @@ if (requireNamespace("certeplot2", quietly = TRUE)) {
   zip4 |>
     plot2(category = adherence_area(postcode, reference = hospitals),
           datalabels = FALSE) |>
-    plot2::add_sf(geo_provincies |> crop_certe(),
+    add_sf(geo_provincies |> crop_certe(),
            colour_fill = "#FFFFFF77", colour = "black", linewidth = 0.5) |>
-    plot2::add_sf(zip_to_sf(hospitals),
+    add_sf(zip_to_sf(hospitals),
            datalabels = names(hospitals),
            colour = "black")
 }

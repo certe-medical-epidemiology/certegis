@@ -26,7 +26,6 @@
 #' The function looks up the distance from each input zipcode to all zipcodes of `reference` in [postcodes4_afstanden]. The names with the shortest distance is returned. In case of equal distances, the first name in definition order is chosen.
 #'
 #' Zipcodes not found in [postcodes4_afstanden] return `NA`.
-#'
 #' @return A character vector of names of `reference`, the same length as `zipcode`.
 #' @export
 #' @importFrom dplyr filter arrange
@@ -37,16 +36,16 @@
 #' # six-character zipcodes are automatically truncated
 #' adherence_area("9251AB")
 #' 
-#' if (requireNamespace("certeplot2", quietly = TRUE)) {
+#' if (require("plot2", quietly = TRUE)) {
 #'   geo_postcodes4 |>
 #'      crop_certe() |>
 #'      plot2(category = suppressMessages(adherence_area(postcode)),
 #'            datalabels = FALSE) |>
-#'      plot2::add_sf(geo_provincies |> crop_certe(),
+#'      add_sf(geo_provincies |> crop_certe(),
 #'             colour_fill = NA, colour = "black", linewidth = 0.5)
 #' }
 #' 
-#' if (requireNamespace("certeplot2", quietly = TRUE)) {
+#' if (require("plot2", quietly = TRUE)) {
 #'   hospitals <- c("Antonius"           = "8601",
 #'                  "Frisius Heerenveen" = "8441",
 #'                  "Frisius Leeuwarden" = "8934",
@@ -60,9 +59,9 @@
 #'   zip4 |>
 #'     plot2(category = adherence_area(postcode, reference = hospitals),
 #'           datalabels = FALSE) |>
-#'     plot2::add_sf(geo_provincies |> crop_certe(),
+#'     add_sf(geo_provincies |> crop_certe(),
 #'            colour_fill = "#FFFFFF77", colour = "black", linewidth = 0.5) |>
-#'     plot2::add_sf(zip_to_sf(hospitals),
+#'     add_sf(zip_to_sf(hospitals),
 #'            datalabels = names(hospitals),
 #'            colour = "black")
 #' }

@@ -59,11 +59,11 @@
 #'                        "Scheper Emmen"))
 #' hospitals
 #' 
-#' if (require("certeplot2")) {
+#' if (require("plot2")) {
 #'   geo_gemeenten |>
 #'     crop_certe() |>
 #'     plot2(datalabels = FALSE) |>
-#'     plot2::add_sf(hospitals, colour = "certeroze", datalabels = place)
+#'     add_sf(hospitals, colour = "certeroze", datalabels = place)
 #' }
 #' 
 #' }

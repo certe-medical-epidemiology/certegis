@@ -80,7 +80,7 @@ included_datasets <- function() {
 #' @name cbs_geodata
 #' @rdname cbs_geodata
 #' @examples 
-#' if (require("certeplot2")) {
+#' if (require("plot2")) {
 #' 
 #'   geo_postcodes6 |>
 #'     filter_geolocation(plaats == "Groningen") |>
@@ -90,7 +90,7 @@ included_datasets <- function() {
 #'   
 #' }
 #' 
-#' if (require("certeplot2")) {
+#' if (require("plot2")) {
 #' 
 #'   geo_postcodes4 |>
 #'     filter_geolocation(plaats == "Groningen") |>

@@ -105,10 +105,10 @@ data.frame(postcode = 7753, number_of_cases = 3) |>
 geo_provincies |> crop_certe()
 
 # but other geometries do, such as geo_gemeenten
-if (require("certeplot2")) {
+if (require("plot2")) {
   geo_gemeenten |> crop_certe() |>    # cropped municipalities
     plot2(title = "Certe Region") |>
-    plot2::add_sf(
+    add_sf(
       geo_provincies |> crop_certe(), # cropped provinces
       colour_fill = NA,
       colour = "black",
@@ -127,7 +127,7 @@ geo_gemeenten |>
   crop_certe() |>
   filter_geolocation(inwoners_vrouw >= 50000)
 
-if (require("certeplot2")) {
+if (require("plot2")) {
   geo_postcodes4 |> 
     filter_geolocation(gemeente == "Tytsjerksteradiel") |> 
     plot2(category = inwoners,
@@ -148,11 +148,11 @@ geo_provincies |> convert_to_metre_CRS28992()
 
 # Converting zip codes to points on a map ------------------------------
 
-if (require("certeplot2")) {
+if (require("plot2")) {
   geo_provincies |>
     crop_certe() |> 
     plot2(category = NULL, colour_fill = NA, datalabels = FALSE) |> 
-    plot2::add_sf(
+    add_sf(
       zip_to_sf(c(9201, 9713)),
       datalabels = c("Dit is nou Drachten", "En dit Groningen"),
       colour= "red"
@@ -164,11 +164,11 @@ if (require("certeplot2")) {
 
 degrees_to_sf(4.5, 54)
 
-if (require("certeplot2")) {
+if (require("plot2")) {
   geo_provincies |>
     crop_certe() |> 
     plot2(category = NULL, colour_fill = NA) |> 
-    plot2::add_sf(
+    add_sf(
       degrees_to_sf(6.5, 53),
       datalabels = "Dit is (6.5, 53)!"
     )
